@@ -8,6 +8,7 @@ import BetModal from '../components/modal/betModal'
 
 import { useEffect, useState } from "react";
 import BetConfirmation from "../components/modal/betConfirmation";
+import WatchParty from "../components/watchParty";
 
 export default function Game() {
     // const clientSocket = useSocketIoClient()
@@ -37,7 +38,7 @@ export default function Game() {
     })
 
     const [modalConfirmObject, setModalConfirmObject] = useState({
-        isOpen : true,
+        isOpen : false,
         type : 1
     })
 
@@ -78,9 +79,11 @@ export default function Game() {
                 </div>
 
                 <div className="max-w-md w-full">
-                    <video autoPlay={true} src={process.env.WEB_RTC}>
 
-                    </video>
+                    <WatchParty url={process.env.NEXT_PUBLIC_WEB_RTC_URL}></WatchParty>
+                    {/* <video autoPlay={true} src={process.env.WEB_RTC}>
+
+                    </video> */}
                     {/* <iframe className="relative h-full w-full"
                         src="https://www.youtube.com/embed/JYUyyAsdNhM?si=1POPimjWqOnHfKgQ?autoplay=1&cc_load_policy=1"
                         title="YouTube video player" frameborder="0"

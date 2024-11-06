@@ -157,7 +157,7 @@ export default function Register() {
         <label className="text-center">Enter One Time Password</label>
         <Input className="w-full" type="text" id="mobileNumber" name="number" value="" />
         <button onClick={() => setIsShowModal(true)} className="primary w-full">Accept</button>
-        <label className="text-center">Didn't receive the verification OTP?</label>
+        <label className="text-center">Didn&apos;t receive the verification OTP?</label>
         <label className="text-center underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href='/sign-up'>Resend Again</label>
 
       </div>

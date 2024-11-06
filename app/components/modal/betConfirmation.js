@@ -16,7 +16,7 @@ function BetConfirmation({ type, onClose, balance }) {
         var title = type == 1 ? "Meron" : "Wala"
         return <div className="grid grid-cols-3 grid-rows-1 gap-4 items-center mx-[-23px]">
             <div>
-                <Image src={tacoLeft}></Image>
+                <Image alt="tacoLeft" src={tacoLeft}></Image>
             </div>
             <div className='text-center'>
                 <div className={`${className}Color h-20 w-20 rounded-full m-auto leading-[80px]`}>
@@ -24,7 +24,7 @@ function BetConfirmation({ type, onClose, balance }) {
                 </div>
             </div>
             <div className='justify-self-end'>
-                <Image src={tacoRight}></Image>
+                <Image  alt="tacoRight" src={tacoRight}></Image>
             </div>
         </div>
 

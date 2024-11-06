@@ -23,7 +23,7 @@ function BetModal({ type, onClose, balance }) {
         return <div className="grid grid-cols-3 grid-rows-1 gap-4">
 
             <div className='p-2 rounded-[10] default w-full col-span-2 inline-flex gap-2 text-center'>
-                <Image src={dollar}></Image>
+                <Image alt="dollar" src={dollar}></Image>
                 {balance}
             </div>
             <div className='p-2 rounded-[10] default text-center'>Fight#17</div>

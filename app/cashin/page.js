@@ -25,7 +25,7 @@ export default function CashIn() {
     expireDate.setHours(expireDate.getHours()+ 2)
 
     const data = {
-      trxAmount: `${(Number.parseFloat(amount)).toFixed(2)}`.replace(".",""),
+      trxAmount: `${(Number.parseFloat(amount)).toFixed(2)}`.replaceAll(",","").replace(".",""),
       timeStart: formatDate(date.toISOString()),
       timeExpire: formatDate(expireDate.toISOString())
 
@@ -69,9 +69,4 @@ export default function CashIn() {
       </div>
     </MainLayout >
   );
-}
-
-Date.prototype.addHours = function(h) {
-  this.setTime(this.getTime() + (h*60*60*1000));
-  return this;
 }

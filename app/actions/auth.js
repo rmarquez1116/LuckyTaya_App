@@ -31,7 +31,7 @@ export async function login(prevState, formData) {
     const httpsAgent = new Agent({
         rejectUnauthorized: false
     })
-    try {
+    try {  
         const response = await axios.post(`${process.env.BASE_URL}/api/v1/User/Login`, request, { httpsAgent })
         if (response.status == 200) {
 
