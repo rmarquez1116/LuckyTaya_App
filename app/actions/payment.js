@@ -10,7 +10,15 @@ const Repayment = (req) => {
   const createRequest = (req) => {
     const mchId = process.env.NEXT_PUBLIC_STARPAY_MERCHANT_ID;
     const name = process.env.NEXT_PUBLIC_PAYMENT_NAME;
+    var date = new Date();
+    var expireDate = new Date();
+    expireDate.setHours(expireDate.getHours()+ 2)
 
+    const dates = {
+      timeStart: formatDate(date.toISOString()),
+      timeExpire: formatDate(expireDate.toISOString())
+
+    }
     const request = {
       "msgId": getToken(15),
       "mchId": mchId,
@@ -18,7 +26,7 @@ const Repayment = (req) => {
       "deviceInfo": name,
       "currency": "PHP",
       "service": "pay.starpay.repayment",
-      ...req
+      ...req,...dates
     }
     
     const signature = sha256withRSAsign(JSON.stringify(request))
@@ -44,7 +52,6 @@ const Repayment = (req) => {
 
 
     const request = createRequest(req)
-    console.log(request, 'hello1235')
     const response = sendOrder(request)
     response.then(data => {
       return data

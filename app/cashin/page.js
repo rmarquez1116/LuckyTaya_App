@@ -8,7 +8,6 @@ import Input from "../components/input";
 import { useRouter } from 'next/navigation'
 import { useState } from "react";
 import Repayment from "../actions/payment";
-import { formatDate } from "../lib/DataFilter";
 import QrCode from "../components/modal/qrCode";
 
 const denomination = [
@@ -20,22 +19,12 @@ export default function CashIn() {
   const [qrData, setQrData] = useState('')
  
   const onCashIn = async () => {
-    var date = new Date();
-    var expireDate = new Date();
-    expireDate.setHours(expireDate.getHours()+ 2)
-
-    const data = {
-      trxAmount: `${(Number.parseFloat(amount)).toFixed(2)}`.replaceAll(",","").replace(".",""),
-      timeStart: formatDate(date.toISOString()),
-      timeExpire: formatDate(expireDate.toISOString())
-
-    }
-    var payment = await Repayment(data);
+    var payment = await Repayment(`${(Number.parseFloat(amount)).toFixed(2)}`.replaceAll(",","").replace(".",""));
     if(payment.response.code == "200"){
       setIsShowQr(true)
       setQrData(payment.response.codeUrl)
     }
-    console.log({data,payment},'StarpayHello')
+    // console.log({data,payment},'StarpayHello')
   }
   const router = useRouter();
   return (
@@ -45,7 +34,7 @@ export default function CashIn() {
       <div className="flex justify-center align-center  p-6 mt-5">
         <div className="card max-w-md w-full gap-5 flex-col flex p-6 bg-white rounded-3xl shadow">
           <div className="inline-flex gap-3 items-center justify-center">
-            <Image alt="cashin" src={cashin}></Image>
+            <Image className="w-auto" alt="cashin" src={cashin}></Image>
             <label className="text-center">CashIn</label>
           </div>
           <div className="bg-gray p-3 rounded-[20px] w-full">

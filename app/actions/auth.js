@@ -65,6 +65,35 @@ export async function logout() {
     redirect("/login");
 }
 
+
+
+export async function getAccountDetails(fightId, amount, side) {
+    const cookieStore = await cookies()
+    var session = cookieStore.get('session');
+    if (!session) {
+        return redirect('/login')
+    }
+    try {
+        session = JSON.parse(session.value);
+
+        var url = `${process.env.BASE_URL}/api/v1/UserAccount/MyAccount`
+     
+        const response = await axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${session.token}`
+            },
+            httpsAgent: new Agent({
+                rejectUnauthorized: false
+            })
+        })
+        if (response.status == 200) {
+            return response.data
+        } else return null;
+    } catch (error) {
+        console.log(error, 'Error')
+        return null;
+    }
+}
 export async function getSession(){
     const cookieStore = await cookies()
     const session = cookieStore.get("session")

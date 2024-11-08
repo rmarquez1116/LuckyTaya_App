@@ -57,7 +57,6 @@ export async function register(prevState, formData) {
         request['facebookAccount'] = "";
         request.referralCode = request.referralCode == "" ? 0 : request.referralCode
         const response = await axios.post(`${process.env.BASE_URL}/api/v1/User/Register`, request, { httpsAgent })
-        console.log(response, 'hello321')
         if (response.status >= 200 && response.status <=300) {
 
             const cookieStore = await cookies()
@@ -74,7 +73,7 @@ export async function register(prevState, formData) {
             };
         }
     } catch (error) {
-        console.log(error, 'hello321222')
+        console.log(error, 'Error')
 
         return {
             errors: {

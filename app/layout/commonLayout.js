@@ -4,10 +4,9 @@ import Image from 'next/image';
 
 function CommonLayout({ children }) {
     return (
-        <body>
+        <div>
 
             <header>
-
                 <nav className='fixed p-3 w-full'>
                     <div className="flex justify-center">
 
@@ -22,7 +21,7 @@ function CommonLayout({ children }) {
 
                 </div>
             </main>
-        </body>
+        </div>
     )
 }
 

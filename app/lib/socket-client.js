@@ -29,7 +29,6 @@ export default class SocketIoClient extends EventEmitter {
       withCredentials: true,
       transports: ["websocket"]
     }
-    console.log(this.config,'hellooooo')
     this.socket = io(this.config.url, options)
 
     this.socket.on("connect", () => {

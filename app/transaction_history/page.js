@@ -1,42 +1,10 @@
 'use client'
+import React, { useEffect, useState } from "react";
 import TransactionItem from "../components/transactionItem";
 import MainLayout from "../layout/mainLayout";
 import BalanceHeader from "../components/balanceHeader";
-import React, { useEffect, useState } from "react";
 import { getTransactionsByDate } from "../actions/transaction";
 
-const transactions = [
-  {
-    transactionDesc: "Debit",
-    amount: "1,000",
-    transactionDateTime : '2024-10-27T05:57:12.207Z',
-    transactionNumberStr: '123456789'
-  },
-  {
-    transactionDesc: "Debit",
-    amount: "1,000",
-    transactionDateTime : '2024-10-27T05:57:12.207Z',
-    transactionNumberStr: '123456789'
-  },
-  {
-    transactionDesc: "Debit",
-    amount: "1,000",
-    transactionDateTime : '2024-10-27T05:57:12.207Z',
-    transactionNumberStr: '123456789'
-  },
-  {
-    transactionDesc: "Debit",
-    amount: "1,000",
-    transactionDateTime : '2024-10-27T05:57:12.207Z',
-    transactionNumberStr: '123456789'
-  },
-  {
-    transactionDesc: "Debit",
-    amount: "1,000",
-    transactionDateTime : '2024-10-27T05:57:12.207Z',
-    transactionNumberStr: '123456789'
-  },
-]
 export default function TransactionHistory() {
 
   const [transactionList, setTransactionList] = useState([])
@@ -44,10 +12,7 @@ export default function TransactionHistory() {
   useEffect(() => {
     const getData = async () => {
       try {
-        var date = new Date(), y = date.getFullYear(), m = date.getMonth();
-        var firstDay = new Date(y, m, 1).toISOString();
-        var lastDay = new Date(y, m + 1, 0).toISOString();
-        const result = await getTransactionsByDate(firstDay, lastDay)
+        const result = await getTransactionsByDate()
         setTransactionList(result)
       } catch (error) {   
       }

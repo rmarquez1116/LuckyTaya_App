@@ -1,3 +1,5 @@
+import React from "react"
+import { getSession } from "../actions/auth"
 import { ProvideSocketIoClient } from "../providers/SocketIoProvider"
 
 export const metadata = {
@@ -8,10 +10,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
 
-    <html lang="en">
-      {/* <ProvideSocketIoClient> */}
-        <body>{children}</body>
-      {/* </ProvideSocketIoClient> */}
-    </html>
+    <React.Fragment>
+      {children}
+    </React.Fragment>
   )
 }

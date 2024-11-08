@@ -3,7 +3,12 @@ import axios from "axios";
 import { Agent } from "https";
 import { cookies } from "next/headers";
 
-export async function getTransactionsByDate(dateFrom, dateTo) {
+export async function getTransactionsByDate() {
+
+    
+    var date = new Date(), y = date.getFullYear(), m = date.getMonth();
+    var dateFrom = new Date(y, m, 1).toISOString();
+    var dateTo = new Date(y, m + 1, 0).toISOString();
     const cookieStore = await cookies()
     var session = cookieStore.get('session');
     if (!session) {
@@ -11,11 +16,10 @@ export async function getTransactionsByDate(dateFrom, dateTo) {
     }
     try {
 
-        console.log(session.value, 'hello2')
         session = JSON.parse(session.value);
 
-        var url = `${process.env.BASE_URL}/api/v1/xAccountTransaction/GetTransByUserIdByDateV2?dateTimeFrom=${dateFrom}&dateTime=${dateTo}`
-
+        var url = `${process.env.BASE_URL}/api/v1/xAccountTransaction/GetTransByUserIdByDateV2?dateTimeFrom=${dateFrom}&dateTimeTo=${dateTo}`
+ 
         const response = await axios.get(url, {
             headers: {
                 Authorization: `Bearer ${session.token}`
@@ -24,12 +28,12 @@ export async function getTransactionsByDate(dateFrom, dateTo) {
                 rejectUnauthorized: false
             })
         })
-        console.log(response, 'hello');
+        // console.log(dateFrom,dateTo,url,response.data, 'hello');
         if (response.status == 200) {
             return response.data;
         } else return [];
     } catch (error) {
-        console.log(error, 'hello')
+        console.log(error, 'Error')
         return [];
     }
 }
@@ -57,12 +61,11 @@ export async function cashIn(amount) {
                 rejectUnauthorized: false
             })
         })
-        console.log(response, 'hello');
         if (response.status == 200) {
             return response.data;
         } else return [];
     } catch (error) {
-        console.log(error, 'hello')
+        console.log(error, 'Error')
         return [];
     }
 }
@@ -77,7 +80,6 @@ export async function cashOut(dateFrom, dateTo) {
     }
     try {
 
-        console.log(session.value, 'hello2')
         session = JSON.parse(session.value);
 
         var url = `${process.env.BASE_URL}/api/v1/xAccountTransaction/GetTransByUserIdByDateV2?dateTimeFrom=${dateFrom}&dateTime=${dateTo}`
@@ -90,12 +92,11 @@ export async function cashOut(dateFrom, dateTo) {
                 rejectUnauthorized: false
             })
         })
-        console.log(response, 'hello');
         if (response.status == 200) {
             return response.data;
         } else return [];
     } catch (error) {
-        console.log(error, 'hello')
+        console.log(error, 'Error')
         return [];
     }
 }

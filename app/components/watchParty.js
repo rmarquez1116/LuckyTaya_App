@@ -12,7 +12,7 @@ const WatchParty = ({url}) => {
 
         // When a remote stream is received, display it
         pc.ontrack = (event) => {
-            console.log(event,'hellosocket')
+            // console.log(event,'hellosocket')
             if (remoteVideoRef.current) {
                 remoteVideoRef.current.srcObject = event.streams[0];
             }
@@ -22,14 +22,14 @@ const WatchParty = ({url}) => {
 
         // Listen for offer from the signaling server
         socket.on("offer", async (offer) => {
-            console.log(offer,'hellosocket')
+            // console.log(offer,'hellosocket')
             await handleOffer(offer, peerConnection);
         });
 
         // Listen for answer from the signaling server
         socket.on("answer", async (answer) => {
             
-            console.log(answer,'hellosocket')
+            // console.log(answer,'hellosocket')
             if (peerConnection) {
                 await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
             }
@@ -38,7 +38,7 @@ const WatchParty = ({url}) => {
         // Listen for ICE candidates
         socket.on("ice-candidate", (candidate) => {
             
-            console.log(candidate,'hellosocket')
+            // console.log(candidate,'hellosocket')
             if (peerConnection) {
                 peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
             }

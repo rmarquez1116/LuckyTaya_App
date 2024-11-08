@@ -7,7 +7,7 @@ import Image from 'next/image'
 const denomination = [
     "100", "200", "300", "100", "2,000", "3,000", "10,000", "15,000", "20,000"
 ]
-function BetConfirmation({ type, onClose, balance }) {
+function BetConfirmation({ type, onClose, balance,amount }) {
     // type 1 Meron
     // type 2 wala
 
@@ -31,23 +31,23 @@ function BetConfirmation({ type, onClose, balance }) {
     }
 
     return (
-        <div className='absolute justify-center items-center flex w-full h-full overflow-hidden backdrop-blur'>
+        <div className='absolute justify-center flex w-full overflow-hidden backdrop-blur'>
             <div className="text-center flex flex-col card max-w-sm gap-5 p-6 mt-10 bg-white rounded-3xl shadow">
                 <div className="grid grid-cols-3 grid-rows-1 gap-4">
                     <div ></div>
                     <div className='text-center'>Confirm Bet</div>
-                    <div className='text-right'>X</div>
+                    <div className='text-right' onClick={()=>onClose(false)}>X</div>
                 </div>
-                <Input className='text-center rounded-full bg-dark' value="100"></Input>
+                <Input disabled={true} readOnly={true} className='text-center rounded-full bg-dark' value={amount}></Input>
                 <label>Payout: 168.00</label>
                 {renderBody()}
                 <div className="grid grid-cols-2 grid-rows-1 gap-4">
                     <div className='text-center'>
 
-                        <button className='w-full btn-confirm p-3 rounded-[10px]'>Confirmed</button>
+                        <button onClick={()=>onClose(true)} className='w-full btn-confirm p-3 rounded-[10px]'>Confirmed</button>
                     </div>
                     <div className='text-center'>
-                        <button className='w-full btn-cancel p-3 rounded-[10px]'>Cancel</button>
+                        <button onClick={()=>onClose()} className='w-full btn-cancel p-3 rounded-[10px]'>Cancel</button>
                     </div>
                 </div>
             </div>

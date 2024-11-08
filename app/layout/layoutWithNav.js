@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 function CommonLayout({ children }) {
     return (
-        <body>
+        <div>
 
             <header>
 
@@ -32,7 +32,8 @@ function CommonLayout({ children }) {
 
                 </div>
             </main>
-        </body>
+
+        </div>
     )
 }
 

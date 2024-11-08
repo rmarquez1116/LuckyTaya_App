@@ -4,12 +4,11 @@ import Day from './day';
 import CenterLabel from './centerLabel';
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-function Calendar({ currentDate, schedule }) {
+function Calendar({ currentDate, schedule, onSelect }) {
 
     const [data, setData] = useState([])
     useEffect(() => {
         setData(schedule)
-        console.log(schedule)
         return () => {
         }
     }, [schedule])
@@ -22,7 +21,7 @@ function Calendar({ currentDate, schedule }) {
     const label = months[currentMonthIndex] + " " + currentDate.getFullYear();
 
     function getDayClassName(date) {
-        var fightDetail = data.find(x => (new Date(x.entryDateTime).toLocaleDateString() == date.toLocaleDateString()))
+        var fightDetail = [...data].reverse().find(x => (new Date(x.entryDateTime).toLocaleDateString() == date.toLocaleDateString()))
         if (!fightDetail)
             return 'default';
         switch (fightDetail.statusDesc) {
@@ -37,6 +36,14 @@ function Calendar({ currentDate, schedule }) {
             default:
                 return 'default';
         }
+    }
+
+    function onSelectData(date, color) {
+        var fightDetail = [...data].reverse().find(x => (new Date(x.entryDateTime).toLocaleDateString() == date.toLocaleDateString()))
+        if (fightDetail) {
+            fightDetail.color = color;
+        }
+        onSelect(fightDetail)
     }
 
     const dateBoxes = Array.from(
@@ -59,10 +66,10 @@ function Calendar({ currentDate, schedule }) {
             } else {
                 dateText = date;
             }
-
+            const dataDate = new Date(`${actualYear}/${actualMonth + 1}/${date}`);
             if (dateText == "") return <div key={`day-empty-${date}`}></div>;
             else return (<React.Fragment key={`day-${dateText}`}>
-                <Day id={`dy-${dateText}`} color={getDayClassName(new Date(`${actualYear}/${actualMonth + 1}/${date}`))} label={dateText} />
+                <Day data={dataDate} onSelect={onSelectData} id={`dy-${dateText}`} color={getDayClassName(dataDate)} label={dateText} />
             </React.Fragment>
             );
         })

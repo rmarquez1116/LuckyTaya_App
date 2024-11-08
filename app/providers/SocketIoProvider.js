@@ -1,4 +1,5 @@
 'use client'
+import { getSession } from "../actions/auth"
 import SocketIoClient from "../lib/socket-client"
 import React, { createContext, useRef, useState } from "react"
 
@@ -7,7 +8,7 @@ export const socketIoContext = createContext({
   connected: false
 })
 
-export function ProvideSocketIoClient({ children }) {
+export const ProvideSocketIoClient = React.memo(({ children }) => {
   const socketIo = useProvideSocketIoClient()
   return (
     <socketIoContext.Provider
@@ -19,12 +20,13 @@ export function ProvideSocketIoClient({ children }) {
       {children}
     </socketIoContext.Provider>
   )
-}
-function useProvideSocketIoClient() {
+})
+async function useProvideSocketIoClient() {
   const clientRef = useRef(null)
   const [connected, setConnected] = useState(false)
   if (typeof window === "undefined") return
-  const url = process.env['NEXT_PUBLIC_WEB_SOCKET_URL'] || ""
+  const session = await getSession();
+  const url = process.env['NEXT_PUBLIC_WEB_SOCKET_URL'] + session.token
   const config = {
     url: url,
     token: ""

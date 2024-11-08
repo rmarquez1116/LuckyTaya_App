@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { memo } from 'react'
 import '../globals.css';
-export default function Input(props) {
- 
+const Input = (props) => {
+
     return (
         <input className='bg-dark' {...props}></input>
     )
 }
+
+export default memo(Input)

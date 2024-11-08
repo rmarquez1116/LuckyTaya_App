@@ -1,18 +1,19 @@
 'use client'
-import Link from "next/link";
 import MainLayout from "../layout/mainLayout";
-import Form from "../components/form";
 import Image from "next/image";
 import cashout from '../../public/images/cashout.png'
 import dollar from '../../public/images/dollar.png'
 import BalanceHeader from '../components/balanceHeader'
 import Input from "../components/input";
 import { useRouter } from 'next/navigation'
+import { useState } from "react";
 
 const denomination = [
   "100", "200", "300", "100", "2,000", "3,000", "10,000", "15,000", "20,000"
 ]
 export default function CashOut() {
+  const [amount, setAmount] = useState('');
+ 
   const router = useRouter();
   return (
     <MainLayout>
@@ -20,8 +21,8 @@ export default function CashOut() {
       <div className="flex justify-center align-center  p-6 mt-5">
         <div className="card max-w-md w-full gap-5 flex-col flex p-6 bg-white rounded-3xl shadow">
           <div className="inline-flex gap-3 items-center justify-center">
-            <Image alt="cashout" src={cashout}></Image>
-            <label className="text-center">Cashout</label>
+            <Image className="w-auto" alt="cashin" src={cashout}></Image>
+            <label className="text-center">CashOut</label>
           </div>
           <div className="bg-gray p-3 rounded-[20px] w-full">
             <div className="inline-flex gap-3 items-center justify-center">
@@ -31,14 +32,14 @@ export default function CashOut() {
           <div>
             <label>Amount</label>
           </div>
-          <Input type="text" id="amount" value=""></Input>
+          <Input type="text" id="amount" value={amount} onChange={(e) => setAmount(e.value)}></Input>
           <div className="grid grid-cols-3 grid-rows-3 gap-4  align-middle   place-items-center">
             {denomination.map((object, i) => {
-              return <div  key={`denomination-${i}`}  className="amount-button text-center rounded-[20px] w-full p-3">{object}</div>
+              return <div onClick={() => setAmount(object)} key={`denomination-${i}`} className="amount-button text-center rounded-[20px] w-full p-3">{object}</div>
             })}
           </div>
-<button onClick={()=>router.push('/payment/failed')} className="primary w-full">Confirmed</button>
-       </div>
+          <button className="primary w-full">Confirmed</button>
+        </div>
         <br />
 
       </div>
