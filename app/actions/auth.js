@@ -44,13 +44,12 @@ export async function login(prevState, formData) {
             var token = response.data.token;
             token = token.split('.')[1];
             token = atob(token)
-            console.log(token, 'helloo')
             const expiration = new Date(token.exp * 1000)
 
 
             cookieStore.set("session", JSON.stringify(response.data), {
                 httpOnly: true,
-                secure: true,
+                secure: process.env.NEXT_PUBLIC_PRODUCTION_ENV == 'production',
                 expires: expiration,
                 sameSite: 'Strict'
             });

@@ -100,7 +100,7 @@ function Game() {
             setData(null)
             setIsLoaded(false);
         }
-    }, [data])
+    }, [])
 
 
     const setAmountBet = (type, amount) => {
