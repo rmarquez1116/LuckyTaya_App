@@ -4,12 +4,14 @@ import clock from '../../../public/images/clock.png'
 import FighterDetail from '../fighterDetails'
 import Image from 'next/image'
 import player1 from '../../../public/images/player1.png'
-function SchedulePopUp({ data ,onClose}) {
+function SchedulePopUp({ data, onClose }) {
     const renderDetails = () => {
         return <div className="grid grid-cols-1 bg-dark-no-border rounded-[10] p-3 w-full">
-            {data.fightDetails.map((item) => {
+            {data.fightDetails.map((item, i) => {
                 item.picture = player1
-                return <FighterDetail type={2} data={item}></FighterDetail>
+                return <React.Fragment key={`fighterdetail${i}`}>
+                    <FighterDetail type={2} data={item}></FighterDetail>
+                </React.Fragment>
             })}
         </div>
     }
@@ -19,8 +21,8 @@ function SchedulePopUp({ data ,onClose}) {
     }
     const formatDisplayTime = (date) => {
         var newDate = new Date(date).toLocaleTimeString();
-       
-        return newDate.substring(0, newDate.length - 6) + " " +newDate.slice(8);
+
+        return newDate.substring(0, newDate.length - 6) + " " + newDate.slice(8);
     }
     return (
         <div className='absolute flex justify-center items-center flex w-full overflow-hidden backdrop-blur'>

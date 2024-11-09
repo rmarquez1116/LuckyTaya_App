@@ -6,7 +6,9 @@ const useSocket = () => {
 
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState(null);
-
+  useEffect(() => {
+  }, [socket,messages])
+  
   useEffect(() => {
     const setup = async () => {
       const session = await getSession();

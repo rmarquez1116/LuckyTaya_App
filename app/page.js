@@ -41,6 +41,9 @@ export default function Home() {
     }
 }, [messages])
 
+useEffect(() => {
+}, [data,isLoaded])
+
   useEffect(() => {
     getData()
     return () => {

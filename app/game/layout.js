@@ -1,6 +1,4 @@
 import React from "react"
-import { getSession } from "../actions/auth"
-import { ProvideSocketIoClient } from "../providers/SocketIoProvider"
 
 export const metadata = {
   title: 'Next.js',
