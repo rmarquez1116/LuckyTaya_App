@@ -8,9 +8,15 @@ import SidebarButton from '../components/sidebarButton';
 import Menu from '../components/menu';
 import iconFooter from '../../public/images/logo-footer.png';
 import { logout } from '../actions/auth';
+import { redirect } from 'next/navigation';
 
 function Sidebar({ toggle, isOpen }) {
+  const onLogout = async () => {
+    await logout()
+    redirect('/login')
+  }
   return (
+
     <React.Fragment>
       <div className='h-full w-full absolute top-0' onClick={toggle}
         style={{
@@ -42,7 +48,7 @@ function Sidebar({ toggle, isOpen }) {
           </Link>
         </div>
         <Menu></Menu>
-        <button onClick={() => logout()} className='w-[50%]'>Logout</button>
+        <button onClick={() => onLogout()} className='w-[50%]'>Logout</button>
 
         <div className='absolute bottom-[50px] w-full'>
 

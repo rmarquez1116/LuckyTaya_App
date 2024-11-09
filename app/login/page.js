@@ -2,8 +2,9 @@
 import Link from "next/link";
 import CommonLayout from "../layout/commonLayout";
 import { login } from "../actions/auth";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import { redirect } from "next/navigation";
 const Form = dynamic(()=>import('../components/form'),{ssr : false})
 const form = [
   {
@@ -22,6 +23,12 @@ const form = [
 export default function Login() {
   
   const [state, loginAction] = useActionState(login, undefined);
+  useEffect (() => {
+    if(state == true){
+      redirect('/')
+    }
+  }, [state])
+  
   return (
     <CommonLayout>
       <div className="flex flex-col card max-w-sm p-6 mt-10 bg-white rounded-3xl shadow">

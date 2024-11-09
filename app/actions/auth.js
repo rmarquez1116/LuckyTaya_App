@@ -1,7 +1,6 @@
 "use server";
 
 import { z } from "zod";
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import axios from "axios";
 import { Agent } from "https";
@@ -56,6 +55,7 @@ export async function login(prevState, formData) {
                 sameSite: 'Strict'
             });
             isSuccess = true
+            return true;
         }
     } catch (error) {
         return {
@@ -63,9 +63,6 @@ export async function login(prevState, formData) {
                 username: ["Invalid email or password"],
             },
         };
-    }
-    if (isSuccess) {
-        redirect("/");
     }
     return {
         errors: {
@@ -75,9 +72,7 @@ export async function login(prevState, formData) {
 }
 
 export async function logout() {
-
     await cookies().delete("session");
-    redirect("/login");
 }
 
 

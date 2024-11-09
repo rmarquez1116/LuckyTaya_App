@@ -24,7 +24,7 @@ const middleware = async(req)=> {
   }
 
   if (isPublicRoute && session?.userId) {
-    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+    return NextResponse.redirect(new URL("/", req.nextUrl));
   }
   return NextResponse.next();
 }
