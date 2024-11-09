@@ -18,60 +18,64 @@ const loginSchema = z.object({
 });
 
 export async function login(prevState, formData) {
-    var isSuccess = false;
-    const result = loginSchema.safeParse(Object.fromEntries(formData));
-
-    if (!result.success) {
-        return {
-            errors: result.error.flatten().fieldErrors,
-        };
-    }
-    const { username, password } = result.data;
-    const request = { username, password };
-    const httpsAgent = new Agent({
-        rejectUnauthorized: false
-    })
     try {
-        const response = await axios.post(`${process.env.BASE_URL}/api/v1/User/Login`, request, {
+        var isSuccess = false;
+        const result = loginSchema.safeParse(Object.fromEntries(formData));
 
-            headers: {
-                "Content-Type": "application/json",
-            }
-            , httpsAgent
-        })
-        if (response.status == 200) {
-
-            const cookieStore = await cookies()
-            var token = response.data.token;
-            token = token.split('.')[1];
-            token = atob(token)
-            console.log(token, 'helloo')
-            const expiration = new Date(token.exp * 1000)
-
-
-            cookieStore.set("session", JSON.stringify(response.data), {
-                httpOnly: true,
-                secure: true,
-                expires: expiration,
-                sameSite: 'Strict'
-            });
-            isSuccess = true
+        if (!result.success) {
+            return {
+                errors: result.error.flatten().fieldErrors,
+            };
         }
-    } catch (error) {
+        const { username, password } = result.data;
+        const request = { username, password };
+        const httpsAgent = new Agent({
+            rejectUnauthorized: false
+        })
+        try {
+            const response = await axios.post(`${process.env.BASE_URL}/api/v1/User/Login`, request, {
+
+                headers: {
+                    "Content-Type": "application/json",
+                }
+                , httpsAgent
+            })
+            if (response.status == 200) {
+
+                const cookieStore = await cookies()
+                var token = response.data.token;
+                token = token.split('.')[1];
+                token = atob(token)
+                console.log(token, 'helloo')
+                const expiration = new Date(token.exp * 1000)
+
+
+                cookieStore.set("session", JSON.stringify(response.data), {
+                    httpOnly: true,
+                    secure: true,
+                    expires: expiration,
+                    sameSite: 'Strict'
+                });
+                isSuccess = true
+            }
+        } catch (error) {
+            return {
+                errors: {
+                    username: ["Invalid email or password"],
+                },
+            };
+        }
+        if (isSuccess) {
+            redirect("/");
+        }
         return {
             errors: {
                 username: ["Invalid email or password"],
             },
         };
+    } catch (error) {
+
     }
-    if (isSuccess) {
-        redirect("/");
-    }
-    return {
-        errors: {
-            username: ["Invalid email or password"],
-        },
-    };
 }
 
 export async function logout() {
