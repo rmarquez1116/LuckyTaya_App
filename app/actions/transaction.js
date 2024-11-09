@@ -22,7 +22,8 @@ export async function getTransactionsByDate() {
  
         const response = await axios.get(url, {
             headers: {
-                Authorization: `Bearer ${session.token}`
+                Authorization: `Bearer ${session.token}`,
+                "Content-Type": "application/json",
             },
             httpsAgent: new Agent({
                 rejectUnauthorized: false
@@ -55,7 +56,8 @@ export async function cashIn(amount) {
 
         const response = await axios.post(url, request, {
             headers: {
-                Authorization: `Bearer ${session.token}`
+                Authorization: `Bearer ${session.token}`,
+                "Content-Type": "application/json",
             },
             httpsAgent: new Agent({
                 rejectUnauthorized: false
@@ -86,7 +88,8 @@ export async function cashOut(dateFrom, dateTo) {
 
         const response = await axios.get(url, {
             headers: {
-                Authorization: `Bearer ${session.token}`
+                Authorization: `Bearer ${session.token}`,
+                "Content-Type": "application/json",
             },
             httpsAgent: new Agent({
                 rejectUnauthorized: false

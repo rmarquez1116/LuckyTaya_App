@@ -56,8 +56,14 @@ export async function register(prevState, formData) {
         delete request.re_password;
         request['facebookAccount'] = "";
         request.referralCode = request.referralCode == "" ? 0 : request.referralCode
-        const response = await axios.post(`${process.env.BASE_URL}/api/v1/User/Register`, request, { httpsAgent })
-        if (response.status >= 200 && response.status <=300) {
+        const response = await axios.post(`${process.env.BASE_URL}/api/v1/User/Register`, request, {
+            headers: {
+                Authorization: `Bearer ${session.token}`,
+                "Content-Type": "application/json",
+            },
+            httpsAgent
+        })
+        if (response.status >= 200 && response.status <= 300) {
 
             const cookieStore = await cookies()
             cookieStore.set("session", JSON.stringify(response.data), {
@@ -65,7 +71,7 @@ export async function register(prevState, formData) {
                 secure: true,
             });
             isSuccess = true
-        }else{
+        } else {
             return {
                 errors: {
                     referralCode: ["Can't Process your Request"],

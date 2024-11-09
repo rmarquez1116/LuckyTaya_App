@@ -31,23 +31,29 @@ export async function login(prevState, formData) {
     const httpsAgent = new Agent({
         rejectUnauthorized: false
     })
-    try {  
-        const response = await axios.post(`${process.env.BASE_URL}/api/v1/User/Login`, request, { httpsAgent })
+    try {
+        const response = await axios.post(`${process.env.BASE_URL}/api/v1/User/Login`, request, {
+
+            headers: {
+                "Content-Type": "application/json",
+            }
+            , httpsAgent
+        })
         if (response.status == 200) {
 
             const cookieStore = await cookies()
             var token = response.data.token;
             token = token.split('.')[1];
             token = atob(token)
-            console.log(token,'helloo')
+            console.log(token, 'helloo')
             const expiration = new Date(token.exp * 1000)
 
 
             cookieStore.set("session", JSON.stringify(response.data), {
                 httpOnly: true,
                 secure: true,
-                expires : expiration,
-                sameSite :'Strict'
+                expires: expiration,
+                sameSite: 'Strict'
             });
             isSuccess = true
         }
@@ -58,7 +64,7 @@ export async function login(prevState, formData) {
             },
         };
     }
-    if(isSuccess){
+    if (isSuccess) {
         redirect("/");
     }
     return {
@@ -86,10 +92,11 @@ export async function getAccountDetails(fightId, amount, side) {
         session = JSON.parse(session.value);
 
         var url = `${process.env.BASE_URL}/api/v1/UserAccount/MyAccount`
-     
+
         const response = await axios.get(url, {
             headers: {
-                Authorization: `Bearer ${session.token}`
+                Authorization: `Bearer ${session.token}`,
+                "Content-Type": "application/json",
             },
             httpsAgent: new Agent({
                 rejectUnauthorized: false
@@ -103,12 +110,12 @@ export async function getAccountDetails(fightId, amount, side) {
         return null;
     }
 }
-export async function getSession(){
+export async function getSession() {
     const cookieStore = await cookies()
     const session = cookieStore.get("session")
-    if(!session){
+    if (!session) {
         logout()
-    }else{
+    } else {
         return JSON.parse(session.value);
     }
 }

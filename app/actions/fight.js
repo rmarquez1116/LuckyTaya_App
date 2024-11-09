@@ -18,7 +18,8 @@ export async function getFightSchedule() {
 
         const response = await axios.get(url, {
             headers: {
-                Authorization: `Bearer ${session.token}`
+                Authorization: `Bearer ${session.token}`,
+                "Content-Type": "application/json",
             },
             httpsAgent: new Agent({
                 rejectUnauthorized: false
@@ -58,7 +59,8 @@ export async function getSabongEventStatus() {
 
         const response = await axios.get(url, {
             headers: {
-                Authorization: `Bearer ${session.token}`
+                Authorization: `Bearer ${session.token}`,
+                "Content-Type": "application/json",
             },
             httpsAgent: new Agent({
                 rejectUnauthorized: false
@@ -87,7 +89,8 @@ export async function getFightDetailsByFightId(fightId) {
 
         const response = await axios.get(url, {
             headers: {
-                Authorization: `Bearer ${session.token}`
+                Authorization: `Bearer ${session.token}`,
+                "Content-Type": "application/json",
             },
             httpsAgent: new Agent({
                 rejectUnauthorized: false
@@ -118,7 +121,8 @@ async function getFightStatus(status) {
 
         const response = await axios.get(url, {
             headers: {
-                Authorization: `Bearer ${session.token}`
+                Authorization: `Bearer ${session.token}`,
+                "Content-Type": "application/json",
             },
             httpsAgent: new Agent({
                 rejectUnauthorized: false
@@ -146,7 +150,8 @@ export async function getLatestFight() {
 
         const response = await axios.get(url, {
             headers: {
-                Authorization: `Bearer ${session.token}`
+                Authorization: `Bearer ${session.token}`,
+                "Content-Type": "application/json",
             },
             httpsAgent: new Agent({
                 rejectUnauthorized: false
@@ -185,7 +190,8 @@ export async function placeABet(fightId, amount, side) {
         }
         const response = await axios.post(url, request, {
             headers: {
-                Authorization: `Bearer ${session.token}`
+                Authorization: `Bearer ${session.token}`,
+                "Content-Type": "application/json",
             },
             httpsAgent: new Agent({
                 rejectUnauthorized: false
