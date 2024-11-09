@@ -14,6 +14,7 @@ import Loading from "./components/loading";
 import { getLatestFight, getOpenOrClosedFightEvents } from "./actions/fight";
 import useSocket from "./hooks/useSocket";
 import Carousel from './components/carousel'
+import { getToken } from "./helpers/StringGenerator";
 export default function Home() {
   const router = useRouter();
   const { socket, messages } = useSocket();
@@ -23,23 +24,8 @@ export default function Home() {
 
   useEffect(() => {
     console.log(messages, 'hellosocket')
-    if (messages != null && !isJsonEmpty(data)) {
-      const parseMessage = JSON.parse(messages)
-      switch (parseMessage.PacketType) {
-        // for betting updates
-        case 10:
-          break;
-        // last call
-        case 22:
-          break;
-        // result
-        case 50:
-          break;
-        default:
-          getData();
-          break;
-      }
-
+    if (messages != null) {
+      getData();
     }
   }, [messages])
 
@@ -56,19 +42,20 @@ export default function Home() {
     const response = await getOpenOrClosedFightEvents();
     console.log(response, 'hello')
     if (response) {
-      const items=[]
+      const items = []
       for (let index = 0; index < response.length; index++) {
         const element = response[index];
         items.push(<FightScheduleBox data={element} />)
       }
       setCarouselItems(items)
     }
+    setData(getToken(4))
     setIsLoaded(true)
   }
 
   return (
     <MainLayout>
-      <BalanceHeader type={1}></BalanceHeader>
+      <BalanceHeader type={1} forceUpdate={data}></BalanceHeader>
       <div className="className=' p-8 pb-20">
         <div className='flex min-w-md justify-center items-center'>
 

@@ -5,15 +5,16 @@ import Image from 'next/image'
 import avatar from '../../public/images/avatar/avatar1.png'
 import { getAccountDetails, getSession } from '../actions/auth'
 
-function BalanceHeader({ type }) {
+function BalanceHeader({ type , forceUpdate }) {
     const [balance, setBalance] = useState("0")
     const getBal = async () => {
         const account = await getAccountDetails();
+        console.log(account)
         setBalance((account.balance).toLocaleString())
     }
     useEffect(() => {
         getBal();
-    }, [type])
+    }, [type,forceUpdate])
 
     if (type == 1)
         return (

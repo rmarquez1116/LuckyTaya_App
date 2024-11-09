@@ -14,6 +14,7 @@ import useSocket from "../hooks/useSocket";
 import Alert from "../components/alert";
 import { getInitialBetDetails } from "../actions/wsApi";
 import WinnerModal from "../components/modal/winnerModal";
+import { getToken } from "../helpers/StringGenerator";
 
 function Game() {
 
@@ -62,32 +63,33 @@ function Game() {
         console.log(messages, 'hellosocket')
         if (messages != null && !isJsonEmpty(data)) {
             const parseMessage = JSON.parse(messages)
-            switch (parseMessage.PacketType) {
-                // for betting updates
-                case 10:
-                    if (data.fight.fightId == parseMessage.FightId &&
-                        data.event.eventId == parseMessage.EventId) {
-                        setBetDetails(JSON.parse(parseMessage.jsonPacket))
-                    }
-                    break;
-                // last call
-                case 22:
-                    setAlert({ timeout: 5000, isOpen: true, type: "info", message: "Last Call !!!" })
-                    break;
-                // result
-                case 50:
-                    const betResult = JSON.parse(parseMessage.jsonPacket)
-                    setBettingEndedResult({ winnerSide: betResult.WinSide, isOpen: true })
-                    if (betResult.WinSide == betResult.YourSide) {
+            if (data.fight.fightId = parseMessage.FightId)
+                switch (parseMessage.PacketType) {
+                    // for betting updates
+                    case 10:
+                        if (data.fight.fightId == parseMessage.FightId &&
+                            data.event.eventId == parseMessage.EventId) {
+                            setBetDetails(JSON.parse(parseMessage.jsonPacket))
+                        }
+                        break;
+                    // last call
+                    case 22:
+                        setAlert({ timeout: 5000, isOpen: true, type: "info", message: "Last Call !!!" })
+                        break;
+                    // result
+                    case 50:
+                        const betResult = JSON.parse(parseMessage.jsonPacket)
+                        setBettingEndedResult({ winnerSide: betResult.WinSide, isOpen: true })
+                        if (betResult.WinSide == betResult.YourSide) {
 
-                    } else {
+                        } else {
 
-                    }
-                    break;
-                default:
-                    getData();
-                    break;
-            }
+                        }
+                        break;
+                    default:
+                        getData();
+                        break;
+                }
 
         }
     }, [messages])
