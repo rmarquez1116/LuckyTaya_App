@@ -1,6 +1,5 @@
 'use client'
 import MainLayout from "../layout/mainLayout";
-import Image from "next/image";
 import BalanceHeader from '../components/balanceHeader'
 import bg from '../../public/images/game-bg.png'
 import MeronWala from "../components/meronWala";
@@ -8,17 +7,15 @@ import BetModal from '../components/modal/betModal'
 
 import { memo, useEffect, useState } from "react";
 import BetConfirmation from "../components/modal/betConfirmation";
-import WatchParty from "../components/watchParty";
 import Loading from "../components/loading";
 import { getLatestFight, placeABet } from "../actions/fight";
 import { isJsonEmpty } from "../lib/utils";
 import useSocket from "../hooks/useSocket";
-import { getCookie } from 'cookies-next';
 import Alert from "../components/alert";
 import { getInitialBetDetails } from "../actions/wsApi";
 import WinnerModal from "../components/modal/winnerModal";
 
-function Game({ session }) {
+function Game() {
 
     const { messages } = useSocket();
     const [betDetails, setBetDetails] = useState({
@@ -103,7 +100,7 @@ function Game({ session }) {
             setData(null)
             setIsLoaded(false);
         }
-    }, [])
+    }, [data])
 
 
     const setAmountBet = (type, amount) => {

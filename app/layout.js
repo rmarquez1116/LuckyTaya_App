@@ -5,7 +5,6 @@ export default function RootLayout({ children }) {
     return (
         <html>
             <head>
-                {/* Add Open Sans Font from Google Fonts */}
                 <link
                     href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap"
                     rel="stylesheet"

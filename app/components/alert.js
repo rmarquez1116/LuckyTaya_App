@@ -1,10 +1,6 @@
 import React, { useEffect } from 'react'
 
 function Alert({ title, message, type, onClose, timeout = 3000 }) {
-
-    useEffect(() => {
-    }, [timeout,onClose])
-    
     useEffect(() => {
         setTimeout(() => {
             onClose()
@@ -12,7 +8,7 @@ function Alert({ title, message, type, onClose, timeout = 3000 }) {
 
         return () => {
         }
-    }, [])
+    }, [timeout,onClose])
 
     const color = m => {
         switch (m) {

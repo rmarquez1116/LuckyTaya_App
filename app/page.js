@@ -42,7 +42,7 @@ export default function Home() {
 }, [messages])
 
 useEffect(() => {
-}, [data,isLoaded])
+}, [data])
 
   useEffect(() => {
     getData()

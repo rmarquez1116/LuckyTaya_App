@@ -14,7 +14,7 @@ function BetModal({ type, onClose, balance,data,setAmountToBet }) {
       return () => {
         // setAmount(0)
       }
-    }, [amount])
+    }, [amount,setAmountToBet])
     
     const setTheAmount = (e)=>{
         setAmount(e.value)
