@@ -8,55 +8,63 @@ import DashboardButton from "./components/dashboardButton";
 import FightScheduleBox from "./components/fightScheduleBox";
 import BalanceHeader from "./components/balanceHeader";
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { isJsonEmpty } from "./lib/utils";
 import Loading from "./components/loading";
-import { getLatestFight } from "./actions/fight";
+import { getLatestFight, getOpenOrClosedFightEvents } from "./actions/fight";
 import useSocket from "./hooks/useSocket";
+import Carousel from './components/carousel'
 export default function Home() {
   const router = useRouter();
-  const {socket,messages} = useSocket();
+  const { socket, messages } = useSocket();
   const [isLoaded, setIsLoaded] = useState(false)
   const [data, setData] = useState({})
- 
+  const [carouselItems, setCarouselItems] = useState([])
+
   useEffect(() => {
     console.log(messages, 'hellosocket')
     if (messages != null && !isJsonEmpty(data)) {
-        const parseMessage = JSON.parse(messages)
-        switch (parseMessage.PacketType) {
-            // for betting updates
-            case 10:
-                break;
-            // last call
-            case 22:
-                 break;
-            // result
-            case 50:  
-                break;
-            default:
-                getData();
-                break;
-        }
+      const parseMessage = JSON.parse(messages)
+      switch (parseMessage.PacketType) {
+        // for betting updates
+        case 10:
+          break;
+        // last call
+        case 22:
+          break;
+        // result
+        case 50:
+          break;
+        default:
+          getData();
+          break;
+      }
 
     }
-}, [messages])
+  }, [messages])
 
-useEffect(() => {
-}, [data])
+  useEffect(() => {
+  }, [data])
 
   useEffect(() => {
     getData()
     return () => {
     }
   }, [])
-  
+
   const getData = async () => {
-    const response = await getLatestFight();
-    setData(response)
+    const response = await getOpenOrClosedFightEvents();
+    console.log(response, 'hello')
+    if (response) {
+      const items=[]
+      for (let index = 0; index < response.length; index++) {
+        const element = response[index];
+        items.push(<FightScheduleBox data={element} />)
+      }
+      setCarouselItems(items)
+    }
     setIsLoaded(true)
   }
-
-
 
   return (
     <MainLayout>
@@ -64,7 +72,7 @@ useEffect(() => {
       <div className="className=' p-8 pb-20">
         <div className='flex min-w-md justify-center items-center'>
 
-          <button  onClick={() => router.push('/transaction_history')} className="w-full rounded-[20px] p-2  max-w-md dark-gradient">Transaction History   →</button>
+          <button onClick={() => router.push('/transaction_history')} className="w-full rounded-[20px] p-2  max-w-md dark-gradient">Transaction History   →</button>
         </div>
         <br />
         <div className='grid grid-cols-3 grid-rows-1 gap-4 text-center w-full'>
@@ -73,11 +81,14 @@ useEffect(() => {
           <DashboardButton onClick={() => router.push('/cashin')} img={cashIn} label="Cash In"></DashboardButton>
           <DashboardButton onClick={() => router.push('/cashout')} img={cashOut} label="Cash Out"></DashboardButton>
         </div>
-        {isLoaded && !isJsonEmpty(data) &&
-          <FightScheduleBox data={data}></FightScheduleBox>
+        <br />
+        {isLoaded && carouselItems.length > 0 &&
+          <React.Fragment>
+            {/* <FightScheduleBox data={data}></FightScheduleBox> */}
+            <Carousel items={carouselItems} />
+          </React.Fragment>
         }
-        {!isLoaded && <Loading/>}
-
+        {!isLoaded && <Loading />}
 
       </div>
     </MainLayout>

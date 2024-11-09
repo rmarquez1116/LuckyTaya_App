@@ -108,8 +108,8 @@ export async function getFightDetailsByFightId(fightId) {
 
 async function getFightStatus(status) {
     const cookieStore = await cookies()
-    if(status == 22)
-        return {code :22, name :"Ended"}
+    if (status == 22)
+        return { code: 22, name: "Ended" }
     var session = cookieStore.get('session');
     if (!session) {
         return redirect('/login')
@@ -130,6 +130,45 @@ async function getFightStatus(status) {
         })
         if (response.status == 200) {
             return response.data
+        } else return null;
+    } catch (error) {
+        console.log(error, 'Error')
+        return null;
+    }
+}
+
+export async function getOpenOrClosedFightEvents() {
+    const cookieStore = await cookies()
+    var session = cookieStore.get('session');
+    if (!session) {
+        return redirect('/login')
+    }
+    try {
+        session = JSON.parse(session.value);
+
+        var url = `${process.env.BASE_URL}/api/v1/SabongFight/V3/FightWithStatusOpenOrClosed`
+
+        const response = await axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${session.token}`,
+                "Content-Type": "application/json",
+            },
+            httpsAgent: new Agent({
+                rejectUnauthorized: false
+            })
+        })
+        if (response.status == 200) {
+
+            const items = [];
+            for (let index = 0; index < response.data.length; index++) {
+                const element = response.data[index];
+                const { fightId, eventId, fightStatusCode } = element
+                var statusDesc = await getFightStatus(element.fight.fightStatusCode);
+                element.fightStatus = statusDesc;
+                items.push(element)
+            }
+            return items
+
         } else return null;
     } catch (error) {
         console.log(error, 'Error')
@@ -161,9 +200,9 @@ export async function getLatestFight() {
             const { fightId, eventId, fightStatusCode } = response.data
             var statusDesc = await getFightStatus(fightStatusCode);
             // if (fightStatusCode == 10 || fightStatusCode == 11) {
-                const fightDetails = await getFightDetailsByFightId(fightId)
-                if (!isJsonEmpty(fightDetails))
-                    return { ...fightDetails, fightStatus: statusDesc }
+            const fightDetails = await getFightDetailsByFightId(fightId)
+            if (!isJsonEmpty(fightDetails))
+                return { ...fightDetails, fightStatus: statusDesc }
             // }
             return null;
 
@@ -186,7 +225,7 @@ export async function placeABet(fightId, amount, side) {
 
         var url = `${process.env.BASE_URL}/api/v1/SabongBet/PlaceBet`
         const request = {
-            fightId, amount : Number.parseFloat(amount), side
+            fightId, amount: Number.parseFloat(amount), side
         }
         const response = await axios.post(url, request, {
             headers: {

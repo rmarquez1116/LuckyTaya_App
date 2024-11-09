@@ -13,7 +13,7 @@ function BalanceHeader({ type }) {
     }
     useEffect(() => {
         getBal();
-    }, [])
+    }, [type])
 
     if (type == 1)
         return (
