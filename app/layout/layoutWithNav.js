@@ -6,7 +6,7 @@ function CommonLayout({ children }) {
     return (
         <div>
 
-            <header>
+            <div>
 
                 <nav className='fixed p-3 w-full'>
                     <div className="flex justify-center">
@@ -24,14 +24,14 @@ function CommonLayout({ children }) {
                         <Image alt='logo' src={logo}></Image>
                     </div>
                 </nav>
-            </header>
-            <main>
+            </div>
+            <div>
                 <div className="bg-background py-10 flex justify-center items-center ">
 
                     {children}
 
                 </div>
-            </main>
+            </div>
 
         </div>
     )

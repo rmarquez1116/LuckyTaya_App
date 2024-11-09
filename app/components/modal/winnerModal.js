@@ -34,13 +34,13 @@ function FighterDetail({ data }) {
     const color = data.side == 1 ? "meronColor" : "walaColor"
     return <React.Fragment>
         <div className='inline-flex gap-2 justify-center w-full'>
-            <div className={`${color} rounded-full h-5 w-5  text-center`}></div>
+            <div className={`${color} rounded-full h-5 w-5  text-center label-header1`}></div>
             {title}
         </div>
 
         <div className="grid grid-cols-3 grid-rows-1 gap-4 bg-dark-no-border p-3 rounded-[20px]">
             <div className='col-span-2'>
-                <div>
+                <div className='font-bold'>
                     Entry Name
                 </div>
                 <div>

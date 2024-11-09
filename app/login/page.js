@@ -1,10 +1,10 @@
 "use client";
 import Link from "next/link";
 import CommonLayout from "../layout/commonLayout";
-import Form from "../components/form";
 import { login } from "../actions/auth";
 import { useActionState } from "react";
-
+import dynamic from "next/dynamic";
+const Form = dynamic(()=>import('../components/form'),{ssr : false})
 const form = [
   {
     id: "username",
@@ -25,7 +25,7 @@ export default function Login() {
   return (
     <CommonLayout>
       <div className="flex flex-col card max-w-sm p-6 mt-10 bg-white rounded-3xl shadow">
-        <label className="text-center">Login</label>
+        <label className="label-header1 text-center">Login</label>
         <Form action={loginAction} state={state} fields={form} buttonText="Login"></Form>
 
         <br />

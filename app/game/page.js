@@ -190,7 +190,7 @@ function Game({ session }) {
                             }
                         }>
                         <div className="grid grid-cols-5 grid-rows-1 gap-4">
-                            <div className="col-span-4">
+                            <div className="col-span-4 uppercase label-header1">
                                 <div>
                                     <label>{data.event.eventName}</label>
                                 </div>

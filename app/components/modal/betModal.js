@@ -33,7 +33,7 @@ function BetModal({ type, onClose, balance,data,setAmountToBet }) {
     const renderDescription = () => {
         return <div className="grid grid-cols-3 grid-rows-1 gap-4">
 
-            <div className='p-2 rounded-[10] default w-full col-span-2 inline-flex gap-2 text-center'>
+            <div className='p-2 rounded-[10] default w-full col-span-2 inline-flex gap-2 text-center font-bold label-header1'>
                 <Image alt="dollar" src={dollar}></Image>
                 {balance}
             </div>
@@ -48,7 +48,7 @@ function BetModal({ type, onClose, balance,data,setAmountToBet }) {
 
                 <div className="grid grid-cols-3 grid-rows-1 gap-4">
                     <div ></div>
-                    <div className='inline-flex gap-2 text-center'><div className='meronColor rounded-full h-5 w-5'></div>Meron</div>
+                    <div className='inline-flex gap-2 text-center label-header1'><div className='meronColor rounded-full h-5 w-5'></div>Meron</div>
                     <div className='text-right' onClick={()=>onClose(false)}>X</div>
 
 
@@ -61,7 +61,7 @@ function BetModal({ type, onClose, balance,data,setAmountToBet }) {
         else return <>
             <div className="grid grid-cols-3 grid-rows-1 gap-4">
                     <div ></div>
-                    <div className='inline-flex gap-2 text-center'><div className='walaColor rounded-full h-5 w-5'></div>Wala</div>
+                    <div className='inline-flex gap-2 text-center  label-header1'><div className='walaColor rounded-full h-5 w-5'></div>Wala</div>
                     <div className='text-right' onClick={()=>onClose(false)}>X</div>
 
 

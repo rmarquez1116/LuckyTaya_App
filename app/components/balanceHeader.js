@@ -18,7 +18,7 @@ function BalanceHeader({ type }) {
     if (type == 1)
         return (
             <div className='balance-header1'>
-                <div className='inline-flex'>
+                <div className='inline-flex gap-2 label-header1 bold items-center font-bold'>
                     <Image alt='dollar' className="w-[20px] h-[20px]" src={dollar}></Image>
                     {" "}{balance}</div>
                 <label>Current Balance</label>
@@ -27,10 +27,12 @@ function BalanceHeader({ type }) {
     else {
         return (
             <div className='balance-header2'>
-                <div className='inline-flex gap-2'>
+                <div className='inline-flex gap-2 items-center'>
                     <label>Current Balance</label>
                     <Image alt='dollar' className="w-[20px] h-[20px]" src={dollar}></Image>
-                    {" "}{balance}
+                    <label className=' font-bold label-header1'>
+                        {balance}
+                    </label>
                 </div>
                 <Image alt="avatar" className="w-[20px] h-[20px]" src={avatar}></Image>
 

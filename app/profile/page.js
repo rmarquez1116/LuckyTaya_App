@@ -1,8 +1,9 @@
 'use client'
-import Form from "../components/form";
 import BalanceHeader from "../components/balanceHeader";
 import MainLayout from "../layout/mainLayout";
+import dynamic from "next/dynamic";
 
+const Form = dynamic(()=>import('../components/form'),{ssr : false})
 const form = [
   {
     id: "mobile_number",
@@ -52,7 +53,7 @@ export default function Profile() {
     <MainLayout>
       <BalanceHeader type={2}></BalanceHeader>
       <div className="flex justify-center align-center  p-6 mt-5">
-        <div className="flex flex-col card w-10/12 max-w-md p-6 mt-10 bg-white rounded-3xl shadow">
+        <div className="flex flex-col card w-10/12 max-w-md p-5 bg-white rounded-3xl shadow">
           <div className="bg-dark gap-2 p-2 flex">
             <label className="pl-3 content-center">Profile</label>
             <button className="primary w-[80px] ml-auto">Edit</button>

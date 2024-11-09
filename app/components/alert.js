@@ -20,7 +20,7 @@ function Alert({ title, message, type, onClose, timeout = 3000 }) {
             case 'info':
                 return 'walaColor';
             case 'warning':
-                return 'orange';
+                return 'yellowColor';
             default:
                 return 'successColor';
         }

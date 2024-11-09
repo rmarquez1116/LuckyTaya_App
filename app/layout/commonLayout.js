@@ -4,24 +4,24 @@ import Image from 'next/image';
 
 function CommonLayout({ children }) {
     return (
-        <div>
+        <React.Fragment>
 
-            <header>
+            <div>
                 <nav className='fixed p-3 w-full'>
                     <div className="flex justify-center">
 
                         <Image alt='button' src={logo}></Image>
                     </div>
                 </nav>
-            </header>
-            <main>
+            </div>
+            <div>
                 <div className="bg-background min-h-screen py-10 flex justify-center items-center ">
 
                     {children}
 
                 </div>
-            </main>
-        </div>
+            </div>
+        </React.Fragment>
     )
 }
 

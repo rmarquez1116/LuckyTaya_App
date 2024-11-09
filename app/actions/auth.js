@@ -36,9 +36,18 @@ export async function login(prevState, formData) {
         if (response.status == 200) {
 
             const cookieStore = await cookies()
+            var token = response.data.token;
+            token = token.split('.')[1];
+            token = atob(token)
+            console.log(token,'helloo')
+            const expiration = new Date(token.exp * 1000)
+
+
             cookieStore.set("session", JSON.stringify(response.data), {
                 httpOnly: true,
                 secure: true,
+                expires : expiration,
+                sameSite :'Strict'
             });
             isSuccess = true
         }

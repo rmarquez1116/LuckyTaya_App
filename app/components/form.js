@@ -8,7 +8,7 @@ export default function Form({ action, state, fields, buttonText }) {
             {fields.map((object, i) => {
                 return <React.Fragment key={`input-${i}`}>
                     <label  key={`label-${i}`} htmlFor={object.id}  className="text-left">{object.label}</label>
-                    <Input defaultValue=""  key={`${object.id}-input`} type={object.type} name={object.id} id={object.id}></Input>
+                    <Input key={`${object.id}-input`} type={object.type} name={object.id} id={object.id}></Input>
                     {state?.errors?.[object.id] && (
                         <p key={`${object.id}-error`} id={`${object.id}-error`}   className="text-red-500">{state.errors[object.id]}</p>
                     )}

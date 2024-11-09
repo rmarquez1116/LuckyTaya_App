@@ -35,7 +35,7 @@ export default function CashIn() {
         <div className="card max-w-md w-full gap-5 flex-col flex p-6 bg-white rounded-3xl shadow">
           <div className="inline-flex gap-3 items-center justify-center">
             <Image className="w-auto" alt="cashin" src={cashin}></Image>
-            <label className="text-center">CashIn</label>
+            <label className="text-center label-header1">Cash-In</label>
           </div>
           <div className="bg-gray p-3 rounded-[20px] w-full">
             <div className="inline-flex gap-3 items-center justify-center">

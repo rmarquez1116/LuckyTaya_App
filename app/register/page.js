@@ -1,6 +1,5 @@
 'use client'
 import CommonLayout from "../layout/commonLayout";
-import Form from "../components/form";
 import { useActionState, useState } from "react";
 import Input from "../components/input";
 import Image from "next/image";
@@ -8,7 +7,9 @@ import otp from '../../public/images/otp.png'
 import otpVerify from '../../public/images/otp_verify.png';
 import Terms from '../components/modal/terms'
 import { register } from "../actions/account";
+import dynamic from "next/dynamic";
 
+const Form = dynamic(()=>import('../components/form'),{ssr : false})
 // const form = [
 //   {
 //     id: "referral",

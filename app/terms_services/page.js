@@ -20,7 +20,7 @@ export default function TermsServices() {
       <div className="w-full flex justify-center">
 
         <div className="flex flex-col gap-10 card max-w-sm p-6 mt-10 bg-white rounded-3xl shadow">
-          <label className="text-center">Terms and Services</label>
+          <label className="text-center label-header1">Terms and Services</label>
           <label className="text-center">Lorem ipsum dolor sit amet,
             consectetur adipiscing elit. Sed ultricies fermentum ipsum a congue.
             Integer auctor a risus molestie blandit.
