@@ -36,6 +36,7 @@ function Game() {
         isOpen: false,
         type: 1
     })
+    const [randomText, setRandomText] = useState(getToken(4))
     const [bettingEndedResult, setBettingEndedResult] = useState({
         winnerSide: 0,
         isOpen: false
@@ -43,10 +44,12 @@ function Game() {
 
     const getData = async () => {
         const response = await getLatestFight();
+        console.log(response, 'hello123')
         if (response) {
             setData(response);
             const initialBetDetails = await getInitialBetDetails(response.fight.fightId);
             setBetDetails(initialBetDetails)
+            setRandomText(getToken(4))
         }
         setIsLoaded(true)
     }
@@ -60,16 +63,20 @@ function Game() {
 
 
     useEffect(() => {
-        console.log(messages, 'hellosocket')
+
+        console.log(messages)
         if (messages != null && !isJsonEmpty(data)) {
             const parseMessage = JSON.parse(messages)
-            if (data.fight.fightId = parseMessage.FightId)
+            const betDetail = JSON.parse(parseMessage.jsonPacket)
+
+            console.log({ messages, parseMessage, betDetail })
+            if (data.fight.fightId == betDetail?.FightId ||
+                data.fight.fightId == parseMessage?.FightId)
                 switch (parseMessage.PacketType) {
-                    // for betting updates
                     case 10:
                         if (data.fight.fightId == parseMessage.FightId &&
                             data.event.eventId == parseMessage.EventId) {
-                            setBetDetails(JSON.parse(parseMessage.jsonPacket))
+                            setBetDetails(betDetail)
                         }
                         break;
                     // last call
@@ -171,7 +178,7 @@ function Game() {
     return (
 
         <MainLayout>
-            <BalanceHeader type={2}></BalanceHeader>
+            <BalanceHeader type={2} forceUpdate={randomText}></BalanceHeader>
             {alert.isOpen && <Alert timeout={alert.timeout} onClose={onCloseAlert} title="Lucky Taya" message={alert.message} type={alert.type}></Alert>}
             {renderModals()}
             {bettingEndedResult.isOpen &&

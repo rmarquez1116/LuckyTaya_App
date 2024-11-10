@@ -19,13 +19,14 @@ export default function Home() {
   const router = useRouter();
   const { socket, messages } = useSocket();
   const [isLoaded, setIsLoaded] = useState(false)
-  const [data, setData] = useState({})
+  const [data, setData] = useState(getToken(4))
   const [carouselItems, setCarouselItems] = useState([])
 
   useEffect(() => {
     console.log(messages, 'hellosocket')
     if (messages != null) {
       getData();
+      setData(getToken(4))
     }
   }, [messages])
 

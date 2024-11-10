@@ -197,12 +197,14 @@ export async function getLatestFight() {
             })
         })
         if (response.status == 200) {
+            console.log(response,'hello123')
             const { fightId, eventId, fightStatusCode } = response.data
             var statusDesc = await getFightStatus(fightStatusCode);
             // if (fightStatusCode == 10 || fightStatusCode == 11) {
             const fightDetails = await getFightDetailsByFightId(fightId)
+            console.log(fightDetails,'hello111')
             if (!isJsonEmpty(fightDetails))
-                return { ...fightDetails, fightStatus: statusDesc }
+                return { ...fightDetails,fight : response.data, fightStatus: statusDesc }
             // }
             return null;
 
