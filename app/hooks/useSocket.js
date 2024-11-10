@@ -17,7 +17,7 @@ const useSocket = () => {
       const socket = new WebSocket(serverUrl);
       socket.onmessage = (event) => {
         setMessages(event.data);
-        // console.log(event.data, 'hello message');
+        console.log(event.data, 'hello message');
       };
 
       // Handle WebSocket connection open event

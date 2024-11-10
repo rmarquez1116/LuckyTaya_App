@@ -6,7 +6,6 @@ import { formatDate } from "../lib/DataFilter";
 
 const starpay = process.env.NEXT_PUBLIC_BASE_URL_STARPAY
 const Repayment = (req) => {
-  console.log(req,'hello')
 
   const createRequest = (req) => {
     const mchId = process.env.NEXT_PUBLIC_STARPAY_MERCHANT_ID;

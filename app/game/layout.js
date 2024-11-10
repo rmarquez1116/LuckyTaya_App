@@ -1,4 +1,5 @@
-import React from "react"
+import React, { Suspense } from "react"
+import Loading from "../components/loading"
 
 export const metadata = {
   title: 'Next.js',
@@ -9,7 +10,10 @@ export default function RootLayout({ children }) {
   return (
 
     <React.Fragment>
+      <Suspense fallback={<Loading></Loading>}>
+
       {children}
+      </Suspense>
     </React.Fragment>
   )
 }

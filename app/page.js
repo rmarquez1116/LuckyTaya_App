@@ -19,19 +19,13 @@ export default function Home() {
   const router = useRouter();
   const { socket, messages } = useSocket();
   const [isLoaded, setIsLoaded] = useState(false)
-  const [data, setData] = useState(getToken(4))
   const [carouselItems, setCarouselItems] = useState([])
 
   useEffect(() => {
-    console.log(messages, 'hellosocket')
     if (messages != null) {
       getData();
-      setData(getToken(4))
     }
   }, [messages])
-
-  useEffect(() => {
-  }, [data])
 
   useEffect(() => {
     getData()
@@ -41,7 +35,6 @@ export default function Home() {
 
   const getData = async () => {
     const response = await getOpenOrClosedFightEvents();
-    console.log(response, 'hello')
     if (response) {
       const items = []
       for (let index = 0; index < response.length; index++) {
@@ -50,13 +43,12 @@ export default function Home() {
       }
       setCarouselItems(items)
     }
-    setData(getToken(4))
     setIsLoaded(true)
   }
 
   return (
     <MainLayout>
-      <BalanceHeader type={1} forceUpdate={data}></BalanceHeader>
+      <BalanceHeader type={1} ></BalanceHeader>
       <div className="className=' p-8 pb-20">
         <div className='flex min-w-md justify-center items-center'>
 

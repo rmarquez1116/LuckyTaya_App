@@ -1,42 +1,34 @@
 'use client'
 import MainLayout from "../layout/mainLayout";
-import BalanceHeader from '../components/balanceHeader'
+import BalanceHeader from './balanceHeader'
 import bg from '../../public/images/game-bg.png'
-import MeronWala from "../components/meronWala";
-import BetModal from '../components/modal/betModal'
+import MeronWala from "./meronWala";
+import BetModal from './modal/betModal'
 
 import { memo, useEffect, useState } from "react";
-import BetConfirmation from "../components/modal/betConfirmation";
-import Loading from "../components/loading";
+import BetConfirmation from "./modal/betConfirmation";
+import Loading from "./loading";
 import { getLatestFight, placeABet } from "../actions/fight";
 import { isJsonEmpty } from "../lib/utils";
 import useSocket from "../hooks/useSocket";
-import Alert from "../components/alert";
+import Alert from "./alert";
 import { getInitialBetDetails } from "../actions/wsApi";
-import WinnerModal from "../components/modal/winnerModal";
+import WinnerModal from "./modal/winnerModal";
 import { getToken } from "../helpers/StringGenerator";
 
-function Game() {
+function GameComponent({ fightData, initialBetDetails }) {
 
     const { messages } = useSocket();
-    const [betDetails, setBetDetails] = useState({
-        fId: 0,
-        s0c: 0,
-        s0a: 0,
-        s0o: 0,
-        s1c: 0,
-        s1a: 0,
-        s1o: 0
-    })
+    const [betDetails, setBetDetails] = useState(initialBetDetails)
 
-    const [isLoaded, setIsLoaded] = useState(false)
-    const [data, setData] = useState(null)
+    const [isLoaded, setIsLoaded] = useState(true)
+    const [data, setData] = useState(fightData)
     const [amountToBet, setAmountToBet] = useState({ type: 1, amount: 0 })
     const [modalObject, setModalObject] = useState({
         isOpen: false,
         type: 1
     })
-
+    const [randomText, setRandomText] = useState(getToken(4))
     const [bettingEndedResult, setBettingEndedResult] = useState({
         winnerSide: 0,
         isOpen: false
@@ -46,7 +38,12 @@ function Game() {
         try {
             const response = await getLatestFight();
             if (response) {
-                setData(response);
+                // Check if the component is still mounted
+                if (isJsonEmpty(data)) { // Only set new data if there's no existing data
+                    setData(response);
+                    const initialBetDetails = await getInitialBetDetails(response.fight.fightId);
+                    setBetDetails(initialBetDetails);
+                }
             }
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -60,16 +57,6 @@ function Game() {
         isOpen: false,
         type: 1
     })
-
-    useEffect(() => {
-        const getBetDetails = async () => {
-            const initialBetDetails = await getInitialBetDetails(data.fight.fightId);
-            setBetDetails(initialBetDetails);
-        }
-        if (data)
-            getBetDetails();
-        
-    }, [data])
 
 
 
@@ -115,14 +102,14 @@ function Game() {
     }, [messages])
 
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        getData();
-        return () => {
-            setData(null)
-            setIsLoaded(false);
-        }
-    }, [])
+    //     getData();
+    //     return () => {
+    //         setData(null)
+    //         setIsLoaded(false);
+    //     }
+    // }, [])
 
 
     const setAmountBet = (type, amount) => {
@@ -189,6 +176,7 @@ function Game() {
     }
 
     return (
+
         <MainLayout>
             {<BalanceHeader type={2}></BalanceHeader>}
             {isLoaded && alert.isOpen && <Alert timeout={alert.timeout} onClose={onCloseAlert} title="Lucky Taya" message={alert.message} type={alert.type}></Alert>}
@@ -266,4 +254,4 @@ function Game() {
     );
 }
 
-export default memo(Game)
+export default memo(GameComponent)

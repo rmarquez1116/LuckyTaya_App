@@ -22,7 +22,6 @@ export default function CashIn() {
     var payment = await Repayment({
       trxAmount :`${(Number.parseFloat(amount)).toFixed(2)}`.replaceAll(",","").replace(".","")
     });
-    console.log(payment,'hello')
     if(payment.response.code == "200"){
       setIsShowQr(true)
       setQrData(payment.response.codeUrl)
