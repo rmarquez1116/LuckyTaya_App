@@ -10,7 +10,7 @@ function FightScheduleBox({ data }) {
         return newDate.toDateString();
     }
     return (
-        <div  onClick={()=>router.push('/game')} className="cursor-pointer  flex flex-col justify-self-center card dark-gradient w-full max-w-sm p-6 mt-10 bg-white rounded-3xl shadow">
+        <div  onClick={()=>router.replace('/game')} className="cursor-pointer  flex flex-col justify-self-center card dark-gradient w-full max-w-sm p-6 mt-10 bg-white rounded-3xl shadow">
             <div className='flex justify-between'>
                 <label className="yellow label-header1">Fight Schedule</label>
 

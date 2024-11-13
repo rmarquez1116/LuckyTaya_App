@@ -12,17 +12,21 @@ import React, { useEffect, useState } from "react";
 import { isJsonEmpty } from "./lib/utils";
 import Loading from "./components/loading";
 import { getLatestFight, getOpenOrClosedFightEvents } from "./actions/fight";
-import useSocket from "./hooks/useSocket";
 import Carousel from './components/carousel'
+import { useWebSocketContext } from './context/webSocketContext';
 import { getToken } from "./helpers/StringGenerator";
+
 export default function Home() {
   const router = useRouter();
-  const { socket, messages } = useSocket();
+  const { messages } = useWebSocketContext();
+
   const [isLoaded, setIsLoaded] = useState(false)
   const [carouselItems, setCarouselItems] = useState([])
 
   useEffect(() => {
+    console.log(messages, 'socket Message')
     if (messages != null) {
+
       getData();
     }
   }, [messages])

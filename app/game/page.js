@@ -15,10 +15,10 @@ import Alert from "../components/alert";
 import { getInitialBetDetails } from "../actions/wsApi";
 import WinnerModal from "../components/modal/winnerModal";
 import { getToken } from "../helpers/StringGenerator";
+import { useWebSocketContext } from '../context/webSocketContext';
 
 function Game() {
-
-    const { messages } = useSocket();
+    const { messages } = useWebSocketContext();
     const [betDetails, setBetDetails] = useState({
         fId: 0,
         s0c: 0,
@@ -36,6 +36,7 @@ function Game() {
         isOpen: false,
         type: 1
     })
+    const [randomText, setRandomText] = useState("1234")
 
     const [bettingEndedResult, setBettingEndedResult] = useState({
         winnerSide: 0,
@@ -65,10 +66,11 @@ function Game() {
         const getBetDetails = async () => {
             const initialBetDetails = await getInitialBetDetails(data.fight.fightId);
             setBetDetails(initialBetDetails);
+            setRandomText(getToken(4))
         }
         if (data)
             getBetDetails();
-        
+
     }, [data])
 
 
@@ -76,6 +78,7 @@ function Game() {
     useEffect(() => {
         try {
 
+            console.log(messages, 'socket Message')
             if (messages != null && !isJsonEmpty(data)) {
                 const parseMessage = JSON.parse(messages)
                 const betDetail = JSON.parse(parseMessage.jsonPacket)
@@ -190,7 +193,7 @@ function Game() {
 
     return (
         <MainLayout>
-            {<BalanceHeader type={2}></BalanceHeader>}
+            {isLoaded && <BalanceHeader type={2} forceUpdate={randomText}></BalanceHeader>}
             {isLoaded && alert.isOpen && <Alert timeout={alert.timeout} onClose={onCloseAlert} title="Lucky Taya" message={alert.message} type={alert.type}></Alert>}
             {renderModals()}
             {isLoaded && bettingEndedResult.isOpen &&

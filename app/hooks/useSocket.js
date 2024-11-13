@@ -2,22 +2,30 @@
 import { useEffect, useState } from 'react';
 import { getSession } from '../actions/auth';
 
-const useSocket = () => {
+const useSocket = (onMessageReceived) => {
 
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState(null);
+  const [url, setUrl] = useState(null)
   useEffect(() => {
-  }, [socket,messages])
- 
+  }, [socket, messages])
+  useEffect(() => {
+    const gettingSession = async () => {
+
+      const session = await getSession();
+      const serverUrl = process.env.NEXT_PUBLIC_WEB_SOCKET_URL + session.token;
+      setUrl(serverUrl)
+    }
+    gettingSession();
+  }, [])
+
 
   useEffect(() => {
     const setup = async () => {
-      const session = await getSession();
-      const serverUrl = process.env.NEXT_PUBLIC_WEB_SOCKET_URL + session.token;
-      const socket = new WebSocket(serverUrl);
+      const socket = new WebSocket(url);
       socket.onmessage = (event) => {
         setMessages(event.data);
-        console.log(event.data, 'hello message');
+        // console.log(event.data, 'hello message');
       };
 
       // Handle WebSocket connection open event
@@ -32,8 +40,8 @@ const useSocket = () => {
 
       setSocket(socket);
     }
-
-    setup();
+    if (url)
+      setup();
     const intervalId = setInterval(() => {
       if (socket && socket.readyState === WebSocket.OPEN) {
         socket.send('ping'); // You can send any message to keep it alive
@@ -49,7 +57,7 @@ const useSocket = () => {
 
       }
     };
-  }, []);
+  }, [url]);
   return { socket, messages };
 };
 

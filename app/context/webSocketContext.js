@@ -1,23 +1,48 @@
-import React from 'react';
-import { createContext, useContext } from 'react';
-import useSocket from '../hooks/useSocket';
-import { useEffect } from 'react';
+'use client';
 
-// Create a context with a default value
+import { createContext, useContext, useState, useEffect } from 'react';
+import {getSession} from '../actions/auth'
+
 const WebSocketContext = createContext();
 
-// Custom provider component
-export const WebSocketContextProvider = ({ children }) => {
-  const { socket, messages } = useSocket();
+export const useWebSocketContext = () => useContext(WebSocketContext);
+
+export const WebSocketProvider = ({ children }) => {
+  const [messages, setMessages] = useState(null);
+  const [socket, setsocket] = useState(null);
+
+  useEffect(() => {
+    const setup = async () => {
+
+
+      const session = await getSession();
+      const serverUrl = process.env.NEXT_PUBLIC_WEB_SOCKET_URL + session.token;
+      const socket = new WebSocket(serverUrl);
+
+      socket.onmessage = (event) => {
+        setMessages(event.data);
+      };
+
+      socket.onopen = () => {
+        console.log('WebSocket connected');
+      };
+
+      socket.onerror = (error) => {
+        console.error('WebSocket error', error);
+      };
+
+      setsocket(socket);
+
+    }
+    setup();
+    return () => {
+      socket.close();
+    };
+  }, []);
 
   return (
-    <WebSocketContext.Provider value={{messages}}>
+    <WebSocketContext.Provider value={{ messages, socket }}>
       {children}
     </WebSocketContext.Provider>
   );
-};
-
-// Custom hook to use the context
-export const useWebSocketContext = () => {
-  return useContext(WebSocketContext);
 };

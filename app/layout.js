@@ -1,5 +1,6 @@
 import React from 'react'
 import "./globals.css";
+import {WebSocketProvider} from './context/webSocketContext'
 
 export default function RootLayout({ children }) {
     return (
@@ -11,7 +12,10 @@ export default function RootLayout({ children }) {
                 />
             </head>
             <body>
-                {children}
+                <WebSocketProvider>
+
+                    {children}
+                </WebSocketProvider>
             </body>
         </html>
     )

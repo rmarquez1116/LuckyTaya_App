@@ -103,3 +103,28 @@ export async function cashOut(dateFrom, dateTo) {
         return [];
     }
 }
+
+
+
+export async function transferV2(request,token) {
+
+    try {
+        var url = `${process.env.BASE_URL}/api/v1/Account/transferV2?amount=${request.amount}&toAccountNumber=${request.accountNumber}`
+ 
+        const response = await axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+            httpsAgent: new Agent({
+                rejectUnauthorized: false
+            })
+        })
+        if (response.status == 200) {
+            return response.data;
+        } else return null;
+    } catch (error) {
+        console.log(error, 'Error')
+        return null;
+    }
+}

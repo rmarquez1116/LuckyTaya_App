@@ -3,6 +3,8 @@ import axios from "axios"
 import { sha256withRSAsign } from '../helpers/Crypto';
 import { getToken } from "../helpers/StringGenerator";
 import { formatDate } from "../lib/DataFilter";
+import { saveData } from '../helpers/DB'
+import { cookies } from "next/headers";
 
 const starpay = process.env.NEXT_PUBLIC_BASE_URL_STARPAY
 const Repayment = (req) => {
@@ -10,9 +12,10 @@ const Repayment = (req) => {
   const createRequest = (req) => {
     const mchId = process.env.NEXT_PUBLIC_STARPAY_MERCHANT_ID;
     const name = process.env.NEXT_PUBLIC_PAYMENT_NAME;
+    const msgId = getToken(15);
     var date = new Date();
     var expireDate = new Date();
-    expireDate.setHours(expireDate.getHours()+ 2)
+    expireDate.setHours(expireDate.getHours() + 2)
 
     const dates = {
       timeStart: formatDate(date.toISOString()),
@@ -20,20 +23,21 @@ const Repayment = (req) => {
 
     }
     const request = {
-      "msgId": getToken(15),
+      "msgId": msgId,
       "mchId": mchId,
-      "notifyUrl": `https://localhost:8080/api/transaction/complete/order`,
+      "notifyUrl": `https://webhook.site/657c5b6c-265b-4cb7-898a-2ce447fc2e76`,
       "deviceInfo": name,
       "currency": "PHP",
       "service": "pay.starpay.repayment",
-      ...req,...dates
+      ...req, ...dates
     }
-    
+
     const signature = sha256withRSAsign(JSON.stringify(request))
     const data = {
       request: request,
       signature: signature
     }
+    console.log(signature,'signature')
     return data;
   }
 
@@ -45,7 +49,23 @@ const Repayment = (req) => {
       .then(response => {
         return response.data
       })
-      return response
+    return response
+  }
+
+  const saveTransaction = async (request) => {
+
+    const cookieStore = await cookies()
+    var session = cookieStore.get('session');
+
+    session = JSON.parse(session.value);
+    const transaction = {
+      request: request.request,
+      status: "Created",
+      accountNumber: session.accountNumber,
+      transactionDate : new Date().toISOString()
+    }
+
+    saveData('qr_transactions', transaction)
   }
 
   try {
@@ -54,11 +74,13 @@ const Repayment = (req) => {
     const request = createRequest(req)
     const response = sendOrder(request)
     response.then(data => {
-      return data
+      return data;
     })
+    saveTransaction(request)
     return response
   } catch (error) {
     return error
   }
 }
+
 export default Repayment
