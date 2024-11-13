@@ -1,7 +1,7 @@
 import { insertDecimalAtThirdToLast } from '../../helpers/Common';
 import { sha256withRSAverify } from '../../helpers/Crypto'
 import { fetchData, updateData } from '../../helpers/DB'
-import {transferV2} from '../../actions/transaction'
+import { transferV2 } from '../../actions/transaction'
 import { Agent } from 'https';
 import axios from 'axios';
 export async function POST(req) {
@@ -18,16 +18,19 @@ export async function POST(req) {
     } else {
         const newData = data[0];
         if (newData.response || newData.status == 'Completed') {
-           
+
             return new Response(JSON.stringify({ code: "200", message: "Transaction already processed" }), { status: 200, headers: { 'Content-Type': 'application/json' } });
         } else {
             // processing 
             const config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
             const token = await getToken(config.agentUsername, atob(config.agentPW))
             // first Leg
+            // get Fee in trxAmount
+            var amountBeforeFee = insertDecimalAtThirdToLast(newData.request.trxAmount)
+            amountBeforeFee = parseFloat(amountBeforeFee) - newData.fee;
             var transferRequest = {
                 accountNumber: newData.accountNumber,
-                amount: insertDecimalAtThirdToLast(newData.request.trxAmount)
+                amount: amountBeforeFee
             }
             const transfer = await transferV2(transferRequest, token)
             console.log(transfer)
@@ -41,6 +44,16 @@ export async function POST(req) {
     return new Response(JSON.stringify({ code: 200, message: "success" }), { status: 200, headers: { 'Content-Type': 'application/json' } });
 }
 
+
+const getFee = (config) => {
+    if (config) {
+        if (config.type == 1) {
+            return config.convenienceStatic
+        } else {
+            return config.conveniencePercentage
+        }
+    }
+}
 
 async function getToken(username, password) {
 
@@ -60,8 +73,8 @@ async function getToken(username, password) {
             return response.data.token
         }
     } catch (error) {
-        
-        console.log(error,'hello')
+
+        console.log(error, 'hello')
         return null
     }
 

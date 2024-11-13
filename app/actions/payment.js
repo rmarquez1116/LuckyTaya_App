@@ -9,6 +9,9 @@ import { cookies } from "next/headers";
 const starpay = process.env.NEXT_PUBLIC_BASE_URL_STARPAY
 const Repayment = (req) => {
 
+  console.log(req, 'hello')
+  const fee = req.fee;
+  delete req.fee;
   const createRequest = (req) => {
     const mchId = process.env.NEXT_PUBLIC_STARPAY_MERCHANT_ID;
     const name = process.env.NEXT_PUBLIC_PAYMENT_NAME;
@@ -25,7 +28,7 @@ const Repayment = (req) => {
     const request = {
       "msgId": msgId,
       "mchId": mchId,
-      "notifyUrl": `https://webhook.site/657c5b6c-265b-4cb7-898a-2ce447fc2e76`,
+      "notifyUrl": process.env.NOTIFY_URL,
       "deviceInfo": name,
       "currency": "PHP",
       "service": "pay.starpay.repayment",
@@ -37,7 +40,6 @@ const Repayment = (req) => {
       request: request,
       signature: signature
     }
-    console.log(signature,'signature')
     return data;
   }
 
@@ -62,7 +64,8 @@ const Repayment = (req) => {
       request: request.request,
       status: "Created",
       accountNumber: session.accountNumber,
-      transactionDate : new Date().toISOString()
+      transactionDate: new Date().toISOString(),
+      fee: fee
     }
 
     saveData('qr_transactions', transaction)
@@ -72,6 +75,7 @@ const Repayment = (req) => {
 
 
     const request = createRequest(req)
+    console.log(request,'hello')
     const response = sendOrder(request)
     response.then(data => {
       return data;
