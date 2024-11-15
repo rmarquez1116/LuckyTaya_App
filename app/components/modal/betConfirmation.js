@@ -31,7 +31,7 @@ function BetConfirmation({ type, onClose, balance,amount }) {
     }
 
     return (
-        <div className='absolute justify-center flex w-full overflow-hidden backdrop-blur'>
+        <div className='absolute justify-center  flex w-full h-full items-start overflow-hidden backdrop-blur   z-20'>
             <div className="text-center flex flex-col card max-w-sm gap-5 p-6 mt-10 bg-white rounded-3xl shadow">
                 <div className="grid grid-cols-3 grid-rows-1 gap-4">
                     <div ></div>
@@ -39,7 +39,7 @@ function BetConfirmation({ type, onClose, balance,amount }) {
                     <div className='text-right' onClick={()=>onClose(false)}>X</div>
                 </div>
                 <Input disabled={true} readOnly={true} className='label-header1 text-center rounded-full bg-dark' value={amount}></Input>
-                <label>Payout: 168.00</label>
+                {/* <label>Payout: 168.00</label> */}
                 {renderBody()}
                 <div className="grid grid-cols-2 grid-rows-1 gap-4">
                     <div className='text-center'>

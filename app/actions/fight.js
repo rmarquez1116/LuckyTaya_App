@@ -185,28 +185,57 @@ export async function getLatestFight() {
     try {
         session = JSON.parse(session.value);
 
-        var url = `${process.env.BASE_URL}/api/v1/SabongFight/GetLastFightNum`
+        var fightEvents = await getOpenOrClosedFightEvents();
+        var response ;
+        if (fightEvents) {
+            var eventId = 0;
+            const events = fightEvents.sort((a,b)=>new Date(b.event.eventDate) - new Date(a.event.eventDate));
 
-        const response = await axios.get(url, {
-            headers: {
-                Authorization: `Bearer ${session.token}`,
-                "Content-Type": "application/json",
-            },
-            httpsAgent: new Agent({
-                rejectUnauthorized: false
+            const currentEvent = events.findIndex(x=>(new Date(x.event.eventDate)).toLocaleDateString() == (new Date()).toLocaleDateString())
+ 
+            if(currentEvent > -1){
+                eventId = events[currentEvent].event.eventId
+            }else{
+                eventId = events[0].event.eventId;
+            } 
+            var url = `${process.env.BASE_URL}/api/v1/SabongFight/GetLastFightNum/${eventId}`
+
+            response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${session.token}`,
+                    "Content-Type": "application/json",
+                },
+                httpsAgent: new Agent({
+                    rejectUnauthorized: false
+                })
             })
-        })
+        }
+        else {
+            var url = `${process.env.BASE_URL}/api/v1/SabongFight/GetLastFightNum`
+
+            response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${session.token}`,
+                    "Content-Type": "application/json",
+                },
+                httpsAgent: new Agent({
+                    rejectUnauthorized: false
+                })
+            })
+        }
         if (response.status == 200) {
             const { fightId, eventId, fightStatusCode } = response.data
             var statusDesc = await getFightStatus(fightStatusCode);
             // if (fightStatusCode == 10 || fightStatusCode == 11) {
             const fightDetails = await getFightDetailsByFightId(fightId)
             if (!isJsonEmpty(fightDetails))
-                return { ...fightDetails,fight : response.data, fightStatus: statusDesc }
+                return { ...fightDetails, fight: response.data, fightStatus: statusDesc }
             // }
             return null;
 
         } else return null;
+
+
     } catch (error) {
         console.log(error, 'Error')
         return null;
@@ -242,5 +271,38 @@ export async function placeABet(fightId, amount, side) {
     } catch (error) {
         console.log(error, 'Error')
         return null;
+    }
+}
+
+
+export async function getEventTrend(eventId) {
+    const cookieStore = await cookies()
+    var session = cookieStore.get('session');
+    if (!session) {
+        return redirect('/login')
+    }
+    try {
+        session = JSON.parse(session.value);
+
+        var url = `${process.env.BASE_URL}/api/v1/SabongFightResult/Trending/${eventId}`
+
+        const response = await axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${session.token}`
+            },
+            httpsAgent: new Agent({
+                rejectUnauthorized: false
+            })
+        })
+        if (response.status == 200) {
+            try {
+                return response.data
+            } catch (error) {
+                return null
+            }
+        } else return [];
+    } catch (error) {
+        console.log(error, 'Error')
+        return [];
     }
 }

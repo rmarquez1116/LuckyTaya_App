@@ -35,3 +35,4 @@ export async function getInitialBetDetails(fightId) {
         return [];
     }
 }
+

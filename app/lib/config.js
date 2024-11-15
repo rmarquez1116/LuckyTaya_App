@@ -8,3 +8,12 @@ export async function getCashInConvenienceFee() {
         type: config.cashInConFeeType
     }
 }
+
+export async function getCashOutConvenienceFee() {
+    const config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
+    return {
+        convenienceStatic: config.cashOutConFeeFixPlayer,
+        conveniencePercentage: config.cashOutConFeePercentage,
+        type: config.cashOutConFeeType
+    }
+}

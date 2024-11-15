@@ -20,9 +20,9 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   overflow: auto;
-  font-size : 15px;
+  font-size: 15px;
 }
 
 @layer utilities {
@@ -143,13 +143,12 @@ div.bg-background {
 }
 
 .yellow {
-  color : #EFE65C;
+  color: #efe65c;
 }
 
-
 .yellowColor {
-  background-color : #EFE65C;
-  color : white
+  background-color: #efe65c;
+  color: white;
 }
 
 .balance-header1 {
@@ -210,6 +209,27 @@ div.bg-background {
   color: white;
 }
 
+.walaColor {
+  background: rgb(0, 0, 169);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 169, 1) 0%,
+    rgba(0, 0, 82, 1) 100%
+  );
+  color: white;
+}
+
+.cancelColor {
+  background: rgb(139, 139, 139);
+  background: linear-gradient(
+    180deg,
+    rgba(139, 139, 139, 1) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  
+  color: white;
+}
+
 .btn-cancel {
   background: rgb(27, 26, 26);
   background: linear-gradient(
@@ -217,7 +237,7 @@ div.bg-background {
     rgba(27, 26, 26, 1) 0%,
     rgba(5, 5, 5, 1) 100%
   );
-  border: .5px solid white;
+  border: 0.5px solid white;
 }
 
 .btn-confirm {
@@ -236,7 +256,7 @@ div.bg-background {
     rgba(21, 153, 0, 1) 0%,
     rgba(14, 101, 0, 1) 100%
   );
-  color :white;
+  color: white;
 }
 
 /* styles/Loading.module.css */
@@ -263,19 +283,72 @@ div.bg-background {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-.label-header1{
+.label-header1 {
   font-size: 20px;
 }
 
-label{
-  font-size : 15px
+label {
+  font-size: 15px;
 }
 
-.label-subHeader{
+.label-subHeader {
   font-size: 13px;
-  color :#B7B7B7;
+  color: #b7b7b7;
+}
+
+.search-input {
+  padding: 8px;
+  padding: 10px 20px;
+  background-color: var(--input-bg) !important;
+  color: var(--font-color);
+}
+
+/* Styles for internal elements with the "drop-down" prefix */
+.drop-down__control {
+  padding: 8px;
+  color: var(--font-color) !important;
+  background-color: #0c0c0c !important;
+  border: 1px solid #5a5a5a !important;
+  border-radius: 40px !important;
+}
+
+.drop-down__menu {
+  background-color: #0c0c0c !important;
+  border: 1px solid #5a5a5a !important;
+  color: white;
+}
+.drop-down__option--is-focused {
+  background: linear-gradient(
+    180deg,
+    rgba(21, 153, 0, 1) 0%,
+    rgba(14, 101, 0, 1) 100%
+  );
+  color: white;
+  color: black;
+}
+
+.drop-down__option--is-selected {
+  background: linear-gradient(
+    180deg,
+    rgba(21, 153, 0, 1) 0%,
+    rgba(14, 101, 0, 1) 100%
+  );
+  color: white;
+  color: black;
+}
+
+.drop-down__single-value {
+  color: white !important;
+}
+
+.drop-down__input {
+  border: 0px;
 }

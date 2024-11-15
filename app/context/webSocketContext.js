@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
-import {getSession} from '../actions/auth'
+import { getSession } from '../actions/auth'
 
 const WebSocketContext = createContext();
 
@@ -13,10 +13,9 @@ export const WebSocketProvider = ({ children }) => {
 
   useEffect(() => {
     const setup = async () => {
-
-
       const session = await getSession();
       const serverUrl = process.env.NEXT_PUBLIC_WEB_SOCKET_URL + session.token;
+      if(!session)return;
       const socket = new WebSocket(serverUrl);
 
       socket.onmessage = (event) => {
@@ -36,7 +35,11 @@ export const WebSocketProvider = ({ children }) => {
     }
     setup();
     return () => {
+      try {
       socket.close();
+      } catch (error) {
+
+      }
     };
   }, []);
 

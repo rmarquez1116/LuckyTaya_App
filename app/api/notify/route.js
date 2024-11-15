@@ -10,7 +10,6 @@ export async function POST(req) {
     const data = await fetchData('qr_transactions', query)
     const result = sha256withRSAverify(JSON.stringify(request.request), request.signature)
 
-    console.log(result)
     if (!result)
         return new Response(JSON.stringify({ code: "401", message: "Unauthorized" }), { status: 401, headers: { 'Content-Type': 'application/json' } });
     if (!data) {
@@ -24,6 +23,15 @@ export async function POST(req) {
             // processing 
             const config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
             const token = await getToken(config.agentUsername, atob(config.agentPW))
+
+            // transfer to convenience fee
+            var transferConFee = {
+                accountNumber: config.convenienceAccountNumber,
+                amount: newData.fee
+            }
+            const transferFee = await transferV2(transferConFee, token)
+            newData.masterToFee = transferFee;
+
             // first Leg
             // get Fee in trxAmount
             var amountBeforeFee = insertDecimalAtThirdToLast(newData.request.trxAmount)
@@ -34,15 +42,11 @@ export async function POST(req) {
             }
             const transfer = await transferV2(transferRequest, token)
             newData.masterToPlayer = transfer
-            // transfer to convenience fee
-            var transferConFee = {
-                accountNumber: config.convenienceAccountNumber,
-                amount: newData.fee
-            }
-            const transferFee = await transferV2(transferConFee, token)
-            newData.masterToFee = transferFee;
+
+
             newData.response = request.request;
             newData.status = "Completed";
+            newData.transType = "cashin"
             const updateResult = await updateData('qr_transactions', query, newData);
             console.log(updateResult, 'hello')
         }

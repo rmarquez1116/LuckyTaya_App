@@ -14,7 +14,7 @@ function BetModal({ type, onClose, balance,data,setAmountToBet }) {
       return () => {
         // setAmount(0)
       }
-    }, [amount,setAmountToBet])
+    }, [amount])
     
     const setTheAmount = (e)=>{
         setAmount(e.value)
@@ -33,10 +33,10 @@ function BetModal({ type, onClose, balance,data,setAmountToBet }) {
     const renderDescription = () => {
         return <div className="grid grid-cols-3 grid-rows-1 gap-4">
 
-            <div className='p-2 rounded-[10] default w-full col-span-2 inline-flex gap-2 text-center font-bold label-header1'>
+            {/* <div className='p-2 rounded-[10] default w-full col-span-2 inline-flex gap-2 text-center font-bold label-header1'>
                 <Image alt="dollar" src={dollar}></Image>
                 {balance}
-            </div>
+            </div> */}
             <div className='p-2 rounded-[10] default text-center'>Fight# {data.fight.fightNum}</div>
 
 
@@ -48,7 +48,7 @@ function BetModal({ type, onClose, balance,data,setAmountToBet }) {
 
                 <div className="grid grid-cols-3 grid-rows-1 gap-4">
                     <div ></div>
-                    <div className='inline-flex gap-2 text-center label-header1'><div className='meronColor rounded-full h-5 w-5'></div>Meron</div>
+                    <div className='inline-flex  items-center gap-2 text-center label-header1'><div className='meronColor rounded-full h-5 w-5'></div>Meron</div>
                     <div className='text-right' onClick={()=>onClose(false)}>X</div>
 
 
@@ -61,7 +61,7 @@ function BetModal({ type, onClose, balance,data,setAmountToBet }) {
         else return <>
             <div className="grid grid-cols-3 grid-rows-1 gap-4">
                     <div ></div>
-                    <div className='inline-flex gap-2 text-center  label-header1'><div className='walaColor rounded-full h-5 w-5'></div>Wala</div>
+                    <div className='inline-flex items-center gap-2 text-center  label-header1'><div className='walaColor rounded-full h-5 w-5'></div>Wala</div>
                     <div className='text-right' onClick={()=>onClose(false)}>X</div>
 
 
@@ -75,7 +75,7 @@ function BetModal({ type, onClose, balance,data,setAmountToBet }) {
     }
 
     return (
-        <div className='absolute justify-center  flex w-full overflow-hidden backdrop-blur'>
+        <div className='absolute justify-center  flex w-full h-full items-start overflow-hidden backdrop-blur  z-10'>
             <div className="flex flex-col card max-w-sm gap-5 p-6 mt-10 bg-white rounded-3xl shadow">
 
 

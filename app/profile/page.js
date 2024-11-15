@@ -1,21 +1,32 @@
-'use client'
-import BalanceHeader from "../components/balanceHeader";
 import MainLayout from "../layout/mainLayout";
-import dynamic from "next/dynamic";
+import { getProfile, profile } from "../actions/profile";
+import ProfileComponent from './_component'
 
-const Form = dynamic(()=>import('../components/form'),{ssr : false})
+
 const form = [
   {
-    id: "mobile_number",
+    id: "firstname",
+    type: "text",
+    value: "",
+    label: "First Name"
+  },
+  {
+    id: "lastname",
+    type: "text",
+    value: "",
+    label: "Last Name"
+  },
+  {
+    id: "phoneNumber",
     type: "text",
     value: "",
     label: "Mobile Number"
   },
   {
-    id: "username",
-    type: "text",
+    id: "email",
+    type: "email",
     value: "",
-    label: "Username"
+    label: "Email"
   },
   {
     id: "birthdate",
@@ -46,21 +57,20 @@ const form = [
     type: "text",
     value: "",
     label: "Barangay"
-  },
+  }
 ]
-export default function Profile() {
+export default async function Profile() {
+
+  const user = await getProfile();
+
+  for (let index = 0; index < form.length; index++) {
+    const element = form[index];
+    form[index].value = user[element.id]
+  }
+
   return (
     <MainLayout>
-      <BalanceHeader type={2}></BalanceHeader>
-      <div className="flex justify-center align-center  p-6 mt-5">
-        <div className="flex flex-col card w-10/12 max-w-md p-5 bg-white rounded-3xl shadow">
-          <div className="bg-dark gap-2 p-2 flex">
-            <label className="pl-3 content-center">Profile</label>
-            <button className="primary w-[80px] ml-auto">Edit</button>
-          </div>
-          <Form fields={form} buttonText="Update Profile"></Form>
-        </div>
-      </div>
+      <ProfileComponent form={form}/>
     </MainLayout >
   );
 }

@@ -8,7 +8,7 @@ import BetModal from '../components/modal/betModal'
 import { memo, useEffect, useState } from "react";
 import BetConfirmation from "../components/modal/betConfirmation";
 import Loading from "../components/loading";
-import { getLatestFight, placeABet } from "../actions/fight";
+import { getEventTrend, getLatestFight, placeABet } from "../actions/fight";
 import { isJsonEmpty } from "../lib/utils";
 import useSocket from "../hooks/useSocket";
 import Alert from "../components/alert";
@@ -16,6 +16,7 @@ import { getInitialBetDetails } from "../actions/wsApi";
 import WinnerModal from "../components/modal/winnerModal";
 import { getToken } from "../helpers/StringGenerator";
 import { useWebSocketContext } from '../context/webSocketContext';
+import Trend from '../components/trend'
 
 function Game() {
     const { messages } = useWebSocketContext();
@@ -37,11 +38,12 @@ function Game() {
         type: 1
     })
     const [randomText, setRandomText] = useState("1234")
-
+    const [trends, setTrends] = useState([])
     const [bettingEndedResult, setBettingEndedResult] = useState({
         winnerSide: 0,
         isOpen: false
     })
+    const [showTrend, setShowTrend] = useState(false)
 
     const getData = async () => {
         try {
@@ -66,11 +68,15 @@ function Game() {
         const getBetDetails = async () => {
             const initialBetDetails = await getInitialBetDetails(data.fight.fightId);
             setBetDetails(initialBetDetails);
+
+            const eventTrend = await getEventTrend(data.event.eventId);
+            setTrends(eventTrend)
             setRandomText(getToken(4))
         }
-        if (data)
+        if (data) {
             getBetDetails();
-
+            setShowTrend(data.fightStatus.name != "Open")
+        }
     }, [data])
 
 
@@ -83,33 +89,31 @@ function Game() {
                 const parseMessage = JSON.parse(messages)
                 const betDetail = JSON.parse(parseMessage.jsonPacket)
 
-                if (data.fight.fightId == betDetail?.FightId ||
-                    data.fight.fightId == parseMessage?.FightId)
-                    switch (parseMessage.PacketType) {
-                        case 10:
-                            if (data.fight.fightId == parseMessage.FightId &&
-                                data.event.eventId == parseMessage.EventId) {
-                                setBetDetails(betDetail)
-                            }
-                            break;
-                        // last call
-                        case 22:
-                            setAlert({ timeout: 5000, isOpen: true, type: "info", message: "Last Call !!!" })
-                            break;
-                        // result
-                        case 50:
-                            const betResult = JSON.parse(parseMessage.jsonPacket)
-                            setBettingEndedResult({ winnerSide: betResult.WinSide, isOpen: true })
-                            if (betResult.WinSide == betResult.YourSide) {
+                switch (parseMessage.PacketType) {
+                    case 10:
+                        if (data.fight.fightId == parseMessage.FightId &&
+                            data.event.eventId == parseMessage.EventId) {
+                            setBetDetails(betDetail)
+                        }
+                        break;
+                    // last call
+                    case 22:
+                        setAlert({ timeout: 5000, isOpen: true, type: "info", message: "Last Call !!!" })
+                        break;
+                    // result
+                    case 50:
+                        const betResult = JSON.parse(parseMessage.jsonPacket)
+                        setBettingEndedResult({ winnerSide: betResult.WinSide, isOpen: true })
+                        if (betResult.WinSide == betResult.YourSide) {
 
-                            } else {
+                        } else {
 
-                            }
-                            break;
-                        default:
-                            getData();
-                            break;
-                    }
+                        }
+                        break;
+                    default:
+                        getData();
+                        break;
+                }
 
             }
         } catch (error) {
@@ -202,7 +206,7 @@ function Game() {
             }
 
             {isLoaded && !isJsonEmpty(data) &&
-                <div className="flex flex-col items-center gap-5 justify-center align-center  p-6 mt-5">
+                <div className="flex overflow-auto flex-col items-center gap-5 justify-center align-center  p-6">
                     <div className="rounded-[20px] card max-w-md  bg-center  p-5 w-full"
                         style={
                             {
@@ -226,18 +230,18 @@ function Game() {
                         </div>
                     </div>
 
-                    <div className="max-w-md w-full">
+                    <div className="max-w-md w-full h-[30vh]">
 
                         {/* <WatchParty url="ws://161.49.111.13:3333/app/test-input-stream?transport=tcp"></WatchParty> */}
                         {/* <video autoPlay={true} src={process.env.WEB_RTC}>
 
 </video> */}
-                        {/* <iframe className="relative h-full w-full"
-                        src="https://www.youtube.com/embed/JYUyyAsdNhM?si=1POPimjWqOnHfKgQ?autoplay=1&cc_load_policy=1"
-                        title="YouTube video player" frameborder="0"
-                        allow="autoplay;encrypted-media;"
-                        referrerpolicy="strict-origin-when-cross-origin"
-                        allowfullscreen></iframe> */}
+                        <iframe className="relative h-full w-full"
+                            src="https://www.youtube.com/embed/4AbXp05VWoQ?si=zzaGMvrDOSoP9tBb?autoplay=1&cc_load_policy=1"
+                            title="YouTube video player" frameBorder="0"
+                            allow="autoplay;encrypted-media;"
+                            referrerPolicy="strict-origin-when-cross-origin"
+                            allowFullScreen></iframe>
                         <br />
                         <div className="grid grid-cols-5 grid-rows-1 gap-4">
                             <div className="col-span-2 card rounded-[10px] p-3  text-center">
@@ -249,7 +253,10 @@ function Game() {
                             </div>
                         </div>
                     </div>
-                    <div className="max-w-md w-full">
+                    <br />
+                    <br />
+                    {showTrend && <Trend items={trends} />}
+                    {!showTrend && <div className="max-w-md w-full">
                         <div className="grid grid-cols-2 grid-rows-1 gap-4">
                             <div onClick={() => openBetting(1)}>
                                 <MeronWala type={1} data={betDetails} />
@@ -260,7 +267,7 @@ function Game() {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>}
                 </div>
             }
             {!isLoaded && <Loading />}

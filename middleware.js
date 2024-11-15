@@ -25,7 +25,6 @@ const middleware = async (req) => {
 
   if (session) {
     const token = session.token.split('.')
-    console.log(token,'-------------------========')
     if (token.length ==2 &&token[1] != "" && isTokenExpire(token[1])) {
       await cookieStore.delete("session");
       return NextResponse.redirect(new URL("/login", req.nextUrl));
@@ -37,9 +36,9 @@ const middleware = async (req) => {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
-  if (isPublicRoute && session?.userId) {
-    return NextResponse.redirect(new URL("/", req.nextUrl));
-  }
+  // if (isPublicRoute && session?.userId) {
+  //   return NextResponse.redirect(new URL("/", req.nextUrl));
+  // }
   return NextResponse.next();
 }
 
