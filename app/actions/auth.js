@@ -45,8 +45,7 @@ export async function login(prevState, formData) {
             token = token.split('.')[1];
             token = atob(token)
             const expiration = new Date(token.exp * 1000)
-
-
+            
             cookieStore.set("session", JSON.stringify(response.data), {
                 httpOnly: true,
                 secure: process.env.NEXT_PUBLIC_PRODUCTION_ENV == 'production',

@@ -33,8 +33,14 @@ export async function POST(req) {
                 amount: amountBeforeFee
             }
             const transfer = await transferV2(transferRequest, token)
-            console.log(transfer)
-
+            newData.masterToPlayer = transfer
+            // transfer to convenience fee
+            var transferConFee = {
+                accountNumber: config.convenienceAccountNumber,
+                amount: newData.fee
+            }
+            const transferFee = await transferV2(transferConFee, token)
+            newData.masterToFee = transferFee;
             newData.response = request.request;
             newData.status = "Completed";
             const updateResult = await updateData('qr_transactions', query, newData);

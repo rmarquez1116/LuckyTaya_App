@@ -10,69 +10,6 @@ import { register } from "../actions/account";
 import dynamic from "next/dynamic";
 
 const Form = dynamic(()=>import('../components/form'),{ssr : false})
-// const form = [
-//   {
-//     id: "referral",
-//     type: "text",
-//     value: "",
-//     label: "Referral"
-//   },
-//   {
-//     id: "mobile_number",
-//     type: "text",
-//     value: "",
-//     label: "Mobile Number"
-//   },
-//   {
-//     id: "password",
-//     type: "password",
-//     value: "",
-//     label: "Create Password"
-//   },
-//   {
-//     id: "re_password",
-//     type: "password",
-//     value: "",
-//     label: "Re-enter your Password"
-//   },
-//   {
-//     id: "username",
-//     type: "text",
-//     value: "",
-//     label: "Username"
-//   },
-//   {
-//     id: "birthdate",
-//     type: "date",
-//     value: "",
-//     label: "Birthdate"
-//   },
-//   {
-//     id: "region",
-//     type: "text",
-//     value: "",
-//     label: "Region"
-//   },
-//   {
-//     id: "province",
-//     type: "text",
-//     value: "",
-//     label: "Province"
-//   },
-//   {
-//     id: "city",
-//     type: "text",
-//     value: "",
-//     label: "City / Municipality"
-//   },
-//   {
-//     id: "barangay",
-//     type: "text",
-//     value: "",
-//     label: "Barangay"
-//   },
-// ]
-
 
 const form = [
   {
@@ -105,6 +42,37 @@ const form = [
     value: "",
     label: "Email"
   },
+  
+  {
+    id: "birthdate",
+    type: "date",
+    value: "",
+    label: "Birthdate"
+  },
+  {
+    id: "region",
+    type: "text",
+    value: "",
+    label: "Region"
+  },
+  {
+    id: "province",
+    type: "text",
+    value: "",
+    label: "Province"
+  },
+  {
+    id: "city",
+    type: "text",
+    value: "",
+    label: "City / Municipality"
+  },
+  {
+    id: "barangay",
+    type: "text",
+    value: "",
+    label: "Barangay"
+  },
   {
     id: "username",
     type: "text",
@@ -123,7 +91,6 @@ const form = [
     value: "",
     label: "Re-enter your Password"
   },
-
 ]
 export default function Register() {
   const [step, setStep] = useState(1);

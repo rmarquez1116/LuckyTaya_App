@@ -40,3 +40,16 @@ export function formatMoney(amount) {
 		maximumFractionDigits: 0,
 	}).format(amount);
 }
+
+export function base64UrlDecode(base64Url) {
+	try {
+		// Replace Base64Url specific characters
+		const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+
+		// Decode the Base64 string
+		const decoded = atob(base64); // atob decodes the Base64 string
+		return decoded;
+	} catch (error) {
+		return ""
+	}
+}
