@@ -10,7 +10,6 @@ import BetConfirmation from "../components/modal/betConfirmation";
 import Loading from "../components/loading";
 import { getEventTrend, getLatestFight, placeABet } from "../actions/fight";
 import { isJsonEmpty } from "../lib/utils";
-import useSocket from "../hooks/useSocket";
 import Alert from "../components/alert";
 import { getInitialBetDetails } from "../actions/wsApi";
 import WinnerModal from "../components/modal/winnerModal";
@@ -19,7 +18,8 @@ import { useWebSocketContext } from '../context/webSocketContext';
 import Trend from '../components/trend'
 
 function Game() {
-    const { messages } = useWebSocketContext();
+    const {socket, messages } = useWebSocketContext();
+
     const [betDetails, setBetDetails] = useState({
         fId: 0,
         s0c: 0,
@@ -82,13 +82,13 @@ function Game() {
 
 
     useEffect(() => {
-        try {
 
-            console.log(messages, 'socket Message')
+        try {
+            console.log({messages,data}, 'socket Message')
             if (messages != null && !isJsonEmpty(data)) {
                 const parseMessage = JSON.parse(messages)
                 const betDetail = JSON.parse(parseMessage.jsonPacket)
-
+                
                 switch (parseMessage.PacketType) {
                     case 10:
                         if (data.fight.fightId == parseMessage.FightId &&

@@ -7,21 +7,33 @@ const useSocket = (onMessageReceived) => {
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState(null);
   const [url, setUrl] = useState(null)
+  const [sessionCookie, setSessionCookie] = useState('')
+
   useEffect(() => {
   }, [socket, messages])
+  const gettingSession = async () => {
+    const serverUrl = process.env.NEXT_PUBLIC_WEB_SOCKET_URL + session.token;
+    setUrl(serverUrl)
+  }
   useEffect(() => {
-    const gettingSession = async () => {
-
+    const gettingSess = async () => {
       const session = await getSession();
-      const serverUrl = process.env.NEXT_PUBLIC_WEB_SOCKET_URL + session.token;
-      setUrl(serverUrl)
+      setSessionCookie(session)
     }
-    gettingSession();
+    gettingSess();
   }, [])
+
+  useEffect(() => {
+    console.log(sessionCookie, 'session-------------')
+    if (sessionCookie)
+      gettingSession();
+  }, [sessionCookie])
 
 
   useEffect(() => {
     const setup = async () => {
+
+      console.log(sessionCookie, 'session[-------------')
       const socket = new WebSocket(url);
       socket.onmessage = (event) => {
         setMessages(event.data);
@@ -35,11 +47,14 @@ const useSocket = (onMessageReceived) => {
 
       // Handle WebSocket connection close event
       socket.onclose = () => {
+        console.log('WebSocket Close');
       };
 
 
       setSocket(socket);
     }
+    
+    console.log({sessionCookie,url}, 'session[-------------')
     if (url)
       setup();
     const intervalId = setInterval(() => {
@@ -57,7 +72,7 @@ const useSocket = (onMessageReceived) => {
 
       }
     };
-  }, [url]);
+  }, [url, sessionCookie]);
   return { socket, messages };
 };
 

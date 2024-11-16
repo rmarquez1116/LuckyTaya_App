@@ -2,20 +2,38 @@
 
 import { createContext, useContext, useState, useEffect } from 'react';
 import { getSession } from '../actions/auth'
+import { usePathname } from 'next/navigation';
 
 const WebSocketContext = createContext();
 
 export const useWebSocketContext = () => useContext(WebSocketContext);
 
 export const WebSocketProvider = ({ children }) => {
+
+  const pathname = usePathname();
+
   const [messages, setMessages] = useState(null);
   const [socket, setsocket] = useState(null);
+  const [sessionCookie, setSessionCookie] = useState('')
+
+  const getSess = async () => {
+    const session = await getSession();
+    console.log({ session, sessionCookie }, "-------------------")
+    if (session != sessionCookie)
+      setSessionCookie(session)
+  }
 
   useEffect(() => {
+    getSess();
+    console.log('aaaaa',pathname)
+  }, [pathname]);
+
+  useEffect(() => {
+
     const setup = async () => {
-      const session = await getSession();
-      const serverUrl = process.env.NEXT_PUBLIC_WEB_SOCKET_URL + session.token;
-      if(!session)return;
+      const serverUrl = process.env.NEXT_PUBLIC_WEB_SOCKET_URL + sessionCookie.token;
+
+      console.log({ sessionCookie }, "-------------------")
       const socket = new WebSocket(serverUrl);
 
       socket.onmessage = (event) => {
@@ -33,15 +51,20 @@ export const WebSocketProvider = ({ children }) => {
       setsocket(socket);
 
     }
-    setup();
-    return () => {
-      try {
-      socket.close();
-      } catch (error) {
+    console.log(sessionCookie, '===============')
+    if (sessionCookie) {
+      if (socket)
+        try {
+          socket.close();
+        } catch (error) {
 
-      }
+        }
+      setup();
+    }
+    return () => {
+
     };
-  }, []);
+  }, [sessionCookie]);
 
   return (
     <WebSocketContext.Provider value={{ messages, socket }}>

@@ -70,7 +70,8 @@ export async function login(prevState, formData) {
 }
 
 export async function logout() {
-    await cookies().delete("session");
+    const cookieStore = await cookies()
+    cookieStore.delete("session");
 }
 
 
