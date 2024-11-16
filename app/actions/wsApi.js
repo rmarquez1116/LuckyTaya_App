@@ -29,9 +29,13 @@ export async function getInitialBetDetails(fightId) {
             } catch (error) {
                 return null
             }
-        } else return [];
+        } else if (response.status == 401) {
+            logout()
+        } return [];
     } catch (error) {
-        console.log(error, 'Error')
+        if (error.status == 401) {
+            logout()
+        }
         return [];
     }
 }

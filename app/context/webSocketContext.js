@@ -18,14 +18,12 @@ export const WebSocketProvider = ({ children }) => {
 
   const getSess = async () => {
     const session = await getSession();
-    console.log({ session, sessionCookie }, "-------------------")
     if (session != sessionCookie)
       setSessionCookie(session)
   }
 
   useEffect(() => {
     getSess();
-    console.log('aaaaa',pathname)
   }, [pathname]);
 
   useEffect(() => {
@@ -33,7 +31,6 @@ export const WebSocketProvider = ({ children }) => {
     const setup = async () => {
       const serverUrl = process.env.NEXT_PUBLIC_WEB_SOCKET_URL + sessionCookie.token;
 
-      console.log({ sessionCookie }, "-------------------")
       const socket = new WebSocket(serverUrl);
 
       socket.onmessage = (event) => {
@@ -51,7 +48,6 @@ export const WebSocketProvider = ({ children }) => {
       setsocket(socket);
 
     }
-    console.log(sessionCookie, '===============')
     if (sessionCookie) {
       if (socket)
         try {

@@ -3,6 +3,7 @@ import axios from "axios";
 import { Agent } from "https";
 import { cookies } from "next/headers";
 import { isJsonEmpty } from "../lib/utils";
+import { logout } from "./auth";
 
 export async function getFightSchedule() {
     const cookieStore = await cookies()
@@ -31,7 +32,9 @@ export async function getFightSchedule() {
                 statusDesc: getDataStatus(item, types)
             }))
             return responseWithStatus;
-        } else return [];
+        } else if (response.status == 401) {
+            logout()
+        } return [];
     } catch (error) {
         console.log(error, 'Error')
         return [];
@@ -132,7 +135,9 @@ async function getFightStatus(status) {
             return response.data
         } else return null;
     } catch (error) {
-        console.log(error, 'Error')
+        if (error.status == 401) {
+            logout()
+        }
         return null;
     }
 }
@@ -157,6 +162,8 @@ export async function getOpenOrClosedFightEvents() {
                 rejectUnauthorized: false
             })
         })
+
+        console.log(response.status, '-statutts')
         if (response.status == 200) {
 
             const items = [];
@@ -169,9 +176,13 @@ export async function getOpenOrClosedFightEvents() {
             }
             return items
 
-        } else return null;
+        } else if (response.status == 401) {
+            logout()
+        } return null;
     } catch (error) {
-        console.log(error, 'Error')
+        if (error.status == 401) {
+            logout()
+        }
         return null;
     }
 }
@@ -186,18 +197,18 @@ export async function getLatestFight() {
         session = JSON.parse(session.value);
 
         var fightEvents = await getOpenOrClosedFightEvents();
-        var response ;
+        var response;
         if (fightEvents) {
             var eventId = 0;
-            const events = fightEvents.sort((a,b)=>new Date(b.event.eventDate) - new Date(a.event.eventDate));
+            const events = fightEvents.sort((a, b) => new Date(b.event.eventDate) - new Date(a.event.eventDate));
 
-            const currentEvent = events.findIndex(x=>(new Date(x.event.eventDate)).toLocaleDateString() == (new Date()).toLocaleDateString())
- 
-            if(currentEvent > -1){
+            const currentEvent = events.findIndex(x => (new Date(x.event.eventDate)).toLocaleDateString() == (new Date()).toLocaleDateString())
+
+            if (currentEvent > -1) {
                 eventId = events[currentEvent].event.eventId
-            }else{
+            } else {
                 eventId = events[0].event.eventId;
-            } 
+            }
             var url = `${process.env.BASE_URL}/api/v1/SabongFight/GetLastFightNum/${eventId}`
 
             response = await axios.get(url, {
@@ -300,7 +311,10 @@ export async function getEventTrend(eventId) {
             } catch (error) {
                 return null
             }
-        } else return [];
+        } else if (response.status == 401) {
+            logout()
+        }
+        return null
     } catch (error) {
         console.log(error, 'Error')
         return [];

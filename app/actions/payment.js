@@ -8,8 +8,6 @@ import { cookies } from "next/headers";
 
 const starpay = process.env.NEXT_PUBLIC_BASE_URL_STARPAY
 const Repayment = (req) => {
-
-  console.log(req, 'hello')
   const fee = req.fee;
   delete req.fee;
   const createRequest = (req) => {

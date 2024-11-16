@@ -72,6 +72,7 @@ export async function login(prevState, formData) {
 export async function logout() {
     const cookieStore = await cookies()
     cookieStore.delete("session");
+    redirect('/login')
 }
 
 
@@ -98,7 +99,9 @@ export async function getAccountDetails(fightId, amount, side) {
         })
         if (response.status == 200) {
             return response.data
-        } else return null;
+        } else if (response.status == 401){
+            logout()
+        };
     } catch (error) {
         console.log(error, 'Error')
         return null;

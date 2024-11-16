@@ -37,9 +37,13 @@ export async function getTransactionsByDate() {
             const data = processTransaction(response.data, dateFrom, dateTo, session.accountNumber)
 
             return data;
-        } else return [];
+        } else if (response.status == 401) {
+            logout()
+        } return [];
     } catch (error) {
-        console.log(error, 'Error')
+        if (error.status == 401) {
+            logout()
+        }
         return [];
     }
 }
@@ -47,8 +51,8 @@ export async function getTransactionsByDate() {
 async function processTransaction(serverData, dateFrom, dateTo, accountNumber) {
     const query = {
         $and: [{
-            $or : [{accountNumber: { $eq: accountNumber }}, 
-                {accountNumber: { $eq: accountNumber.toString() }}
+            $or: [{ accountNumber: { $eq: accountNumber } },
+            { accountNumber: { $eq: accountNumber.toString() } }
             ]
         },
         {
@@ -61,8 +65,6 @@ async function processTransaction(serverData, dateFrom, dateTo, accountNumber) {
     }
 
     const dbData = await fetchData('qr_transactions', query)
-
-    console.log(dbData,'---------')
     const processedDataFromDB = []
     for (let index = 0; index < dbData.length; index++) {
         const element = dbData[index];
@@ -77,11 +79,11 @@ async function processTransaction(serverData, dateFrom, dateTo, accountNumber) {
     }
 
 
-    
-    
+
+
     serverData = serverData.filter(x => x.transactionDesc != 'Transfer')
     let mergedArray = ([...serverData, ...processedDataFromDB]).sort((a, b) => new Date(b.transactionDateTime) - new Date(a.transactionDateTime));
-    
+
     return mergedArray
 }
 
