@@ -3,12 +3,12 @@ import axios from "axios"
 import { sha256withRSAsign } from '../helpers/Crypto';
 import { getToken } from "../helpers/StringGenerator";
 
-const starpay = process.env.NEXT_PUBLIC_BASE_URL_STARPAY
+const starpay = process.env.BASE_URL_STARPAY
 const banks = (req) => {
 
   const createRequest = (req) => {
-    const mchId = process.env.NEXT_PUBLIC_STARPAY_MERCHANT_ID;
-    const name = process.env.NEXT_PUBLIC_PAYMENT_NAME;
+    const mchId = process.env.STARPAY_MERCHANT_ID;
+    const name = process.env.PAYMENT_NAME;
     const msgId = getToken(15);
    
     const request = {

@@ -1,6 +1,7 @@
 import React from 'react'
 import logo from '../../public/images/logo.png';
 import Image from 'next/image';
+import Link from 'next/link';
 
 function CommonLayout({ children }) {
     return (
@@ -9,8 +10,9 @@ function CommonLayout({ children }) {
             <div>
                 <nav className='fixed p-3 w-full'>
                     <div className="flex justify-center">
-
-                        <Image alt='button' src={logo}></Image>
+                        <Link href="/">
+                            <Image alt='logo' src={logo}></Image>
+                        </Link>
                     </div>
                 </nav>
             </div>

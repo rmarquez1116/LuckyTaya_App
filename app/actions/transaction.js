@@ -11,7 +11,7 @@ export async function getTransactionsByDate() {
 
     const dateFrom = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
     const dateTo = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999).toISOString();
-    console.log({ dateFrom, dateTo }, '-----------transactiondate')
+
     const cookieStore = await cookies()
     var session = cookieStore.get('session');
     if (!session) {

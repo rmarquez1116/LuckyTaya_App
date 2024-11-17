@@ -26,17 +26,23 @@ function TransactionItem({ data, key }) {
                     {getAmount()}
                 </span>
             </label>
-            <label key={`label4-${key}`} className=' text-[16px]'>
-                Date: <span className='font-bold'>
-                    {date.toLocaleDateString()}
-                </span>
 
-            </label>
-            <label key={`label5-${key}`} className=' text-[16px]'>
-                Time: <span className='font-bold'>
-                    {date.toLocaleTimeString()}
-                </span>
-            </label>
+
+
+
+            <div className="grid grid-cols-2 grid-rows-1 gap-4">
+                <label key={`label4-${key}`} className=' text-[16px]'>
+                    Date: <span className='font-bold'>
+                        {date.toLocaleDateString()}
+                    </span>
+
+                </label>
+                <label key={`label5-${key}`} className=' text-[16px]'>
+                    Time: <span className='font-bold'>
+                        {date.toLocaleTimeString()}
+                    </span>
+                </label>
+            </div>
             <label key={`label6-${key}`} className=' text-[16px]'>
                 Trans ID: <span className='font-bold'>
                     {data.transactionNumberStr}

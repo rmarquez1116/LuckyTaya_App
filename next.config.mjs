@@ -10,10 +10,7 @@ const nextConfig = {
                     {
                         key: 'X-Forwarded-Proto',
                         value: 'https', // if you're using HTTPS
-                    },{
-                        key: 'X-Forwarded-Host',
-                        value: process.env.NGROK_HOST || 'localhost:3000', // Adjust this as needed
-                      },
+                    }
                 ],
             },
         ];

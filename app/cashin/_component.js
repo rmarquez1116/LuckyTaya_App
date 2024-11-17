@@ -60,11 +60,15 @@ export default function CashIn({ config }) {
         }
     }
     const router = useRouter();
+    const onQrClose = () =>{
+        setIsShowQr(false)
+        router.replace('/')
+    }
     return (
         <React.Fragment>
 
             <BalanceHeader type={2}></BalanceHeader>
-            {isShowQr && <QrCode data={qrData} onClose={() => setIsShowQr(false)} />}
+            {isShowQr && <QrCode data={qrData} onClose={() => onQrClose()} />}
             <div className="flex justify-center align-center  p-6 mt-5">
                 <div className="card max-w-md w-full gap-5 flex-col flex p-6 bg-white rounded-3xl shadow">
                     <div className="inline-flex gap-3 items-center justify-center">

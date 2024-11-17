@@ -5,6 +5,7 @@ import Hamburger from "../components/hamburger";
 import React, { useState } from "react";
 import Sidebar from '../components/sidebar'
 import iconFooter from '../../public/images/logo-footer.png';
+import Link from "next/link";
 
 export default function MainLayout({ children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +23,9 @@ export default function MainLayout({ children }) {
           </div>
 
           <div className="flex justify-center">
-            <Image alt='logo' src={logo}></Image>
+            <Link href="/">
+              <Image alt='logo' src={logo}></Image>
+            </Link>
           </div>
         </nav>
       </header>

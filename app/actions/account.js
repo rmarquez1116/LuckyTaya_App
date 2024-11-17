@@ -31,13 +31,13 @@ const registerSchema = z.object({
         .string()
         .min(1, { message: "Invalid Last Name" })
         .trim(),
-    referralCode: z.string().optional(),
+    // referralCode: z.string().optional(),
     re_password: z.string(),
     birthdate: z.string(),
-    region: z.string(),
-    province: z.string(),
-    city: z.string(),
-    barangay: z.string(),
+    // region: z.string(),
+    // province: z.string(),
+    // city: z.string(),
+    // barangay: z.string(),
 
 }).refine((data) => (data.password === data.re_password)
     && (data.password != "" && data.re_password != ""), {
@@ -62,7 +62,8 @@ export async function register(prevState, formData) {
     try {
         delete request.re_password;
         request['facebookAccount'] = "";
-        request.referralCode = request.referralCode == "" ? 0 : request.referralCode
+        request['referralCode'] = 0;
+        // request.referralCode = request.referralCode == "" ? 0 : request.referralCode
         const sabongRequest = {
             username: request.username,
             password: request.password,
@@ -73,9 +74,9 @@ export async function register(prevState, formData) {
             facebookAccount: "",
             referralCode: request.referralCode
         }
-        const query = {username: {$eq : request.username}}
-        const existingPlayer =await fetchData('taya_user', query)
-        if(existingPlayer.length > 0){
+        const query = { username: { $eq: request.username } }
+        const existingPlayer = await fetchData('taya_user', query)
+        if (existingPlayer.length > 0) {
             return {
                 errors: {
                     username: ["Data already exists"],
@@ -110,12 +111,46 @@ export async function register(prevState, formData) {
     if (isSuccess) {
         request.userId = responseData.userId;
         request.accountNumber = responseData.accountNumber
-        saveData('taya_user', request)
-        redirect("/login");
+        await saveData('taya_user', request)
+
+        await processLogin({ username: request.username, password: request.password })
+        redirect("/");
     }
     return {
         errors: {
             username: ["Invalid email or password"],
         },
     };
+}
+
+
+
+async function processLogin(request) {
+    const httpsAgent = new Agent({
+        rejectUnauthorized: false
+    })
+    const response = await axios.post(`${process.env.BASE_URL}/api/v1/User/Login`, request, {
+
+        headers: {
+            "Content-Type": "application/json",
+        }
+        , httpsAgent
+    })
+    if (response.status == 200) {
+
+        const cookieStore = await cookies()
+        var token = response.data.token;
+        token = token.split('.')[1];
+        token = atob(token)
+        const expiration = new Date(token.exp * 1000)
+
+        cookieStore.set("session", JSON.stringify(response.data), {
+            httpOnly: true,
+            secure: process.env.NEXT_PUBLIC_PRODUCTION_ENV == 'production',
+            expires: expiration,
+            sameSite: 'Strict'
+        });
+        return true;
+    }
+    return false;
 }

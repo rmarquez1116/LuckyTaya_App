@@ -12,12 +12,18 @@ import dynamic from "next/dynamic";
 const Form = dynamic(()=>import('../components/form'),{ssr : false})
 
 const form = [
+  
   {
-    id: "referralCode",
-    type: "text",
-    value: "",
-    label: "Referral"
+    type : "separator",
+    label : "Profile Details"
   },
+  // {
+  //   id: "referralCode",
+  //   type: "text",
+  //   value: "",
+  //   label: "Referral"
+  // },
+  
   {
     id: "firstname",
     type: "text",
@@ -49,29 +55,33 @@ const form = [
     value: "",
     label: "Birthdate"
   },
+  // {
+  //   id: "region",
+  //   type: "text",
+  //   value: "",
+  //   label: "Region"
+  // },
+  // {
+  //   id: "province",
+  //   type: "text",
+  //   value: "",
+  //   label: "Province"
+  // },
+  // {
+  //   id: "city",
+  //   type: "text",
+  //   value: "",
+  //   label: "City / Municipality"
+  // },
+  // {
+  //   id: "barangay",
+  //   type: "text",
+  //   value: "",
+  //   label: "Barangay"
+  // },
   {
-    id: "region",
-    type: "text",
-    value: "",
-    label: "Region"
-  },
-  {
-    id: "province",
-    type: "text",
-    value: "",
-    label: "Province"
-  },
-  {
-    id: "city",
-    type: "text",
-    value: "",
-    label: "City / Municipality"
-  },
-  {
-    id: "barangay",
-    type: "text",
-    value: "",
-    label: "Barangay"
+    type : "separator",
+    label : "Account Details"
   },
   {
     id: "username",
@@ -101,7 +111,7 @@ export default function Register() {
   const body = () => {
     if (step == 1) {
       return <div className="flex flex-col card w-10/12 max-w-md p-6 mt-10 bg-white rounded-3xl shadow">
-        <Form action={registerAction} state={state} fields={form} buttonText="Register!"></Form>
+        <Form hasBackButton={true} action={registerAction} state={state} fields={form} buttonText="Register!"></Form>
       </div>
     }
     else if (step == 2) {

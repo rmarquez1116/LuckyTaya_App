@@ -7,7 +7,7 @@ export async function fetchData(collection, request) {
         const client = await clientPromise;
         const db = client.db();
         const postsCollection = db.collection(collection);
-        const posts = await postsCollection.find(request).toArray();
+        const posts = await postsCollection.find(request).project({_id : 0}).toArray();
         return posts
     } catch (error) {
         return null

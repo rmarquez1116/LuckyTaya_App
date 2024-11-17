@@ -4,6 +4,7 @@ import React from 'react'
 import cs from '../../public/images/cs.png';
 import cashIn from '../../public/images/cashin.png';
 import cashOut from '../../public/images/cashout.png';
+import play from '../../public/images/play.png';
 import SidebarButton from '../components/sidebarButton';
 import Menu from '../components/menu';
 import iconFooter from '../../public/images/logo-footer.png';
@@ -28,7 +29,7 @@ function Sidebar({ toggle, isOpen }) {
         className={`sidebar-container 
         fixed w-80 h-full overflow-hidden ease-in-out duration-300
         text-center
-        pt-[50px] left-0 z-10 `}
+        pt-[20px] left-0 z-10 `}
         style={{
           opacity: `${isOpen ? "1" : "0"}`,
           top: 0,
@@ -38,17 +39,31 @@ function Sidebar({ toggle, isOpen }) {
       >
 
         <div className='p-3 grid grid-cols-3 grid-rows-1 gap-4 text-center'>
+          <Link href="/game">
+            <SidebarButton img={play} label="Play"></SidebarButton>
+          </Link>
           <Link href="/cashin">
             <SidebarButton img={cashIn} label="Cash In"></SidebarButton>
-          </Link>   <Link href="/cashout">
-            <SidebarButton img={cashOut} label="Cash Out"></SidebarButton>
           </Link>
-          <Link href="/support">
-            <SidebarButton img={cs} label="Support"></SidebarButton>
+          <Link href="/cashout">
+            <SidebarButton img={cashOut} label="Cash Out"></SidebarButton>
           </Link>
         </div>
         <Menu></Menu>
+
+
         <button onClick={() => onLogout()} className='w-[50%]'>Logout</button>
+        <br/>    <br/>
+        <div className='p-3 grid grid-cols-3 grid-rows-1 gap-4 text-center'>
+          <div></div>
+          <div>
+
+            <Link href="/support">
+              <SidebarButton img={cs} label="Support"></SidebarButton>
+            </Link>
+          </div>
+          <div></div>
+        </div>
 
         <div className='absolute bottom-[50px] w-full'>
 

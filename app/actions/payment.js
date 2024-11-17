@@ -6,13 +6,13 @@ import { formatDate } from "../lib/DataFilter";
 import { saveData } from '../helpers/DB'
 import { cookies } from "next/headers";
 
-const starpay = process.env.NEXT_PUBLIC_BASE_URL_STARPAY
+const starpay = process.env.BASE_URL_STARPAY
 const Repayment = (req) => {
   const fee = req.fee;
   delete req.fee;
   const createRequest = (req) => {
-    const mchId = process.env.NEXT_PUBLIC_STARPAY_MERCHANT_ID;
-    const name = process.env.NEXT_PUBLIC_PAYMENT_NAME;
+    const mchId = process.env.STARPAY_MERCHANT_ID;
+    const name = process.env.PAYMENT_NAME;
     const msgId = getToken(15);
     var date = new Date();
     var expireDate = new Date();

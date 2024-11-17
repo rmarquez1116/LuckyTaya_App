@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { fetchData, saveData, updateData } from "../helpers/DB";
 import { cookies } from "next/headers";
+import { encrypt } from "../helpers/Crypto";
 
 const phoneRegex = new RegExp(
     /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
@@ -34,8 +35,25 @@ const profileSchema = z.object({
     path: ["re_password"], // path of error
 });
 
+
+const pinSchema = z.object({
+    
+    pin: z
+        .string()
+        .min(6, { message: "Pin should be 6 characters" })
+        .max(6, { message: "Pin should be 6 characters" })
+        .trim(),
+        
+}).refine((data) => (data.pin === data.re_pin)
+    && (data.pin != "" && data.re_pin != ""), {
+    message: "Pin don't match",
+    path: ["re_pin"], // path of error
+});
+
+
 export async function profile(prevState, formData) {
     const result = profileSchema.safeParse(Object.fromEntries(formData));
+    
     if (!result.success) {
         return {
             errors: result.error.flatten().fieldErrors,
@@ -48,7 +66,9 @@ export async function profile(prevState, formData) {
     var session = cookieStore.get('session');
 
     session = JSON.parse(session.value);
+
     const updateResult = await updateData('taya_user', { 'userId': { $eq: session.userId } }, request);
+    console.log({updateResult,request})
     return { success: true };
 
 }
@@ -62,6 +82,24 @@ export async function getProfile() {
 
     session = JSON.parse(session.value);
     const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]
-
+    if (!user) {
+        const user1 = Object.assign({},session);
+        delete user1.token
+        return user1
+    }
     return user;
+}
+
+
+
+export async function nominatePin(pin) {
+   
+    const cookieStore = await cookies()
+    var session = cookieStore.get('session');
+
+    session = JSON.parse(session.value);
+    const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]
+    user.pin = encrypt(pin)
+    await updateData('taya_user',{ "userId": { $eq: session.userId } },user);
+    return true;
 }

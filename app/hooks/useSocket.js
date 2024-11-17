@@ -12,7 +12,7 @@ const useSocket = (onMessageReceived) => {
   useEffect(() => {
   }, [socket, messages])
   const gettingSession = async () => {
-    const serverUrl = process.env.NEXT_PUBLIC_WEB_SOCKET_URL + session.token;
+    const serverUrl = process.env.WEB_SOCKET_URL + session.token;
     setUrl(serverUrl)
   }
   useEffect(() => {

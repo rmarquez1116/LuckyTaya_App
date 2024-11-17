@@ -15,6 +15,8 @@ import { getLatestFight, getOpenOrClosedFightEvents } from "./actions/fight";
 import Carousel from './components/carousel'
 import { useWebSocketContext } from './context/webSocketContext';
 import { getToken } from "./helpers/StringGenerator";
+import Pin from './components/modal/pinModal'
+import { getProfile, nominatePin, profile } from "./actions/profile";
 
 export default function Home() {
   const router = useRouter();
@@ -22,6 +24,7 @@ export default function Home() {
 
   const [isLoaded, setIsLoaded] = useState(false)
   const [carouselItems, setCarouselItems] = useState([])
+  const [hasPin, setHasPin] = useState(true)
 
   useEffect(() => {
     console.log(messages, 'socket Message')
@@ -37,8 +40,18 @@ export default function Home() {
     }
   }, [])
 
+  const onNominatePin = async(e)=>{
+    await nominatePin(e)
+    router.replace('/profile')
+  }
   const getData = async () => {
     const response = await getOpenOrClosedFightEvents();
+    const userProfile = await getProfile()
+    if (userProfile) {
+      if (!userProfile?.pin) {
+        setHasPin(false)
+      }
+    }
     if (response) {
       const items = []
       for (let index = 0; index < response.length; index++) {
@@ -53,6 +66,8 @@ export default function Home() {
   return (
     <MainLayout>
       <BalanceHeader type={1} ></BalanceHeader>
+
+      {isLoaded && <Pin title="Set Pin" isOpen={!hasPin} onClose={()=>{}} onSubmit={(e)=>onNominatePin(e)}/>}
       <div className="className=' p-8 pb-20">
         <div className='flex min-w-md justify-center items-center'>
 
@@ -73,6 +88,7 @@ export default function Home() {
           </React.Fragment>
         }
         {!isLoaded && <Loading />}
+
 
       </div>
     </MainLayout>
