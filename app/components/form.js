@@ -36,7 +36,7 @@ export default function Form({ action, state, fields, buttonText, hasBackButton 
             {fields.map((object, i) => {
 
                 if (object.type == "separator")
-                    return <div className='separator'>{object.label}</div>
+                    return <div key={`label-${i}`}   className='separator'>{object.label}</div>
                 return <React.Fragment key={`input-${i}`}>
                     <label key={`label-${i}`} htmlFor={object.id} className="text-left">{object.label}</label>
                     {renderElement(object)}
