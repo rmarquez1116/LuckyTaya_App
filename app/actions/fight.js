@@ -15,7 +15,7 @@ export async function getFightSchedule() {
         var types = await getSabongEventStatus();
         session = JSON.parse(session.value);
 
-        var url = `${process.env.BASE_URL}/api/v1/SabongFight`
+        var url = `${process.env.BASE_URL}/api/v1/SabongEvent/V2`
 
         const response = await axios.get(url, {
             headers: {
@@ -42,7 +42,7 @@ export async function getFightSchedule() {
 }
 
 const getDataStatus = (item, types) => {
-    var a = types.find(x => x.code == item.fightStatusCode);
+    var a = types.find(x => x.code == item.eventStatusCode);
     if (!a) { return "" }
     return a.name;
 }
@@ -107,6 +107,43 @@ export async function getFightDetailsByFightId(fightId) {
         return null;
     }
 }
+
+
+
+
+export async function getLastFightDetailsByEvent(eventId) {
+    const cookieStore = await cookies()
+    var session = cookieStore.get('session');
+    if (!session) {
+        return redirect('/login')
+    }
+    try {
+        session = JSON.parse(session.value);
+
+        var url = `${process.env.BASE_URL}/api/v1/SabongFight/GetLastFightNum/${eventId}`
+
+        const response = await axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${session.token}`,
+                "Content-Type": "application/json",
+            },
+            httpsAgent: new Agent({
+                rejectUnauthorized: false
+            })
+        })
+        if (response.status == 200) {
+            if(response.data){
+                var fightDetails = await getFightDetailsByFightId(response.data.fightId)
+                return fightDetails
+            }
+            return null
+        } else return null;
+    } catch (error) {
+        console.log(error, 'Error')
+        return null;
+    }
+}
+
 
 
 async function getFightStatus(status) {

@@ -11,12 +11,13 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from "react";
 import { isJsonEmpty } from "./lib/utils";
 import Loading from "./components/loading";
-import { getLatestFight, getOpenOrClosedFightEvents } from "./actions/fight";
+import { getLastFightDetailsByEvent, getLatestFight, getOpenOrClosedFightEvents } from "./actions/fight";
 import Carousel from './components/carousel'
 import { useWebSocketContext } from './context/webSocketContext';
 import { getToken } from "./helpers/StringGenerator";
 import Pin from './components/modal/pinModal'
 import { getProfile, nominatePin, profile } from "./actions/profile";
+import SchedulePopUp from "./components/modal/schedulePopUp";
 
 export default function Home() {
   const router = useRouter();
@@ -25,6 +26,8 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [carouselItems, setCarouselItems] = useState([])
   const [hasPin, setHasPin] = useState(true)
+  const [isSchedulePopUpOpen, setIsSchedulePopUpOpen] = useState(false)
+  const [fightDetails, setFightDetails] = useState({})
 
   useEffect(() => {
     console.log(messages, 'socket Message')
@@ -40,7 +43,17 @@ export default function Home() {
     }
   }, [])
 
-  const onNominatePin = async(e)=>{
+  const onSelect = async (data) => {
+    if (data) {
+      const response = await getLastFightDetailsByEvent(data)
+      if (response) {
+        setIsSchedulePopUpOpen(true)
+        setFightDetails(response)
+      }
+    }
+  }
+
+  const onNominatePin = async (e) => {
     await nominatePin(e)
     router.replace('/profile')
   }
@@ -56,7 +69,7 @@ export default function Home() {
       const items = []
       for (let index = 0; index < response.length; index++) {
         const element = response[index];
-        items.push(<FightScheduleBox data={element} />)
+        items.push(<FightScheduleBox data={element} onSelect={onSelect}/>)
       }
       setCarouselItems(items)
     }
@@ -66,8 +79,11 @@ export default function Home() {
   return (
     <MainLayout>
       <BalanceHeader type={1} ></BalanceHeader>
+      {isLoaded && isSchedulePopUpOpen && !isJsonEmpty(fightDetails) &&
+          <SchedulePopUp data={fightDetails} onClose={() => setIsSchedulePopUpOpen(false)} />
+        }
 
-      {isLoaded && <Pin title="Set Pin" isOpen={!hasPin} onClose={()=>{}} onSubmit={(e)=>onNominatePin(e)}/>}
+      {isLoaded && <Pin title="Set Pin" isOpen={!hasPin} onClose={() => { }} onSubmit={(e) => onNominatePin(e)} />}
       <div className="className=' p-8 pb-20">
         <div className='flex min-w-md justify-center items-center'>
 
@@ -81,6 +97,7 @@ export default function Home() {
           <DashboardButton onClick={() => router.push('/cashout')} img={cashOut} label="Cash Out"></DashboardButton>
         </div>
         <br />
+      
         {isLoaded && carouselItems.length > 0 &&
           <React.Fragment>
             {/* <FightScheduleBox data={data}></FightScheduleBox> */}

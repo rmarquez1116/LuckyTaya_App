@@ -25,7 +25,7 @@ function SchedulePopUp({ data, onClose }) {
         return newDate.substring(0, newDate.length - 6) + " " + newDate.slice(8);
     }
     return (
-        <div className='absolute flex justify-center items-center flex w-full overflow-hidden backdrop-blur'>
+        <div className='z-10 absolute flex justify-center items-center flex w-full overflow-hidden backdrop-blur'>
             <div className="flex flex-col items-center  w-full max-w-sm card gap-3 p-6 bg-white rounded-3xl shadow">
                 <div className="grid grid-cols-6 w-full grid-rows-1 gap-4  p-3  ">
                     <div className='flex items-center' onClick={onClose}>&lt;</div>

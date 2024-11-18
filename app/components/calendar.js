@@ -21,7 +21,7 @@ function Calendar({ currentDate, schedule, onSelect }) {
     const label = months[currentMonthIndex] + " " + currentDate.getFullYear();
 
     function getDayClassName(date) {
-        var fightDetail = [...data].reverse().find(x => (new Date(x.entryDateTime).toLocaleDateString() == date.toLocaleDateString()))
+        var fightDetail = [...data].reverse().find(x => (new Date(x.eventDate).toLocaleDateString() == date.toLocaleDateString()))
         if (!fightDetail)
             return 'default';
         switch (fightDetail.statusDesc) {
@@ -39,7 +39,7 @@ function Calendar({ currentDate, schedule, onSelect }) {
     }
 
     function onSelectData(date, color) {
-        var fightDetail = [...data].reverse().find(x => (new Date(x.entryDateTime).toLocaleDateString() == date.toLocaleDateString()))
+        var fightDetail = [...data].reverse().find(x => (new Date(x.eventDate).toLocaleDateString() == date.toLocaleDateString()))
         if (fightDetail) {
             fightDetail.color = color;
         }

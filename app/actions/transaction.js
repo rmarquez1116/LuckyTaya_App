@@ -4,13 +4,13 @@ import { Agent } from "https";
 import { cookies } from "next/headers";
 import { fetchData } from "../helpers/DB";
 
-export async function getTransactionsByDate() {
+export async function getTransactionsByDate({dateFrom,dateTo}) {
 
 
-    const now = new Date();
+    // const now = new Date();
 
-    const dateFrom = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-    const dateTo = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999).toISOString();
+    // const dateFrom = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    // const dateTo = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999).toISOString();
 
     const cookieStore = await cookies()
     var session = cookieStore.get('session');
@@ -83,6 +83,14 @@ async function processTransaction(serverData, dateFrom, dateTo, accountNumber) {
 
     serverData = serverData.filter(x => x.transactionDesc != 'Transfer')
     let mergedArray = ([...serverData, ...processedDataFromDB]).sort((a, b) => new Date(b.transactionDateTime) - new Date(a.transactionDateTime));
+
+    mergedArray = mergedArray.map((e) => {
+        return {
+            ...e,
+            fromFullName: `${e.fromFirstname} ${e.fromLastname}`,
+            toFullName: `${e.toFirstname} ${e.toLastname}`
+        }
+    })
 
     return mergedArray
 }

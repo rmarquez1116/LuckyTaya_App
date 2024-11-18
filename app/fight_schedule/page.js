@@ -4,7 +4,7 @@ import Legends from '../components/legends';
 import CenterLabel from '../components/centerLabel';
 import Calendar from '../components/calendar';
 import { useEffect, useState } from "react";
-import { getFightDetailsByFightId, getFightSchedule } from "../actions/fight";
+import { getFightDetailsByFightId, getFightSchedule, getLastFightDetailsByEvent } from "../actions/fight";
 import { dataFilterByCurrentMonth } from "../lib/DataFilter";
 import { isJsonEmpty } from "../lib/utils";
 import SchedulePopUp from "../components/modal/schedulePopUp";
@@ -17,19 +17,18 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false)
   const onSelect = async (data) => {
     if (data) {
-      const response = await getFightDetailsByFightId(data.fightId)
+      const response = await getLastFightDetailsByEvent(data.eventId)
       if (response) {
         response.color = data.color
         setIsSchedulePopUpOpen(true)
         setFightDetails(response)
       }
     }
-
   }
   useEffect(() => {
     const getData = async () => {
       const response = await getFightSchedule();
-      const result = dataFilterByCurrentMonth(response, 'entryDateTime')
+      const result = dataFilterByCurrentMonth(response, 'eventDate')
       setData(result);
       setIsLoaded(true)
     }
