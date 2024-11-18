@@ -10,7 +10,8 @@ function BalanceHeader({ type, forceUpdate }) {
     const [isLoaded, setIsLoaded] = useState(false)
     const getBal = async () => {
         const account = await getAccountDetails();
-        setBalance((account.balance).toLocaleString())
+        if (account)
+            setBalance((account.balance).toLocaleString())
         setIsLoaded(true)
     }
     useEffect(() => {

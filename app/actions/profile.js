@@ -93,20 +93,24 @@ export async function getProfile() {
 
 
 export async function nominatePin(pin) {
+    try {
 
-    const cookieStore = await cookies()
-    var session = cookieStore.get('session');
+        const cookieStore = await cookies()
+        var session = cookieStore.get('session');
 
-    session = JSON.parse(session.value);
-    const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]
-    if (user) {
-        user.pin = encrypt(pin)
-        await updateData('taya_user', { "userId": { $eq: session.userId } }, user);
-    } else {
-        var newUser = session;
-        newUser.pin = (encrypt(pin))
-        delete newUser.token;
-        await saveData('taya_user', newUser)
+        session = JSON.parse(session.value);
+        const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]
+        if (user) {
+            user.pin = encrypt(pin)
+            await updateData('taya_user', { "userId": { $eq: session.userId } }, user);
+        } else {
+            var newUser = session;
+            newUser.pin = (encrypt(pin))
+            delete newUser.token;
+            await saveData('taya_user', newUser)
+        }
+    } catch (error) {
+        console.log(error, '----------')
     }
     return true;
 }

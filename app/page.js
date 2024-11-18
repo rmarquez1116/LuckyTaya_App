@@ -69,7 +69,7 @@ export default function Home() {
       const items = []
       for (let index = 0; index < response.length; index++) {
         const element = response[index];
-        items.push(<FightScheduleBox data={element} onSelect={onSelect}/>)
+        items.push(<FightScheduleBox data={element} onSelect={onSelect} />)
       }
       setCarouselItems(items)
     }
@@ -80,8 +80,8 @@ export default function Home() {
     <MainLayout>
       <BalanceHeader type={1} ></BalanceHeader>
       {isLoaded && isSchedulePopUpOpen && !isJsonEmpty(fightDetails) &&
-          <SchedulePopUp data={fightDetails} onClose={() => setIsSchedulePopUpOpen(false)} />
-        }
+        <SchedulePopUp data={fightDetails} onClose={() => setIsSchedulePopUpOpen(false)} />
+      }
 
       {isLoaded && <Pin title="Set Pin" isOpen={!hasPin} onClose={() => { }} onSubmit={(e) => onNominatePin(e)} />}
       <div className="className=' p-8 pb-20">
@@ -97,7 +97,7 @@ export default function Home() {
           <DashboardButton onClick={() => router.push('/cashout')} img={cashOut} label="Cash Out"></DashboardButton>
         </div>
         <br />
-      
+
         {isLoaded && carouselItems.length > 0 &&
           <React.Fragment>
             {/* <FightScheduleBox data={data}></FightScheduleBox> */}
