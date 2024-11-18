@@ -7,6 +7,7 @@ const publicKey = fs.readFileSync('./key/Public.key', 'utf8')
 const sppublicKey = fs.readFileSync('./key/SP_Public.key', 'utf8')
 const SECRET_PASSKEY = process.env.SECRET_PASSKEY;
 const AES = require('crypto-js/aes')
+const CryptoJS = require('crypto-js')
 
 const sha256withRSAsign = (stringtoencrypt = '') => {
     const data = Buffer.from(stringtoencrypt)

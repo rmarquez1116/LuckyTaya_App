@@ -9,6 +9,8 @@ import { useRouter } from 'next/navigation'
 import Repayment from "../actions/payment";
 import QrCode from "../components/modal/qrCode";
 import { formatMoney } from '../helpers/Common'
+import { validateMpin } from "../actions/profile";
+import PinV2 from "../components/modal/pinModalV2";
 
 const denomination = [
     "100", "200", "300", "1,000", "2,000", "3,000", "10,000", "15,000", "20,000"
@@ -21,6 +23,7 @@ export default function CashIn({ config }) {
     const [qrData, setQrData] = useState('')
     const [total, setTotal] = useState(0)
     const [fee, setFee] = useState(0)
+    const [isShowPin, setIsShowPin] = useState(false)
     const getFee = (isForDisplay) => {
         if (config) {
             if (config.type == 1) {
@@ -48,19 +51,29 @@ export default function CashIn({ config }) {
         }
     }, [amount])
 
+    const onValidatePin = async (pin) => {
+        const result = await validateMpin(pin);
 
-    const onCashIn = async () => {
-        var payment = await Repayment({
-            trxAmount: `${(Number.parseFloat(total)).toFixed(2)}`.replaceAll(",", "").replace(".", ""),
-            fee: fee
-        });
-        if (payment.response.code == "200") {
-            setIsShowQr(true)
-            setQrData(payment.response.codeUrl)
+        if (result == true) {
+            setIsShowPin(false);
+            var payment = await Repayment({
+                trxAmount: `${(Number.parseFloat(total)).toFixed(2)}`.replaceAll(",", "").replace(".", ""),
+                fee: fee
+            });
+            if (payment.response.code == "200") {
+                setIsShowQr(true)
+                setQrData(payment.response.codeUrl)
+            }
+        }else{
+            alert("Invalid Pin")
         }
     }
+
+    const onCashIn = async () => {
+        setIsShowPin(true);
+    }
     const router = useRouter();
-    const onQrClose = () =>{
+    const onQrClose = () => {
         setIsShowQr(false)
         router.replace('/')
     }
@@ -68,6 +81,8 @@ export default function CashIn({ config }) {
         <React.Fragment>
 
             <BalanceHeader type={2}></BalanceHeader>
+            {isShowPin && <PinV2 title="Set Pin" isOpen={isShowPin} onClose={() => { setIsShowPin(false) }} onSubmit={(e) => onValidatePin(e)} />}
+
             {isShowQr && <QrCode data={qrData} onClose={() => onQrClose()} />}
             <div className="flex justify-center align-center  p-6 mt-5">
                 <div className="card max-w-md w-full gap-5 flex-col flex p-6 bg-white rounded-3xl shadow">

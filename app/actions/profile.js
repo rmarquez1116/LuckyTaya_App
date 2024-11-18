@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { fetchData, saveData, updateData } from "../helpers/DB";
 import { cookies } from "next/headers";
-import { encrypt } from "../helpers/Crypto";
+import { decrypt, encrypt } from "../helpers/Crypto";
 
 const phoneRegex = new RegExp(
     /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
@@ -113,4 +113,27 @@ export async function nominatePin(pin) {
         console.log(error, '----------')
     }
     return true;
+}
+
+
+
+export async function validateMpin(pin) {
+    try {
+
+        const cookieStore = await cookies()
+        var session = cookieStore.get('session');
+
+        session = JSON.parse(session.value);
+        const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]
+
+        if (user) {
+            console.log(user,'---------------')
+           return  decrypt(user.pin) == pin
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.log(error,'000000000')
+    }
+    return false;
 }

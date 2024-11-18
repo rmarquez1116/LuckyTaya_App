@@ -7,7 +7,7 @@ import Loading from "../components/loading";
 import Tables from "../components/tables";
 import { format } from 'date-fns'
 import { getStartOfWeek } from "../lib/utils";
-import { formatMoney } from "../helpers/Common";
+import { formatMoney, formatMoneyV2 } from "../helpers/Common";
 
 export default function TransactionHistory() {
   const currDate = new Date()
@@ -107,7 +107,7 @@ export default function TransactionHistory() {
                   label: 'AMOUNT',
                   customValueClass: 'text-semiYellow',
                   format: (val) => {
-                    return formatMoney(val)
+                    return formatMoneyV2(val)
                   }
                 }, {
                   key: 'transactionDesc',

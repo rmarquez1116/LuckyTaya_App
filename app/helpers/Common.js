@@ -40,6 +40,23 @@ export function formatMoney(amount) {
 		maximumFractionDigits: 0,
 	}).format(amount);
 }
+export function formatMoneyV2 (value) {
+
+    const numValue = parseFloat(value)
+
+    if (isNaN(numValue)) {
+        return formatter.format(0).replace("PHP", '').trim()
+    }
+
+    return formatter.format(numValue).replace("PHP", '').trim()
+}
+const formatter = new Intl.NumberFormat('en-PH', {
+    style: 'currency',
+    currency: 'PHP',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    currencyDisplay: 'code'
+})
 
 export function base64UrlDecode(base64Url) {
 	try {
