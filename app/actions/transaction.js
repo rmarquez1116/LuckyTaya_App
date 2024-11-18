@@ -4,7 +4,7 @@ import { Agent } from "https";
 import { cookies } from "next/headers";
 import { fetchData } from "../helpers/DB";
 
-export async function getTransactionsByDate({dateFrom,dateTo}) {
+export async function getTransactionsByDate({ dateFrom, dateTo, isBettingHistory }) {
 
 
     // const now = new Date();
@@ -34,7 +34,7 @@ export async function getTransactionsByDate({dateFrom,dateTo}) {
         })
         // console.log(dateFrom,dateTo,url,response.data, 'hello');
         if (response.status == 200) {
-            const data = processTransaction(response.data, dateFrom, dateTo, session.accountNumber)
+            const data = processTransaction(response.data, dateFrom, dateTo, session.accountNumber, isBettingHistory)
 
             return data;
         } else if (response.status == 401) {
@@ -48,7 +48,7 @@ export async function getTransactionsByDate({dateFrom,dateTo}) {
     }
 }
 
-async function processTransaction(serverData, dateFrom, dateTo, accountNumber) {
+async function processTransaction(serverData, dateFrom, dateTo, accountNumber, isBettingHistory) {
     const query = {
         $and: [{
             $or: [{ accountNumber: { $eq: accountNumber } },
@@ -66,23 +66,31 @@ async function processTransaction(serverData, dateFrom, dateTo, accountNumber) {
 
     const dbData = await fetchData('qr_transactions', query)
     const processedDataFromDB = []
-    for (let index = 0; index < dbData.length; index++) {
-        const element = dbData[index];
-        if (element.masterToFee)
-            processedDataFromDB.push({ ...element.masterToFee, transactionType: "Fee", transCategoryDesc : "Out" })
-        if (element.masterToPlayer)
-            processedDataFromDB.push({ ...element.masterToPlayer, transactionType: "Transfer", transCategoryDesc : "In" })
-        if (element.agentToAgentPlayer)
-            processedDataFromDB.push({ ...element.agentToAgentPlayer, transactionType: "Transfer", transCategoryDesc : "In" })
-        if (element.agentToFee)
-            processedDataFromDB.push({ ...element.agentToFee, transactionType: "Fee", transCategoryDesc : "Out" })
-    }
+    if (!isBettingHistory)
+        for (let index = 0; index < dbData.length; index++) {
+            const element = dbData[index];
+            if (element.masterToFee)
+                processedDataFromDB.push({ ...element.masterToFee, transactionType: "Fee", transCategoryDesc: "Out" })
+            if (element.masterToPlayer)
+                processedDataFromDB.push({ ...element.masterToPlayer, transactionType: "Transfer", transCategoryDesc: "In" })
+            if (element.agentToAgentPlayer)
+                processedDataFromDB.push({ ...element.agentToAgentPlayer, transactionType: "Transfer", transCategoryDesc: "In" })
+            if (element.agentToFee)
+                processedDataFromDB.push({ ...element.agentToFee, transactionType: "Fee", transCategoryDesc: "Out" })
+        }
 
+    if (isBettingHistory)
+        serverData = serverData.filter(x => x.transactionDesc != 'Transfer')
+    let mergedArray = ([...serverData, ...processedDataFromDB])
+        .reduce((acc, current) => {
+            // Check if the id already exists in the accumulator
+            if (!acc.some(item => item.transactionNumber === current.transactionNumber)) {
+                acc.push(current);
+            }
+            return acc;
+        }, [])
+        .sort((a, b) => new Date(b.transactionDateTime) - new Date(a.transactionDateTime));
 
-
-
-    serverData = serverData.filter(x => x.transactionDesc != 'Transfer')
-    let mergedArray = ([...serverData, ...processedDataFromDB]).sort((a, b) => new Date(b.transactionDateTime) - new Date(a.transactionDateTime));
 
     mergedArray = mergedArray.map((e) => {
         return {

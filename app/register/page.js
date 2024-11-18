@@ -1,6 +1,6 @@
 'use client'
 import CommonLayout from "../layout/commonLayout";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import Input from "../components/input";
 import Image from "next/image";
 import otp from '../../public/images/otp.png'
@@ -9,13 +9,13 @@ import Terms from '../components/modal/terms'
 import { register } from "../actions/account";
 import dynamic from "next/dynamic";
 
-const Form = dynamic(()=>import('../components/form'),{ssr : false})
+const Form = dynamic(() => import('../components/form'), { ssr: false })
 
 const form = [
-  
+
   {
-    type : "separator",
-    label : "Profile Details"
+    type: "separator",
+    label: "Profile Details"
   },
   // {
   //   id: "referralCode",
@@ -23,7 +23,7 @@ const form = [
   //   value: "",
   //   label: "Referral"
   // },
-  
+
   {
     id: "firstname",
     type: "text",
@@ -48,7 +48,7 @@ const form = [
     value: "",
     label: "Email"
   },
-  
+
   {
     id: "birthdate",
     type: "date",
@@ -80,8 +80,8 @@ const form = [
   //   label: "Barangay"
   // },
   {
-    type : "separator",
-    label : "Account Details"
+    type: "separator",
+    label: "Account Details"
   },
   {
     id: "username",
@@ -107,6 +107,16 @@ export default function Register() {
   const [isShowModal, setIsShowModal] = useState(false)
 
   const [state, registerAction] = useActionState(register, undefined);
+  useEffect(() => {
+    console.log(state, '----')
+    if (state && state.errors) {
+
+      var error = state.errors
+      if (error.hasOwnProperty('alert')) {
+        alert(error.alert[0])
+      }
+    }
+  }, [state])
 
   const body = () => {
     if (step == 1) {

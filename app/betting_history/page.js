@@ -9,7 +9,7 @@ import { format } from 'date-fns'
 import { getStartOfWeek } from "../lib/utils";
 import { formatMoney } from "../helpers/Common";
 
-export default function TransactionHistory() {
+export default function BettingHistory() {
   const currDate = new Date()
   const defaultEndDate = new Date(currDate)
   defaultEndDate.setHours(23, 59, 59, 999)
@@ -31,7 +31,7 @@ export default function TransactionHistory() {
       const result = await getTransactionsByDate({
         dateFrom: startDateDateTime.toISOString(),
         dateTo: endDateDateTime.toISOString(),
-        isBettingHistory: false
+        isBettingHistory: true
       })
       setTransactionList(result)
       setIsLoaded(true)
@@ -64,7 +64,7 @@ export default function TransactionHistory() {
       <BalanceHeader type={2} />
       <div className="w-full flex flex-col gap-10 p-6">
 
-        <label className="text-center label-header1">Transaction History</label>
+        <label className="text-center label-header1">Betting History</label>
         <div className="grid grid-cols-1 gap-4 place-items-center">
           <div className="flex flex-row">
             <div className="gap-2 flex">

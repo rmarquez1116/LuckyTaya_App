@@ -4,6 +4,8 @@ import { z } from "zod";
 import { cookies } from "next/headers";
 import axios from "axios";
 import { Agent } from "https";
+import { redirect } from "next/navigation";
+
 
 const loginSchema = z.object({
     username: z
@@ -55,10 +57,27 @@ export async function login(prevState, formData) {
             isSuccess = true
             return true;
         }
-    } catch (error) {
+    } catch (e) {
+        console.log(e,'----')
+        const errorMessages = e.response.data.error
+        var errorMesssagees = ''
+        if (errorMessages) {
+            if (errorMessagees['Not found']) {
+                errorMesssagees = errorMessages['Not found'][0]
+            } else if (errorMessages['Bad request']) {
+                errorMesssagees = errorMessages['Bad request'][0]
+            } else if (errorMessages['Unexpexted Error']) {
+                errorMesssagees = errorMessages['Unexpexted Error'][0]
+            } else {
+                errorMesssagees = 'Login Failed'
+            }
+        }
+        else {
+                errorMesssagees = 'Login Failed'
+        }
         return {
             errors: {
-                username: ["Invalid email or password"],
+                username: [errorMesssagees],
             },
         };
     }

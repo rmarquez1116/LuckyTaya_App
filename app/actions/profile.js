@@ -37,13 +37,13 @@ const profileSchema = z.object({
 
 
 const pinSchema = z.object({
-    
+
     pin: z
         .string()
         .min(6, { message: "Pin should be 6 characters" })
         .max(6, { message: "Pin should be 6 characters" })
         .trim(),
-        
+
 }).refine((data) => (data.pin === data.re_pin)
     && (data.pin != "" && data.re_pin != ""), {
     message: "Pin don't match",
@@ -53,7 +53,7 @@ const pinSchema = z.object({
 
 export async function profile(prevState, formData) {
     const result = profileSchema.safeParse(Object.fromEntries(formData));
-    
+
     if (!result.success) {
         return {
             errors: result.error.flatten().fieldErrors,
@@ -68,7 +68,7 @@ export async function profile(prevState, formData) {
     session = JSON.parse(session.value);
 
     const updateResult = await updateData('taya_user', { 'userId': { $eq: session.userId } }, request);
-    console.log({updateResult,request})
+    console.log({ updateResult, request })
     return { success: true };
 
 }
@@ -83,7 +83,7 @@ export async function getProfile() {
     session = JSON.parse(session.value);
     const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]
     if (!user) {
-        const user1 = Object.assign({},session);
+        const user1 = Object.assign({}, session);
         delete user1.token
         return user1
     }
@@ -93,13 +93,20 @@ export async function getProfile() {
 
 
 export async function nominatePin(pin) {
-   
+
     const cookieStore = await cookies()
     var session = cookieStore.get('session');
 
     session = JSON.parse(session.value);
     const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]
-    user.pin = encrypt(pin)
-    await updateData('taya_user',{ "userId": { $eq: session.userId } },user);
+    if (user) {
+        user.pin = encrypt(pin)
+        await updateData('taya_user', { "userId": { $eq: session.userId } }, user);
+    } else {
+        var newUser = session;
+        newUser.pin = (encrypt(pin))
+        delete newUser.token;
+        await saveData('taya_user', newUser)
+    }
     return true;
 }

@@ -79,7 +79,7 @@ export async function register(prevState, formData) {
         if (existingPlayer.length > 0) {
             return {
                 errors: {
-                    username: ["Data already exists"],
+                    alert: ["Data already exists"],
                 },
             };
         }
@@ -96,15 +96,30 @@ export async function register(prevState, formData) {
             console.log(response)
             return {
                 errors: {
-                    referralCode: ["Can't Process your Request"],
+                    alert: ["Can't Process your Request"],
                 },
             };
         }
-    } catch (error) {
-
+    } catch (e) {
+        const errorMessages = e.response.data.error
+        var errorMesssagees = ''
+        if (errorMessages) {
+            if (errorMessagees['Not found']) {
+                errorMesssagees = errorMessages['Not found'][0]
+            } else if (errorMessages['Bad request']) {
+                errorMesssagees = errorMessages['Bad request'][0]
+            } else if (errorMessages['Unexpexted Error']) {
+                errorMesssagees = errorMessages['Unexpexted Error'][0]
+            } else {
+                errorMesssagees = 'Oops! something went wrong'
+            }
+        }
+        else {
+            errorMesssagees = 'Oops! something went wrong'
+        }
         return {
             errors: {
-                referralCode: ["Can't Process your request"],
+                alert: [errorMesssagees],
             },
         };
     }

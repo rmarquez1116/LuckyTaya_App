@@ -5,27 +5,21 @@ import Link from 'next/link';
 import Select from 'react-select';
 
 export default function Form({ action, state, fields, buttonText, hasBackButton = false }) {
-
     const renderElement = (object) => {
         if (object.type == "select") {
-            const items = object.items.map((item)=>{return {value : item.value,label : item.label}})
+            const items = object.items.map((item) => { return { value: item.value, label: item.label } })
             return <React.Fragment>
-                <input hidden value={object.value} name={object.id}/>
-                <Select  onChange={(e) => object.onSelect(e)} placeholder={` Select ${object.label}`} options={items}
+                <input hidden value={object.value} name={object.id} />
+                <Select onChange={(e) => object.onSelect(e)} placeholder={` Select ${object.label}`} options={items}
                     classNamePrefix="drop-down"
-                    defaultValue={items.find(x=>x.value == object.value)}
+                    defaultValue={items.find(x => x.value == object.value)}
                 />
 
-                {state?.errors?.[object.id] && (
-                    <p key={`${object.id}-error`} id={`${object.id}-error`} className="text-red-500">{state.errors[object.id]}</p>
-                )}
             </React.Fragment>
         } else {
             return <React.Fragment>
                 <Input key={`${object.id}-input`} type={object.type} name={object.id} id={object.id} defaultValue={object.value}></Input>
-                {state?.errors?.[object.id] && (
-                    <p key={`${object.id}-error`} id={`${object.id}-error`} className="text-red-500">{state.errors[object.id]}</p>
-                )}
+
 
             </React.Fragment>
         }
@@ -36,10 +30,13 @@ export default function Form({ action, state, fields, buttonText, hasBackButton 
             {fields.map((object, i) => {
 
                 if (object.type == "separator")
-                    return <div key={`label-${i}`}   className='separator'>{object.label}</div>
+                    return <div key={`label-${i}`} className='separator'>{object.label}</div>
                 return <React.Fragment key={`input-${i}`}>
                     <label key={`label-${i}`} htmlFor={object.id} className="text-left">{object.label}</label>
                     {renderElement(object)}
+                    {state?.errors?.[object.id] && (
+                        <p key={`${object.id}-error`} id={`${object.id}-error`} className="text-red">{state.errors[object.id]}</p>
+                    )}
                 </React.Fragment>
             })}
             <SubmitButton />
