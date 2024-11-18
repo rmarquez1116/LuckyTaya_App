@@ -7,6 +7,7 @@ import Loading from "../components/loading";
 import Tables from "../components/tables";
 import { format } from 'date-fns'
 import { getStartOfWeek } from "../lib/utils";
+import { formatMoney } from "../helpers/Common";
 
 export default function TransactionHistory() {
   const currDate = new Date()
@@ -84,10 +85,10 @@ export default function TransactionHistory() {
                 {
                   key: 'transactionDateTime',
                   label: 'DATE',
-                  // format: (val: string) => {
-                  //   const formatDate = new Date(val)
-                  //   return format(formatDate, 'yyyy-MM-dd hh:mm:ss a')
-                  // }
+                  format: (val) => {
+                    const formatDate = new Date(val)
+                    return format(formatDate, 'yyyy-MM-dd hh:mm:ss a')
+                  }
                 }, {
                   key: 'transactionNumber',
                   label: 'TXN ID'
@@ -105,9 +106,9 @@ export default function TransactionHistory() {
                   key: 'amount',
                   label: 'AMOUNT',
                   customValueClass: 'text-semiYellow',
-                  // format: (val: string) => {
-                  //   return formatMoney(val)
-                  // }
+                  format: (val) => {
+                    return formatMoney(val)
+                  }
                 }, {
                   key: 'transactionDesc',
                   concatKey: ['transCategoryDesc'],

@@ -69,13 +69,13 @@ async function processTransaction(serverData, dateFrom, dateTo, accountNumber) {
     for (let index = 0; index < dbData.length; index++) {
         const element = dbData[index];
         if (element.masterToFee)
-            processedDataFromDB.push({ ...element.masterToFee, transactionType: "Fee" })
+            processedDataFromDB.push({ ...element.masterToFee, transactionType: "Fee", transCategoryDesc : "Out" })
         if (element.masterToPlayer)
-            processedDataFromDB.push({ ...element.masterToPlayer, transactionType: "Transfer" })
+            processedDataFromDB.push({ ...element.masterToPlayer, transactionType: "Transfer", transCategoryDesc : "In" })
         if (element.agentToAgentPlayer)
-            processedDataFromDB.push({ ...element.agentToAgentPlayer, transactionType: "Transfer" })
+            processedDataFromDB.push({ ...element.agentToAgentPlayer, transactionType: "Transfer", transCategoryDesc : "In" })
         if (element.agentToFee)
-            processedDataFromDB.push({ ...element.agentToFee, transactionType: "Fee" })
+            processedDataFromDB.push({ ...element.agentToFee, transactionType: "Fee", transCategoryDesc : "Out" })
     }
 
 
