@@ -16,7 +16,8 @@ import Carousel from './components/carousel'
 import { useWebSocketContext } from './context/webSocketContext';
 import { getToken } from "./helpers/StringGenerator";
 import Pin from './components/modal/pinModal'
-import { getProfile, nominatePin, profile } from "./actions/profile";
+import { getProfile, profile } from "./actions/profile";
+import { nominatePin } from './actions/pin'
 import SchedulePopUp from "./components/modal/schedulePopUp";
 
 export default function Home() {

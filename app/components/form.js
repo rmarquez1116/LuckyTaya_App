@@ -9,7 +9,7 @@ export default function Form({ action, state, fields, buttonText, hasBackButton 
         if (object.type == "select") {
             const items = object.items.map((item) => { return { value: item.value, label: item.label } })
             return <React.Fragment>
-                <input hidden value={object.value} name={object.id} />
+                <input hidden defaultValue={object.value} name={object.id} />
                 <Select onChange={(e) => object.onSelect(e)} placeholder={` Select ${object.label}`} options={items}
                     classNamePrefix="drop-down"
                     defaultValue={items.find(x => x.value == object.value)}

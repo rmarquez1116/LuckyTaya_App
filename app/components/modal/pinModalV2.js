@@ -65,8 +65,10 @@ const PinV2 = ({ title, isOpen, onClose, onSubmit }) => {
                         </button>
                     ))}
                     <button
+
+                        type='button'
                         onClick={handleDeleteClick}
-                        className=" rounded-[40px] text-xl bg-red-500 text-white hover:bg-red-600 col-span-2"
+                        className=" rounded-[40px] text-xl bg-red-500 text-white hover:bg-red col-span-2"
                     >
                         DEL
                     </button>
@@ -75,12 +77,15 @@ const PinV2 = ({ title, isOpen, onClose, onSubmit }) => {
                 {/* Modal Footer */}
                 <div className="flex justify-end space-x-4">
                     <button
-                        onClick={()=>onClose()}
+
+                        type='button'
+                        onClick={() => onClose()}
                         className="px-4 py-2 bg-gray-200 text-gray-800 rounded-[40px] hover:bg-gray-300"
                     >
                         Cancel
                     </button>
                     <button
+                        type='button'
                         onClick={handleSubmit}
                         className=" bg-blue-600 text-white rounded-md primary"
                     >

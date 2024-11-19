@@ -6,8 +6,7 @@ const privateKey = fs.readFileSync('./key/Private.key')
 const publicKey = fs.readFileSync('./key/Public.key', 'utf8')
 const sppublicKey = fs.readFileSync('./key/SP_Public.key', 'utf8')
 const SECRET_PASSKEY = process.env.SECRET_PASSKEY;
-const AES = require('crypto-js/aes')
-const CryptoJS = require('crypto-js')
+const CryptoJS = require("crypto-js");
 
 const sha256withRSAsign = (stringtoencrypt = '') => {
     const data = Buffer.from(stringtoencrypt)
@@ -33,12 +32,19 @@ const sha256withRSAverify = (stringtoencrypt = '', signature = '') => {
 
 
 const encrypt = (message) => {
-    return AES.encrypt(message, SECRET_PASSKEY).toString()
+    const iv = crypto.randomBytes(16); // Generate a random IV (Initialization Vector)
+    const cipher = crypto.createCipheriv('aes-128-cbc', Buffer.from(SECRET_PASSKEY), iv); // AES-256-CBC
+    let encrypted = cipher.update(message, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    // Return both the IV and encrypted data (since the IV is needed for decryption)
+    return { iv: iv.toString('hex'), encryptedData: encrypted };
 }
 
-const decrypt = (encryptedMessage) => {
-    const bytes = AES.decrypt(encryptedMessage, SECRET_PASSKEY)
-    return bytes.toString(CryptoJS.enc.Utf8)
+const decrypt = (pin) => {
+    const decipher = crypto.createDecipheriv('aes-128-cbc', Buffer.from(SECRET_PASSKEY), Buffer.from(pin.iv, 'hex'));
+    let decrypted = decipher.update(pin.encryptedData, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
 }
 
-export { sha256withRSAsign, sha256withRSAverify,encrypt,decrypt }
+export { sha256withRSAsign, sha256withRSAverify, encrypt, decrypt }

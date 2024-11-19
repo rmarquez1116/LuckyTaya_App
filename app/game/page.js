@@ -237,8 +237,9 @@ function Game() {
 
 </video> */}
                         <iframe className="relative h-full w-full"
-                            src="https://www.youtube.com/embed/4AbXp05VWoQ?si=zzaGMvrDOSoP9tBb?autoplay=1&cc_load_policy=1"
-                            title="YouTube video player" frameBorder="0"
+                            // src="https://www.youtube.com/embed/4AbXp05VWoQ?si=zzaGMvrDOSoP9tBb?autoplay=1&cc_load_policy=1"
+                            src="http://161.49.111.13/#{\%22playerOption\%22:{\%22autoStart\%22:true,\%22autoFallback\%22:true,\%22mute\%22:false,\%22sources\%22:[{\%22type\%22:\%22webrtc\%22,\%22file\%22:\%22ws://161.49.111.13:3333/app/test-input-stream?transport=tcp\%22}],\%22expandFullScreenUI\%22:true},\%22demoOption\%22:{\%22autoReload\%22:true,\%22autoReloadInterval\%22:2000}}"
+                            title="Lucky Taya" frameBorder="0"
                             allow="autoplay;encrypted-media;"
                             referrerPolicy="strict-origin-when-cross-origin"
                             allowFullScreen></iframe>

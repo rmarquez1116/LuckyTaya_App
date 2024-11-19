@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation'
 import Repayment from "../actions/payment";
 import QrCode from "../components/modal/qrCode";
 import { formatMoney } from '../helpers/Common'
-import { validateMpin } from "../actions/profile";
+import { validateMpin } from "../actions/pin";
 import PinV2 from "../components/modal/pinModalV2";
 
 const denomination = [

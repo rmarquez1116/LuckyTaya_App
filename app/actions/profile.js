@@ -3,7 +3,6 @@
 import { z } from "zod";
 import { fetchData, saveData, updateData } from "../helpers/DB";
 import { cookies } from "next/headers";
-import { decrypt, encrypt } from "../helpers/Crypto";
 
 const phoneRegex = new RegExp(
     /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
@@ -90,50 +89,3 @@ export async function getProfile() {
     return user;
 }
 
-
-
-export async function nominatePin(pin) {
-    try {
-
-        const cookieStore = await cookies()
-        var session = cookieStore.get('session');
-
-        session = JSON.parse(session.value);
-        const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]
-        if (user) {
-            user.pin = encrypt(pin)
-            await updateData('taya_user', { "userId": { $eq: session.userId } }, user);
-        } else {
-            var newUser = session;
-            newUser.pin = (encrypt(pin))
-            delete newUser.token;
-            await saveData('taya_user', newUser)
-        }
-    } catch (error) {
-        console.log(error, '----------')
-    }
-    return true;
-}
-
-
-
-export async function validateMpin(pin) {
-    try {
-
-        const cookieStore = await cookies()
-        var session = cookieStore.get('session');
-
-        session = JSON.parse(session.value);
-        const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]
-
-        if (user) {
-            console.log(user,'---------------')
-           return  decrypt(user.pin) == pin
-        } else {
-            return false;
-        }
-    } catch (error) {
-        console.log(error,'000000000')
-    }
-    return false;
-}
