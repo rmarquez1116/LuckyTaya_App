@@ -238,7 +238,7 @@ function Game() {
 </video> */}
                         <iframe className="relative h-full w-full"
                             // src="https://www.youtube.com/embed/4AbXp05VWoQ?si=zzaGMvrDOSoP9tBb?autoplay=1&cc_load_policy=1"
-                            src="http://161.49.111.13/#{\%22playerOption\%22:{\%22autoStart\%22:true,\%22autoFallback\%22:true,\%22mute\%22:false,\%22sources\%22:[{\%22type\%22:\%22webrtc\%22,\%22file\%22:\%22ws://161.49.111.13:3333/app/test-input-stream?transport=tcp\%22}],\%22expandFullScreenUI\%22:true},\%22demoOption\%22:{\%22autoReload\%22:true,\%22autoReloadInterval\%22:2000}}"
+                            src="http://161.49.111.13/#%7B%22playerOption%22%3A%7B%22autoStart%22%3Atrue%2C%22autoFallback%22%3Atrue%2C%22mute%22%3Afalse%2C%22sources%22%3A%5B%7B%22type%22%3A%22webrtc%22%2C%22file%22%3A%22ws%3A%2F%2F161.49.111.13%3A3333%2Fapp%2Ftest-input-stream%3Ftransport%3Dtcp%22%7D%5D%2C%22expandFullScreenUI%22%3Atrue%7D%2C%22demoOption%22%3A%7B%22autoReload%22%3Atrue%2C%22autoReloadInterval%22%3A2000%7D%7D"
                             title="Lucky Taya" frameBorder="0"
                             allow="autoplay;encrypted-media;"
                             referrerPolicy="strict-origin-when-cross-origin"
