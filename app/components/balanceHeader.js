@@ -38,7 +38,7 @@ function BalanceHeader({ type, forceUpdate }) {
                             {balance}
                         </label>
                     </div>
-                    <Image alt="avatar" className="w-[20px] h-[20px]" src={avatar}></Image>
+                    {/* <Image alt="avatar" className="w-[20px] h-[20px]" src={avatar}></Image> */}
 
                 </div>
             )

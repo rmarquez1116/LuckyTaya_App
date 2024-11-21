@@ -10,6 +10,7 @@ import Menu from '../components/menu';
 import iconFooter from '../../public/images/logo-footer.png';
 import { logout } from '../actions/auth';
 import { redirect } from 'next/navigation';
+import logoutIcon from '../../public/images/logout.svg'
 
 function Sidebar({ toggle, isOpen }) {
   const onLogout = async () => {
@@ -52,9 +53,10 @@ function Sidebar({ toggle, isOpen }) {
         <Menu></Menu>
 
 
-        <button onClick={() => onLogout()} className='w-[50%]'>Logout</button>
-        <br/>    <br/>
-        <div className='p-3 grid grid-cols-3 grid-rows-1 gap-4 text-center'>
+        <button onClick={() => onLogout()} className='justify-center w-full p-4 text-red hover:bg-cursedBlack hover:rounded-xlg hover:text-[#E7DE54] flex gap-2'>
+          <Image src={logoutIcon} alt="logout" className={`h-4 w-auto my-auto`} /> Logout</button>
+
+        <div className='p-3 grid grid-cols-3 grid-rows-1 gap-4 text-center  z-20'>
           <div></div>
           <div>
 
@@ -64,8 +66,8 @@ function Sidebar({ toggle, isOpen }) {
           </div>
           <div></div>
         </div>
-
-        <div className='absolute bottom-[50px] w-full'>
+        <br/>
+        <div className='w-full z-0'>
 
           <div className='w-full flex justify-center items-center'>
 
@@ -75,7 +77,7 @@ function Sidebar({ toggle, isOpen }) {
         </div>
       </div>
       <div />
-    </React.Fragment>
+    </React.Fragment >
   )
 }
 
