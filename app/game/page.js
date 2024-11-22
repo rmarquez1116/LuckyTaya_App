@@ -18,7 +18,7 @@ import { useWebSocketContext } from '../context/webSocketContext';
 import Trend from '../components/trend'
 
 function Game() {
-    const {socket, messages } = useWebSocketContext();
+    const { socket, messages } = useWebSocketContext();
 
     const [betDetails, setBetDetails] = useState({
         fId: 0,
@@ -84,11 +84,11 @@ function Game() {
     useEffect(() => {
 
         try {
-            console.log({messages,data}, 'socket Message')
+            console.log({ messages, data }, 'socket Message')
             if (messages != null && !isJsonEmpty(data)) {
                 const parseMessage = JSON.parse(messages)
                 const betDetail = JSON.parse(parseMessage.jsonPacket)
-                
+
                 switch (parseMessage.PacketType) {
                     case 10:
                         if (data.fight.fightId == parseMessage.FightId &&
@@ -243,7 +243,7 @@ function Game() {
                             allow="autoplay;encrypted-media;"
                             referrerPolicy="strict-origin-when-cross-origin"
                             allowFullScreen></iframe>
-                        <br />
+                        <br />  
                         <div className="grid grid-cols-5 grid-rows-1 gap-4">
                             <div className="col-span-2 card rounded-[10px] p-3  text-center">
                                 <label> Betting {data.fightStatus.name}:</label>

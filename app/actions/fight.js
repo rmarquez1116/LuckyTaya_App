@@ -132,7 +132,7 @@ export async function getLastFightDetailsByEvent(eventId) {
             })
         })
         if (response.status == 200) {
-            if(response.data){
+            if (response.data) {
                 var fightDetails = await getFightDetailsByFightId(response.data.fightId)
                 return fightDetails
             }
@@ -246,7 +246,9 @@ export async function getLatestFight() {
             } else {
                 eventId = events[0].event.eventId;
             }
-            var url = `${process.env.BASE_URL}/api/v1/SabongFight/GetLastFightNum/${eventId}`
+
+
+            var url = `${process.env.BASE_URL}/api/v1/SabongFight/ByEventId/${eventId}`
 
             response = await axios.get(url, {
                 headers: {
@@ -272,12 +274,32 @@ export async function getLatestFight() {
             })
         }
         if (response.status == 200) {
-            const { fightId, eventId, fightStatusCode } = response.data
+            var data;
+            if (response.data instanceof Array) {
+                data = [...response.data].reverse();
+                var selectedIndex = -1
+                for (let index = 0; index < data.length; index++) {
+                    const element = data[index];
+                    if (element.fightStatus == 11) {
+                        selectedIndex = index
+                        break;
+                    }else if (element.fightStatus == 10){
+                        selectedIndex = index;
+                        break;
+                    }
+                }
+                if (selectedIndex > -1)
+                    data = data[selectedIndex]
+                else data = data[data.length - 1]
+            }
+            else data = response.data
+
+            const { fightId, eventId, fightStatusCode } = data
             var statusDesc = await getFightStatus(fightStatusCode);
             // if (fightStatusCode == 10 || fightStatusCode == 11) {
             const fightDetails = await getFightDetailsByFightId(fightId)
             if (!isJsonEmpty(fightDetails))
-                return { ...fightDetails, fight: response.data, fightStatus: statusDesc }
+                return { ...fightDetails, fight: data, fightStatus: statusDesc }
             // }
             return null;
 
