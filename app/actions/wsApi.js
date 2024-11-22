@@ -6,7 +6,7 @@ import { isJsonEmpty } from "../lib/utils";
 
 export async function getInitialBetDetails(fightId) {
     const cookieStore = await cookies()
-    var session = cookieStore.get('session');
+    var session = cookieStore.get('app_session');
     if (!session) {
         return redirect('/login')
     }

@@ -13,7 +13,7 @@ const middleware = async (req) => {
   const isProtectedRoute = protectedRoutes.includes(path);
   const isPublicRoute = publicRoutes.includes(path);
   const cookieStore = await cookies();
-  var session = cookieStore.get("session")?.value;
+  var session = cookieStore.get("app_session")?.value;
 
   try {
     session = JSON.parse(session)
@@ -26,7 +26,7 @@ const middleware = async (req) => {
   if (session) {
     const token = session.token.split('.')
     if (token.length ==2 &&token[1] != "" && isTokenExpire(token[1])) {
-      await cookieStore.delete("session");
+      await cookieStore.delete("app_session");
       return NextResponse.redirect(new URL("/login", req.nextUrl));
     }
   }

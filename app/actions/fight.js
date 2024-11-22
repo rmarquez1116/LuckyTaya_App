@@ -7,7 +7,7 @@ import { logout } from "./auth";
 
 export async function getFightSchedule() {
     const cookieStore = await cookies()
-    var session = cookieStore.get('session');
+    var session = cookieStore.get('app_session');
     if (!session) {
         return redirect('/login')
     }
@@ -50,7 +50,7 @@ const getDataStatus = (item, types) => {
 
 export async function getSabongEventStatus() {
     const cookieStore = await cookies()
-    var session = cookieStore.get('session');
+    var session = cookieStore.get('app_session');
     if (!session) {
         return redirect('/login')
     }
@@ -81,7 +81,7 @@ export async function getSabongEventStatus() {
 
 export async function getFightDetailsByFightId(fightId) {
     const cookieStore = await cookies()
-    var session = cookieStore.get('session');
+    var session = cookieStore.get('app_session');
     if (!session) {
         return redirect('/login')
     }
@@ -113,7 +113,7 @@ export async function getFightDetailsByFightId(fightId) {
 
 export async function getLastFightDetailsByEvent(eventId) {
     const cookieStore = await cookies()
-    var session = cookieStore.get('session');
+    var session = cookieStore.get('app_session');
     if (!session) {
         return redirect('/login')
     }
@@ -150,7 +150,7 @@ async function getFightStatus(status) {
     const cookieStore = await cookies()
     if (status == 22)
         return { code: 22, name: "Ended" }
-    var session = cookieStore.get('session');
+    var session = cookieStore.get('app_session');
     if (!session) {
         return redirect('/login')
     }
@@ -179,9 +179,41 @@ async function getFightStatus(status) {
     }
 }
 
+
+export async function getOpenOrClosedEvents() {
+    const cookieStore = await cookies()
+    var session = cookieStore.get('app_session');
+    if (!session) {
+        return redirect('/login')
+    }
+    try {
+        session = JSON.parse(session.value);
+
+        var url = `${process.env.BASE_URL}/api/v1/SabongEvent/V2/EventWithStatusOpen`
+
+        const response = await axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${session.token}`,
+                "Content-Type": "application/json",
+            },
+            httpsAgent: new Agent({
+                rejectUnauthorized: false
+            })
+        })
+
+       
+        return response.data
+    } catch (error) {
+        if (error.status == 401) {
+            logout()
+        }
+        return null;
+    }
+}
+
 export async function getOpenOrClosedFightEvents() {
     const cookieStore = await cookies()
-    var session = cookieStore.get('session');
+    var session = cookieStore.get('app_session');
     if (!session) {
         return redirect('/login')
     }
@@ -200,7 +232,7 @@ export async function getOpenOrClosedFightEvents() {
             })
         })
 
-        console.log(response.status, '-statutts')
+        console.log(response, '-statutts')
         if (response.status == 200) {
 
             const items = [];
@@ -217,6 +249,7 @@ export async function getOpenOrClosedFightEvents() {
             logout()
         } return null;
     } catch (error) {
+        console.log(error,'hello')
         if (error.status == 401) {
             logout()
         }
@@ -226,25 +259,27 @@ export async function getOpenOrClosedFightEvents() {
 
 export async function getLatestFight() {
     const cookieStore = await cookies()
-    var session = cookieStore.get('session');
+    var session = cookieStore.get('app_session');
     if (!session) {
         return redirect('/login')
     }
     try {
         session = JSON.parse(session.value);
 
-        var fightEvents = await getOpenOrClosedFightEvents();
+        var fightEvents = await getOpenOrClosedEvents();
+        console.log(fightEvents,'----------')
         var response;
         if (fightEvents) {
             var eventId = 0;
-            const events = fightEvents.sort((a, b) => new Date(b.event.eventDate) - new Date(a.event.eventDate));
 
-            const currentEvent = events.findIndex(x => (new Date(x.event.eventDate)).toLocaleDateString() == (new Date()).toLocaleDateString())
+            const events = fightEvents.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
+
+            const currentEvent = events.findIndex(x => (new Date(x.eventDate)).toLocaleDateString() == (new Date()).toLocaleDateString())
 
             if (currentEvent > -1) {
-                eventId = events[currentEvent].event.eventId
+                eventId = events[currentEvent].eventId
             } else {
-                eventId = events[0].event.eventId;
+                eventId = events[0].eventId;
             }
 
 
@@ -315,7 +350,7 @@ export async function getLatestFight() {
 
 export async function placeABet(fightId, amount, side) {
     const cookieStore = await cookies()
-    var session = cookieStore.get('session');
+    var session = cookieStore.get('app_session');
     if (!session) {
         return redirect('/login')
     }
@@ -347,7 +382,7 @@ export async function placeABet(fightId, amount, side) {
 
 export async function getEventTrend(eventId) {
     const cookieStore = await cookies()
-    var session = cookieStore.get('session');
+    var session = cookieStore.get('app_session');
     if (!session) {
         return redirect('/login')
     }

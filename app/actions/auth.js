@@ -48,7 +48,7 @@ export async function login(prevState, formData) {
             token = atob(token)
             const expiration = new Date(token.exp * 1000)
             
-            cookieStore.set("session", JSON.stringify(response.data), {
+            cookieStore.set("app_session", JSON.stringify(response.data), {
                 httpOnly: true,
                 secure: process.env.NEXT_PUBLIC_PRODUCTION_ENV == 'production',
                 expires: expiration,
@@ -90,7 +90,7 @@ export async function login(prevState, formData) {
 
 export async function logout() {
     const cookieStore = await cookies()
-    cookieStore.delete("session");
+    cookieStore.delete("app_session");
     redirect('/login')
 }
 
@@ -98,7 +98,7 @@ export async function logout() {
 
 export async function getAccountDetails(fightId, amount, side) {
     const cookieStore = await cookies()
-    var session = cookieStore.get('session');
+    var session = cookieStore.get('app_session');
     if (!session) {
         return redirect('/login')
     }
@@ -128,7 +128,7 @@ export async function getAccountDetails(fightId, amount, side) {
 }
 export async function getSession() {
     const cookieStore = await cookies()
-    const session = cookieStore.get("session")
+    const session = cookieStore.get("app_session")
     if (!session) {
         logout()
     } else {

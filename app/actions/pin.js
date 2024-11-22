@@ -7,7 +7,7 @@ export async function nominatePin(pin) {
     try {
 
         const cookieStore = await cookies()
-        var session = cookieStore.get('session');
+        var session = cookieStore.get('app_session');
 
         session = JSON.parse(session.value);
         const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]
@@ -33,7 +33,7 @@ export async function validateMpin(pin) {
   
        try {
         const cookieStore = await cookies()
-        var session = cookieStore.get('session');
+        var session = cookieStore.get('app_session');
 
         session = JSON.parse(session.value);
         const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]

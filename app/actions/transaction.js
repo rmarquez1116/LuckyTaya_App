@@ -13,7 +13,7 @@ export async function getTransactionsByDate({ dateFrom, dateTo, isBettingHistory
     // const dateTo = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999).toISOString();
 
     const cookieStore = await cookies()
-    var session = cookieStore.get('session');
+    var session = cookieStore.get('app_session');
     if (!session) {
         return redirect('/login')
     }
@@ -105,7 +105,7 @@ async function processTransaction(serverData, dateFrom, dateTo, accountNumber, i
 
 export async function cashIn(amount) {
     const cookieStore = await cookies()
-    var session = cookieStore.get('session');
+    var session = cookieStore.get('app_session');
     if (!session) {
         return redirect('/login')
     }
@@ -140,7 +140,7 @@ export async function cashIn(amount) {
 
 export async function cashOut(dateFrom, dateTo) {
     const cookieStore = await cookies()
-    var session = cookieStore.get('session');
+    var session = cookieStore.get('app_session');
     if (!session) {
         return redirect('/login')
     }

@@ -55,7 +55,7 @@ const Repayment = (req) => {
   const saveTransaction = async (request) => {
 
     const cookieStore = await cookies()
-    var session = cookieStore.get('session');
+    var session = cookieStore.get('app_session');
 
     session = JSON.parse(session.value);
     const transaction = {

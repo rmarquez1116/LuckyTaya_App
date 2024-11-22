@@ -60,6 +60,7 @@ export default function Home() {
   }
   const getData = async () => {
     const response = await getOpenOrClosedFightEvents();
+
     const userProfile = await getProfile()
     if (userProfile) {
       if (!userProfile?.pin) {

@@ -33,7 +33,7 @@ function FighterDetail({ data }) {
     const title = data.side == 1 ? "Meron" : "Wala"
     const color = data.side == 1 ? "meronColor" : "walaColor"
     return <React.Fragment>
-        <div className='inline-flex gap-2 justify-center w-full'>
+        <div className='inline-flex gap-2 justify-center w-full z-40'>
             <div className={`${color} rounded-full h-5 w-5  text-center label-header1`}></div>
             {title}
         </div>
