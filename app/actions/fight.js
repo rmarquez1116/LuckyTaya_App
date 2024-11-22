@@ -315,10 +315,10 @@ export async function getLatestFight() {
                 var selectedIndex = -1
                 for (let index = 0; index < data.length; index++) {
                     const element = data[index];
-                    if (element.fightStatus == 11) {
+                    if (element.fightStatusCode == 11) {
                         selectedIndex = index
                         break;
-                    }else if (element.fightStatus == 10){
+                    }else if (element.fightStatusCode == 10){
                         selectedIndex = index;
                         break;
                     }
