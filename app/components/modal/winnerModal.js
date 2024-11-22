@@ -18,7 +18,7 @@ function WinnerModal({ winnerSide, data, onClose }) {
     }
 
     return (
-        <div className='absolute flex justify-center items-center flex w-full overflow-hidden backdrop-blur'>
+        <div className='z-50 absolute flex justify-center items-center flex w-full overflow-hidden backdrop-blur'>
             <div className="flex flex-col items-center  w-full max-w-sm card gap-10 p-6 bg-white rounded-3xl shadow">
                 <Image alt="resultImage" src={getWinnerImage()} />
 
@@ -38,24 +38,22 @@ function FighterDetail({ data }) {
             {title}
         </div>
 
-        <div className="grid grid-cols-3 grid-rows-1 gap-4 bg-dark-no-border p-3 rounded-[20px]">
-            <div className='col-span-2'>
-                <div className='font-bold'>
-                    Entry Name
-                </div>
-                <div>
-                    Owner : {data.owner}
-                </div>
-                <div>
-                    Weight : {data.weight}
-                </div>
-                <div>
-                    {data.tag}
-                </div>
+        <div className="grid grid-cols-2 grid-rows-1 gap-4 bg-dark-no-border p-3 rounded-[20px]">
+
+            <div className='col-span-2 font-bold'>
+                Entry Name
             </div>
-            <div >1</div>
+            <div>
+                Owner : {data.owner}
+            </div>
+            <div>
+                Weight : {data.weight}
+            </div>
+            <div>
+               Tag : {data.tag}
+            </div>
         </div>
-        <br/>
+        <br />
     </React.Fragment>
 }
 

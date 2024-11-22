@@ -40,7 +40,7 @@ function Game() {
     const [randomText, setRandomText] = useState("1234")
     const [trends, setTrends] = useState([])
     const [bettingEndedResult, setBettingEndedResult] = useState({
-        winnerSide: 0,
+        winnerSide: -1,
         isOpen: false
     })
     const [showTrend, setShowTrend] = useState(false)
@@ -232,11 +232,7 @@ function Game() {
 
                     <div className="max-w-md w-full h-[30vh]">
 
-                        {/* <WatchParty url="ws://161.49.111.13:3333/app/test-input-stream?transport=tcp"></WatchParty> */}
-                        {/* <video autoPlay={true} src={process.env.WEB_RTC}>
-
-</video> */}
-                        <iframe className="relative h-full w-full"
+                        <iframe className="relative h-full w-full z-0"
                             // src="https://www.youtube.com/embed/4AbXp05VWoQ?si=zzaGMvrDOSoP9tBb?autoplay=1&cc_load_policy=1"
                             src="http://161.49.111.13/#%7B%22playerOption%22%3A%7B%22autoStart%22%3Atrue%2C%22autoFallback%22%3Atrue%2C%22mute%22%3Afalse%2C%22sources%22%3A%5B%7B%22type%22%3A%22webrtc%22%2C%22file%22%3A%22ws%3A%2F%2F161.49.111.13%3A3333%2Fapp%2Ftest-input-stream%3Ftransport%3Dtcp%22%7D%5D%2C%22expandFullScreenUI%22%3Atrue%7D%2C%22demoOption%22%3A%7B%22autoReload%22%3Atrue%2C%22autoReloadInterval%22%3A2000%7D%7D"
                             title="Lucky Taya" frameBorder="0"
