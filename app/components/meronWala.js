@@ -14,7 +14,7 @@ function MeronWala({ type, data }) {
             return "0"
         }
     }
-    return (<div className="col card rounded-[20] text-center  p-3 mt-10">
+    return (<div className="col card rounded-[20] text-center  p-3 mt-10 cursor-pointer">
         <Image alt='meronwala' className='m-auto mt-[-50px]' src={img_button}></Image>
         <br />
         <span className='label-header1'>
@@ -22,7 +22,7 @@ function MeronWala({ type, data }) {
             {getSafeData(data, `s${type}a`)} <br />
         </span>
         Bet<br />
-        1
+        
         <div className="bg-dark-no-border p-1 rounded-[20px] border-transparent">
             Payout<br />
             {parseFloat(getSafeData(data, `s${type}o`)).toFixed(2)}

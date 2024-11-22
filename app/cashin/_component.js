@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import cashin from '../../public/images/cashin.png'
-import dollar from '../../public/images/dollar.png'
+// import dollar from '../../public/images/dollar.png'
 import BalanceHeader from '../components/balanceHeader'
 import Input from "../components/input";
 import { useRouter } from 'next/navigation'
 import Repayment from "../actions/payment";
 import QrCode from "../components/modal/qrCode";
-import { formatMoney } from '../helpers/Common'
+import { formatMoney, formatMoneyV2 } from '../helpers/Common'
 import { validateMpin } from "../actions/pin";
 import PinV2 from "../components/modal/pinModalV2";
 
@@ -18,7 +18,7 @@ const denomination = [
 
 
 export default function CashIn({ config }) {
-    const [amount, setAmount] = useState('');
+    const [amount, setAmount] = useState(0);
     const [isShowQr, setIsShowQr] = useState(false);
     const [qrData, setQrData] = useState('')
     const [total, setTotal] = useState(0)
@@ -39,8 +39,7 @@ export default function CashIn({ config }) {
     useEffect(() => {
         if (amount) {
             const parseAmount = parseFloat(amount.replaceAll(',', ''))
-            const parseFee = getFee(false);
-            console.log({ amount, parseAmount, parseFee })
+            const parseFee = getFee(false); 
             if (config.type == 1) {
                 setFee(parseFee)
                 setTotal(formatMoney(parseAmount + parseFee))
@@ -64,7 +63,7 @@ export default function CashIn({ config }) {
                 setIsShowQr(true)
                 setQrData(payment.response.codeUrl)
             }
-        }else{
+        } else {
             alert("Invalid Pin")
         }
     }
@@ -76,6 +75,12 @@ export default function CashIn({ config }) {
     const onQrClose = () => {
         setIsShowQr(false)
         router.replace('/')
+    }
+    const onAmountChange = (e) => {
+        const value = e.target.value.replace(',','')
+        if (/^\d*(\.\d*)?$/.test(value)) {
+            setAmount(value)
+        }
     }
     return (
         <React.Fragment>
@@ -90,20 +95,26 @@ export default function CashIn({ config }) {
                         <Image className="w-auto" alt="cashin" src={cashin}></Image>
                         <label className="text-center label-header1">Cash-In</label>
                     </div>
-                    <div className="grid grid-cols-2 grid-rows-1 gap-4">
-                        <label>Amount</label>
-                        <label className="text-right">Fee : {getFee(true)}
-                        </label>
-                    </div>
                     <div className="bg-gray p-3 rounded-[20px] w-full">
-                        <div className="inline-flex gap-3 items-center justify-center">
-                            <Image alt="dollar" src={dollar}></Image>
-                            <label className="text-center">{total}</label>
-                        </div></div>
+                        <div className=" grid grid-cols-2 grid-rows-2 gap-4">
+                            <label>Amount : </label>
+                            <label className='text-right bg-dark p-2'>
+                                {formatMoneyV2(amount)}
+                            </label>
+                            <label>Fee :</label>
+                            <label className="text-right px-2 ">{formatMoneyV2(fee)}</label>
+                        </div>
+                        {/* <div className="inline-flex gap-3 items-center justify-center">
+                               <label className="text-center">{total}</label>
+                        </div> */}
 
+                    </div>
 
+                    <div className="grid grid-cols-3 items-center grid-rows-1 gap-1">
+                        <label className="col-span-2">Total amount to be charge :</label>
+                        <input readOnly className="px-2 text-[18px] transparent-input font-bold text-right" type="text" id="amount" value={`${formatMoneyV2(total)}`} onChange={(e) => onAmountChange(e)}></input>
 
-                    <Input type="text" id="amount" value={amount} onChange={(e) => setAmount(e.value)}></Input>
+                    </div>
                     <div className="grid grid-cols-3 grid-rows-3 gap-4  align-middle   place-items-center">
                         {denomination.map((object, i) => {
                             return <div onClick={() => setAmount(object)} key={`denomination-${i}`} className="amount-button text-center rounded-[20px] w-full p-3">{object}</div>

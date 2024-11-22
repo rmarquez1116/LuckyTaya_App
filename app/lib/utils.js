@@ -17,5 +17,18 @@ const getStartOfWeek = (date) => {
     startOfWeek.setHours(0, 0, 0, 0)
     return startOfWeek
 }
-
-export {isJsonEmpty,getStartOfWeek}
+function calculateAge(birthDate) {
+    const today = new Date();
+    const birth = new Date(birthDate);
+  
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDifference = today.getMonth() - birth.getMonth();
+  
+    // If the current month is before the birth month or it's the birth month but today's day is before the birth day
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birth.getDate())) {
+      age--; // subtract one from the age if the birthday hasn't occurred yet this year
+    }
+  
+    return age;
+  }
+export {isJsonEmpty,getStartOfWeek,calculateAge}

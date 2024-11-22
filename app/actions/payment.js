@@ -79,6 +79,7 @@ const Repayment = (req) => {
       return data;
     })
     saveTransaction(request)
+    console.log(response,'------------')
     return response
   } catch (error) {
     return error

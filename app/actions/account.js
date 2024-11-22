@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import axios from "axios";
 import { Agent } from "https";
 import { fetchData, saveData } from "../helpers/DB";
+import { calculateAge } from "../lib/utils";
 
 const phoneRegex = new RegExp(
     /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
@@ -80,6 +81,14 @@ export async function register(prevState, formData) {
             return {
                 errors: {
                     alert: ["Data already exists"],
+                },
+            };
+        }
+        const age = calculateAge(request.birthdate)
+        if(age <18){
+            return {
+                errors: {
+                    alert: ["Can't proceed with registration. You must be 18 years old and above"],
                 },
             };
         }

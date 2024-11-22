@@ -27,8 +27,8 @@ function SchedulePopUp({ data, onClose }) {
     return (
         <div className='z-10 absolute flex justify-center items-center flex w-full overflow-hidden backdrop-blur'>
             <div className="flex flex-col items-center  w-full max-w-sm card gap-3 p-6 bg-white rounded-3xl shadow">
-                <div className="grid grid-cols-6 w-full grid-rows-1 gap-4  p-3  ">
-                    <div className='flex items-center' onClick={onClose}>&lt;</div>
+                <div className="grid grid-cols-7 w-full grid-rows-1 gap-4  p-3  ">
+                    <div className='flex justify-start font-black  cursor-pointer' onClick={onClose}>&lt;</div>
                     <div className="col-span-5">
                         <div>
                             <label>{data.event.eventName}</label>
@@ -37,6 +37,8 @@ function SchedulePopUp({ data, onClose }) {
                             <label>{data.venue.venueName}</label>
                         </div>
                     </div>
+                    <div className='flex justify-end text-red text-[20px] font-black cursor-pointer' onClick={onClose}>X</div>
+                   
                 </div>
                 <div className={`h-2 w-full ${data.color}`}></div>
                 <div className="grid grid-cols-2 grid-rows-1 gap-4 p-3 rounded-[20px]">

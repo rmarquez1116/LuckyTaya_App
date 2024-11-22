@@ -41,7 +41,7 @@ export function formatMoney(amount) {
 	}).format(amount);
 }
 export function formatMoneyV2 (value) {
-
+	value = value.toString().replace(',','')
     const numValue = parseFloat(value)
 
     if (isNaN(numValue)) {
