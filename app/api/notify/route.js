@@ -22,7 +22,7 @@ export async function POST(req) {
         } else {
             // processing 
             const config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
-            const token = await getToken(config.agentUsername, atob(config.agentPW))
+            const token = await getToken(config.masterUsername, atob(config.masterPassword))
 
             // transfer to convenience fee
             var transferConFee = {
