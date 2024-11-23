@@ -1,6 +1,6 @@
 import { insertDecimalAtThirdToLast } from '../../helpers/Common';
 import { sha256withRSAverify } from '../../helpers/Crypto'
-import { fetchData, updateData } from '../../helpers/DB'
+import { fetchData, saveData, updateData } from '../../helpers/DB'
 import { transferV2 } from '../../actions/transaction'
 import { Agent } from 'https';
 import axios from 'axios';
@@ -9,7 +9,7 @@ export async function POST(req) {
     const query = { "request.msgId": { $eq: request.request.originalMsgId } }
     const data = await fetchData('qr_transactions', query)
     const result = sha256withRSAverify(JSON.stringify(request.request), request.signature)
-
+    await saveData('taya_sp_request',request)
     if (!result)
         return new Response(JSON.stringify({ code: "401", message: "Unauthorized" }), { status: 401, headers: { 'Content-Type': 'application/json' } });
     if (!data) {
