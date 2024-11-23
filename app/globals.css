@@ -104,6 +104,12 @@ div.bg-background {
   background-attachment: fixed;
   min-width: 100dvw;
   min-height: 100dvh;
+  background-size: cover;  /* Or use 100% 100% for stretching */
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  margin: 0;
+
 }
 
 .sidebar-container {
