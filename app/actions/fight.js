@@ -201,7 +201,7 @@ export async function getOpenOrClosedEvents() {
             })
         })
 
-       
+
         return response.data
     } catch (error) {
         if (error.status == 401) {
@@ -249,7 +249,7 @@ export async function getOpenOrClosedFightEvents() {
             logout()
         } return null;
     } catch (error) {
-        console.log(error,'hello')
+        console.log(error, 'hello')
         if (error.status == 401) {
             logout()
         }
@@ -259,6 +259,7 @@ export async function getOpenOrClosedFightEvents() {
 
 export async function getLatestFight() {
     const cookieStore = await cookies()
+    let webRtc = process.env.NEXT_PUBLIC_WEB_RTC_URL;
     var session = cookieStore.get('app_session');
     if (!session) {
         return redirect('/login')
@@ -267,7 +268,7 @@ export async function getLatestFight() {
         session = JSON.parse(session.value);
 
         var fightEvents = await getOpenOrClosedEvents();
-        console.log(fightEvents,'----------')
+        console.log(fightEvents, '----------')
         var response;
         if (fightEvents) {
             var eventId = 0;
@@ -278,8 +279,12 @@ export async function getLatestFight() {
 
             if (currentEvent > -1) {
                 eventId = events[currentEvent].eventId
+                if (events[currentEvent].webRtcStream)
+                    webRtc = events[currentEvent].webRtcStream
             } else {
                 eventId = events[0].eventId;
+                if (events[0].webRtcStream)
+                    webRtc = events[0].webRtcStream
             }
 
 
@@ -311,17 +316,19 @@ export async function getLatestFight() {
         if (response.status == 200) {
             var data;
             if (response.data instanceof Array) {
-                data = [...response.data].reverse();
+                // data = [...response.data].reverse();
+                data = response.data;
                 var selectedIndex = -1
                 for (let index = 0; index < data.length; index++) {
                     const element = data[index];
                     if (element.fightStatusCode == 11) {
                         selectedIndex = index
                         break;
-                    }else if (element.fightStatusCode == 10){
+                    } else if (element.fightStatusCode == 10) {
                         selectedIndex = index;
                         break;
                     }
+
                 }
                 if (selectedIndex > -1)
                     data = data[selectedIndex]
@@ -334,7 +341,7 @@ export async function getLatestFight() {
             // if (fightStatusCode == 10 || fightStatusCode == 11) {
             const fightDetails = await getFightDetailsByFightId(fightId)
             if (!isJsonEmpty(fightDetails))
-                return { ...fightDetails, fight: data, fightStatus: statusDesc }
+                return { ...fightDetails, fight: data, fightStatus: statusDesc,webRtc }
             // }
             return null;
 

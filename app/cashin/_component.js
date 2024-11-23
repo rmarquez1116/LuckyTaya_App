@@ -86,7 +86,7 @@ export default function CashIn({ config }) {
         <React.Fragment>
 
             <BalanceHeader type={2}></BalanceHeader>
-            {isShowPin && <PinV2 title="Set Pin" isOpen={isShowPin} onClose={() => { setIsShowPin(false) }} onSubmit={(e) => onValidatePin(e)} />}
+            {isShowPin && <PinV2 title="Enter Pin" isOpen={isShowPin} onClose={() => { setIsShowPin(false) }} onSubmit={(e) => onValidatePin(e)} />}
 
             {isShowQr && <QrCode data={qrData} onClose={() => onQrClose()} />}
             <div className="flex justify-center align-center  p-6 mt-5">

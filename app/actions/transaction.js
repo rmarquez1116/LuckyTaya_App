@@ -188,7 +188,7 @@ export async function transferV2(request, token) {
             return response.data;
         } else return null;
     } catch (error) {
-        console.log(error, 'Error')
+        console.log(error, 'Transfer Error--------')
         return null;
     }
 }

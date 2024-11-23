@@ -16,6 +16,8 @@ import WinnerModal from "../components/modal/winnerModal";
 import { getToken } from "../helpers/StringGenerator";
 import { useWebSocketContext } from '../context/webSocketContext';
 import Trend from '../components/trend'
+import PinV2 from "../components/modal/pinModalV2";
+import { validateMpin } from "../actions/pin";
 
 function Game() {
     const { socket, messages } = useWebSocketContext();
@@ -30,6 +32,7 @@ function Game() {
         s1o: 0
     })
 
+    const [isShowPin, setIsShowPin] = useState(false)
     const [isLoaded, setIsLoaded] = useState(false)
     const [data, setData] = useState(null)
     const [amountToBet, setAmountToBet] = useState({ type: 1, amount: 0 })
@@ -58,7 +61,7 @@ function Game() {
         }
     }
 
-    const [alert, setAlert] = useState({ timeout: 3000, isOpen: false, message: "", type: "success" })
+    const [alert, setAlert] = useState({ timeout: 60000, isOpen: false, message: "", type: "success" })
     const [modalConfirmObject, setModalConfirmObject] = useState({
         isOpen: false,
         type: 1
@@ -160,7 +163,24 @@ function Game() {
     const closeConfirmation = async (isForCompletion = false) => {
         setModalConfirmObject({ isOpen: false, type: modalConfirmObject.type })
         if (isForCompletion) {
+            setIsShowPin(true)
+        }
+    }
 
+    const onCloseAlert = () => {
+        setAlert({ timeout: 3000, isOpen: false, type: "", message: "" })
+
+    }
+    const onBetConfirm = async () => {
+        setIsShowPin(true);
+    }
+
+    const onValidatePin = async (pin) => {
+        const result = await validateMpin(pin);
+
+        if (result == true) {
+            setIsShowPin(false);
+            
             var response = await placeABet(data.fight.fightId, amountToBet.amount, amountToBet.type)
             if (response) {
                 setModalObject({ isOpen: false, type: modalObject.type })
@@ -171,14 +191,10 @@ function Game() {
             } else {
                 setAlert({ timeout: 3000, isOpen: true, type: "error", message: "Can not place a bet as of the moment" })
             }
+        } else {
+            alert("Invalid Pin")
         }
     }
-
-    const onCloseAlert = () => {
-        setAlert({ timeout: 3000, isOpen: false, type: "", message: "" })
-
-    }
-
     const renderModals = () => {
         if (!isJsonEmpty(data)) {
             return <>
@@ -197,6 +213,8 @@ function Game() {
 
     return (
         <MainLayout>
+            {isShowPin && <PinV2 title="Enter Pin" isOpen={isShowPin} onClose={() => { setIsShowPin(false) }} onSubmit={(e) => onValidatePin(e)} />}
+
             {isLoaded && <BalanceHeader type={2} forceUpdate={randomText}></BalanceHeader>}
             {isLoaded && alert.isOpen && <Alert timeout={alert.timeout} onClose={onCloseAlert} title="Lucky Taya" message={alert.message} type={alert.type}></Alert>}
             {renderModals()}
@@ -234,12 +252,12 @@ function Game() {
 
                         <iframe className="relative h-full w-full z-0"
                             // src="https://www.youtube.com/embed/4AbXp05VWoQ?si=zzaGMvrDOSoP9tBb?autoplay=1&cc_load_policy=1"
-                            src="http://161.49.111.13/#%7B%22playerOption%22%3A%7B%22autoStart%22%3Atrue%2C%22autoFallback%22%3Atrue%2C%22mute%22%3Afalse%2C%22sources%22%3A%5B%7B%22type%22%3A%22webrtc%22%2C%22file%22%3A%22ws%3A%2F%2F161.49.111.13%3A3333%2Fapp%2Ftest-input-stream%3Ftransport%3Dtcp%22%7D%5D%2C%22expandFullScreenUI%22%3Atrue%7D%2C%22demoOption%22%3A%7B%22autoReload%22%3Atrue%2C%22autoReloadInterval%22%3A2000%7D%7D"
+                            src={data.webRtc}
                             title="Lucky Taya" frameBorder="0"
                             allow="autoplay;encrypted-media;"
                             referrerPolicy="strict-origin-when-cross-origin"
                             allowFullScreen></iframe>
-                        <br />  
+                        <br />
                         <div className="grid grid-cols-5 grid-rows-1 gap-4">
                             <div className="col-span-2 card rounded-[10px] p-3  text-center">
                                 <label> Betting {data.fightStatus.name}:</label>
