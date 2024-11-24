@@ -3,7 +3,7 @@ import Input from '../input'
 import dollar from '../../../public/images/dollar.png'
 import Image from 'next/image'
 const denomination = [
-    "100", "200", "300", "100", "2,000", "3,000", "10,000", "15,000", "20,000"
+    "100", "200", "300", "1,000", "2,000", "3,000", "10,000", "15,000", "20,000"
 ]
 function BetModal({ type, onClose, balance,data,setAmountToBet }) {
     // type 1 Meron
@@ -37,7 +37,7 @@ function BetModal({ type, onClose, balance,data,setAmountToBet }) {
                 <Image alt="dollar" src={dollar}></Image>
                 {balance}
             </div> */}
-            <div className='p-2 rounded-[10] default text-center'>Fight# {data.fight.fightNum}</div>
+            <div className='p-2 rounded-[10px] default text-center'>Fight# {data.fight.fightNum}</div>
 
 
         </div>
@@ -55,7 +55,7 @@ function BetModal({ type, onClose, balance,data,setAmountToBet }) {
                 </div>
                 {renderDescription()}
                 {renderDemonimation()}
-                <button onClick={()=>onClose(true)} className='p-2 meronColor rounded-[20] w-full'>PLACE BET ON MERON</button>
+                <button onClick={()=>onClose(true)} className='p-2 meronColor rounded-[20px] w-full'>PLACE BET ON MERON</button>
 
             </>
         else return <>
@@ -68,7 +68,7 @@ function BetModal({ type, onClose, balance,data,setAmountToBet }) {
                 </div>
                 {renderDescription()}
                 {renderDemonimation()}
-                <button onClick={()=>onClose(true)} className='p-2 walaColor rounded-[20] w-full'>PLACE BET ON WALA</button>
+                <button onClick={()=>onClose(true)} className='p-2 walaColor rounded-[20px] w-full'>PLACE BET ON WALA</button>
 
 
         </>

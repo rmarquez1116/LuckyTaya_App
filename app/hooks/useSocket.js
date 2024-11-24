@@ -53,8 +53,7 @@ const useSocket = (onMessageReceived) => {
 
       setSocket(socket);
     }
-    
-    console.log({sessionCookie,url}, 'session[-------------')
+  
     if (url)
       setup();
     const intervalId = setInterval(() => {

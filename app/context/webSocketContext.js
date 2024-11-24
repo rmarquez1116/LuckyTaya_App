@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { getSession } from '../actions/auth'
 import { usePathname } from 'next/navigation';
+import Alert from '../components/alert';
 
 const WebSocketContext = createContext();
 
@@ -15,6 +16,7 @@ export const WebSocketProvider = ({ children }) => {
   const [messages, setMessages] = useState(null);
   const [socket, setsocket] = useState(null);
   const [sessionCookie, setSessionCookie] = useState('')
+  const [alert, setAlert] = useState({ timeout: 3000, isOpen: false, message: "", type: "success" })
 
   const getSess = async () => {
     const session = await getSession();
@@ -61,9 +63,38 @@ export const WebSocketProvider = ({ children }) => {
 
     };
   }, [sessionCookie]);
+  const onCloseAlert = () => {
+    setAlert({ timeout: 3000, isOpen: false, type: "", message: "" })
+  }
 
+  useEffect(() => {
+
+    try {
+      if (messages != null) {
+        const parseMessage = JSON.parse(messages)
+
+        switch (parseMessage.PacketType) {
+          case 22:
+            setAlert({ timeout: 60000, isOpen: true, type: "info", message: "Last Call !!!" })
+            break;
+          case 73:
+          case 75:
+            const message = JSON.parse(parseMessage.jsonPacket)
+            setAlert({ timeout: message.Duration * 1000, isOpen: true, type: "info", message: message.Message })
+
+            break;
+          default:
+            break;
+        }
+
+      }
+    } catch (error) {
+
+    }
+  }, [messages])
   return (
     <WebSocketContext.Provider value={{ messages, socket }}>
+      {alert.isOpen && <Alert timeout={alert.timeout} onClose={onCloseAlert} title="Lucky Taya" message={alert.message} type={alert.type}></Alert>}
       {children}
     </WebSocketContext.Provider>
   );

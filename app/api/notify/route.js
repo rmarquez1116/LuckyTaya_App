@@ -49,7 +49,6 @@ export async function POST(req) {
             newData.status = "Completed";
             newData.transType = "cashin"
             const updateResult = await updateData('qr_transactions', query, newData);
-            console.log(updateResult, 'hello')
         }
     }
     return new Response(JSON.stringify({ code: 200, message: "success" }), { status: 200, headers: { 'Content-Type': 'application/json' } });

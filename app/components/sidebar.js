@@ -20,7 +20,7 @@ function Sidebar({ toggle, isOpen }) {
   return (
 
     <React.Fragment>
-      <div className='h-full w-full absolute top-0' onClick={toggle}
+      <div className='h-full w-screen absolute top-0 z-20' onClick={toggle}
         style={{
           opacity: `${isOpen ? "1" : "0"}`,
           top: 0,
@@ -30,7 +30,7 @@ function Sidebar({ toggle, isOpen }) {
         className={`sidebar-container 
         fixed w-80 h-full overflow-hidden ease-in-out duration-300
         text-center
-        pt-[20px] left-0 z-10 `}
+        pt-[20px] left-0   z-[1000] `}
         style={{
           opacity: `${isOpen ? "1" : "0"}`,
           top: 0,

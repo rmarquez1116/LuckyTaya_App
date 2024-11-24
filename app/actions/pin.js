@@ -11,7 +11,6 @@ export async function nominatePin(pin) {
 
         session = JSON.parse(session.value);
         const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]
-        console.log(user,'--------')
         if (user) {
             user.pin = encrypt(pin)
             await updateData('taya_user', { "userId": { $eq: session.userId } }, user);

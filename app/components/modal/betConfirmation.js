@@ -5,7 +5,7 @@ import tacoLeft from '../../../public/images/taco1.png'
 import tacoRight from '../../../public/images/taco2.png'
 import Image from 'next/image'
 const denomination = [
-    "100", "200", "300", "100", "2,000", "3,000", "10,000", "15,000", "20,000"
+    "100", "200", "300", "1,000", "2,000", "3,000", "10,000", "15,000", "20,000"
 ]
 function BetConfirmation({ type, onClose, balance,amount }) {
     // type 1 Meron

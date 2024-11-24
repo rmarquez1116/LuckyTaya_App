@@ -30,8 +30,6 @@ export async function updateData(collection,query, data) {
         const client = await clientPromise;
         const db = client.db(); // Get the database
         const postsCollection = db.collection(collection); // Get the "posts" collection
-        console.log(data,'hello')
-        
         const result = await postsCollection.updateOne(query,{
             $set : data
         });

@@ -11,6 +11,7 @@ import QrCode from "../components/modal/qrCode";
 import { formatMoney, formatMoneyV2 } from '../helpers/Common'
 import { validateMpin } from "../actions/pin";
 import PinV2 from "../components/modal/pinModalV2";
+import ConfirmationModal from "../components/confirmationModal";
 
 const denomination = [
     "100", "200", "300", "1,000", "2,000", "3,000", "10,000", "15,000", "20,000"
@@ -24,6 +25,11 @@ export default function CashIn({ config }) {
     const [total, setTotal] = useState(0)
     const [fee, setFee] = useState(0)
     const [isShowPin, setIsShowPin] = useState(false)
+    const [alert, setAlert] = useState({
+        isShow: false,
+        message: "Invalid Pin",
+        isOkayOnly: true
+    })
     const getFee = (isForDisplay) => {
         if (config) {
             if (config.type == 1) {
@@ -39,7 +45,7 @@ export default function CashIn({ config }) {
     useEffect(() => {
         if (amount) {
             const parseAmount = parseFloat(amount.replaceAll(',', ''))
-            const parseFee = getFee(false); 
+            const parseFee = getFee(false);
             if (config.type == 1) {
                 setFee(parseFee)
                 setTotal(formatMoney(parseAmount + parseFee))
@@ -64,7 +70,11 @@ export default function CashIn({ config }) {
                 setQrData(payment.response.codeUrl)
             }
         } else {
-            alert("Invalid Pin")
+            setAlert({
+                isShow: true,
+                message: "Invalid Pin",
+                isOkayOnly: true
+            })
         }
     }
 
@@ -77,17 +87,31 @@ export default function CashIn({ config }) {
         router.replace('/')
     }
     const onAmountChange = (e) => {
-        const value = e.target.value.replace(',','')
+        const value = e.target.value.replace(',', '')
         if (/^\d*(\.\d*)?$/.test(value)) {
             setAmount(value)
         }
     }
+
+    const onConfirm = () =>{
+        setAlert({
+            isShow: false,
+            message: "Invalid Pin",
+            isOkayOnly: true
+        })
+    }
+    
     return (
         <React.Fragment>
 
             <BalanceHeader type={2}></BalanceHeader>
             {isShowPin && <PinV2 title="Enter Pin" isOpen={isShowPin} onClose={() => { setIsShowPin(false) }} onSubmit={(e) => onValidatePin(e)} />}
-
+            <ConfirmationModal
+                isOpen={alert.isOpen}
+                isOkOnly={alert.isOkayOnly}
+                onConfirm={onConfirm}
+                message={alert.message}
+            ></ConfirmationModal>
             {isShowQr && <QrCode data={qrData} onClose={() => onQrClose()} />}
             <div className="flex justify-center align-center  p-6 mt-5">
                 <div className="card max-w-md w-full gap-5 flex-col flex p-6 bg-white rounded-3xl shadow">

@@ -73,13 +73,11 @@ const Repayment = (req) => {
 
 
     const request = createRequest(req)
-    console.log(request,'hello')
     const response = sendOrder(request)
     response.then(data => {
       return data;
     })
     saveTransaction(request)
-    console.log(response,'------------')
     return response
   } catch (error) {
     return error

@@ -102,7 +102,6 @@ export async function register(prevState, formData) {
             responseData = Object.assign({}, response.data)
             isSuccess = true
         } else {
-            console.log(response)
             return {
                 errors: {
                     alert: ["Can't Process your Request"],

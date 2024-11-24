@@ -8,6 +8,7 @@ import otpVerify from '../../public/images/otp_verify.png';
 import Terms from '../components/modal/terms'
 import { register } from "../actions/account";
 import dynamic from "next/dynamic";
+import Alert from "../components/alert";
 
 const Form = dynamic(() => import('../components/form'), { ssr: false })
 
@@ -105,15 +106,16 @@ const form = [
 export default function Register() {
   const [step, setStep] = useState(1);
   const [isShowModal, setIsShowModal] = useState(false)
+  const [alert, setAlert] = useState({ timeout: 3000, isOpen: false, message: "", type: "success" })
 
   const [state, registerAction] = useActionState(register, undefined);
   useEffect(() => {
-    console.log(state, '----')
     if (state && state.errors) {
 
       var error = state.errors
       if (error.hasOwnProperty('alert')) {
-        alert(error.alert[0])
+        setAlert({ timeout: 5000, isOpen: true, type: "error", message: error.alert[0] })
+
       }
     }
   }, [state])
@@ -155,8 +157,14 @@ export default function Register() {
     setIsShowModal(false);
     setStep(1);
   }
+  const onCloseAlert = () => {
+    setAlert({ timeout: 3000, isOpen: false, type: "", message: "" })
+
+}
   return (
     <CommonLayout>
+      {alert.isOpen && <Alert timeout={alert.timeout} onClose={onCloseAlert} title="Lucky Taya" message={alert.message} type={alert.type}></Alert>}
+
       {body()}
 
       {isShowModal && <Terms onClose={() => closeModal()}></Terms>}

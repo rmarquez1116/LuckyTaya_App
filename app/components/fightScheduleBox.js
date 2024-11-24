@@ -10,7 +10,7 @@ function FightScheduleBox({ data ,onSelect}) {
         return newDate.toDateString();
     }
     return (
-        <div  onClick={()=>onSelect(data.event.eventId)} className="cursor-pointer  flex flex-col justify-self-center card dark-gradient w-full max-w-sm p-6 mt-10 bg-white rounded-3xl shadow">
+        <div  onClick={()=>onSelect(data.event.eventId,data)} className="cursor-pointer  flex flex-col justify-self-center card dark-gradient w-full max-w-sm p-6 mt-10 bg-white rounded-3xl shadow">
             <div className='flex justify-between'>
                 <label className="yellow label-header1">Fight Schedule</label>
 
@@ -33,7 +33,7 @@ function FightScheduleBox({ data ,onSelect}) {
             <div className='flex justify-between'>
                 <div className='inline-flex gap-2 items-center uppercase'><Image alt="calendar" className="w-[20px] h-[20px]" src={calendar}></Image>  <label>{formatDisplayDate(data.event.eventDate)}</label></div>
 
-                <button className="violet">Betting: {data.fightStatus.name}</button>
+                <button className="violet">Event: {data.eventStatus.name}</button>
             </div>
 
         </div>

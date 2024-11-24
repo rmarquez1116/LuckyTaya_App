@@ -67,7 +67,6 @@ export async function profile(prevState, formData) {
     session = JSON.parse(session.value);
 
     const updateResult = await updateData('taya_user', { 'userId': { $eq: session.userId } }, request);
-    console.log({ updateResult, request })
     return { success: true };
 
 }

@@ -31,7 +31,7 @@ function Game() {
         s1a: 0,
         s1o: 0
     })
-
+ 
     const [isShowPin, setIsShowPin] = useState(false)
     const [isLoaded, setIsLoaded] = useState(false)
     const [data, setData] = useState(null)
@@ -40,6 +40,7 @@ function Game() {
         isOpen: false,
         type: 1
     })
+
     const [randomText, setRandomText] = useState("1234")
     const [trends, setTrends] = useState([])
     const [bettingEndedResult, setBettingEndedResult] = useState({
@@ -61,7 +62,7 @@ function Game() {
         }
     }
 
-    const [alert, setAlert] = useState({ timeout: 60000, isOpen: false, message: "", type: "success" })
+    const [alert, setAlert] = useState({ timeout: 5000, isOpen: false, message: "", type: "success" })
     const [modalConfirmObject, setModalConfirmObject] = useState({
         isOpen: false,
         type: 1
@@ -101,7 +102,7 @@ function Game() {
                         break;
                     // last call
                     case 22:
-                        setAlert({ timeout: 5000, isOpen: true, type: "info", message: "Last Call !!!" })
+                        setAlert({ timeout: 60000, isOpen: true, type: "info", message: "Last Call !!!" })
                         break;
                     // result
                     case 50:
@@ -171,16 +172,14 @@ function Game() {
         setAlert({ timeout: 3000, isOpen: false, type: "", message: "" })
 
     }
-    const onBetConfirm = async () => {
-        setIsShowPin(true);
-    }
+
 
     const onValidatePin = async (pin) => {
         const result = await validateMpin(pin);
 
         if (result == true) {
             setIsShowPin(false);
-            
+
             var response = await placeABet(data.fight.fightId, amountToBet.amount, amountToBet.type)
             if (response) {
                 setModalObject({ isOpen: false, type: modalObject.type })
@@ -192,7 +191,7 @@ function Game() {
                 setAlert({ timeout: 3000, isOpen: true, type: "error", message: "Can not place a bet as of the moment" })
             }
         } else {
-            alert("Invalid Pin")
+            setAlert({ timeout: 3000, isOpen: true, type: "error", message: "Invalid Pin" })
         }
     }
     const renderModals = () => {

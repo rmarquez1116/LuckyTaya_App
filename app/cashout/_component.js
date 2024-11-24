@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { formatMoney, formatMoneyV2 } from "../helpers/Common";
 const denomination = [
-    "100", "200", "300", "100", "2,000", "3,000", "10,000", "15,000", "20,000"
+    "100", "200", "300", "1,000", "2,000", "3,000", "10,000", "15,000", "20,000"
 ]
 export default function CashOutComponent({ banks, config }) {
     const [amount, setAmount] = useState('');
@@ -33,7 +33,6 @@ export default function CashOutComponent({ banks, config }) {
         if (amount) {
             const parseAmount = parseFloat(amount.replaceAll(',', ''))
             const parseFee = getFee(false);
-            console.log({ amount, parseAmount, parseFee })
             if (config.type == 1) {
                 setFee(parseFee)
                 setTotal(formatMoney(parseAmount + parseFee))

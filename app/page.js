@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from "react";
 import { isJsonEmpty } from "./lib/utils";
 import Loading from "./components/loading";
-import { getLastFightDetailsByEvent, getLatestFight, getOpenOrClosedFightEvents } from "./actions/fight";
+import { getFightDetailsByEventId, getLastFightDetailsByEvent, getLatestFight, getOpenOrClosedEvents } from "./actions/fight";
 import Carousel from './components/carousel'
 import { useWebSocketContext } from './context/webSocketContext';
 import { getToken } from "./helpers/StringGenerator";
@@ -25,6 +25,7 @@ export default function Home() {
   const { messages } = useWebSocketContext();
 
   const [isLoaded, setIsLoaded] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [carouselItems, setCarouselItems] = useState([])
   const [hasPin, setHasPin] = useState(true)
   const [isSchedulePopUpOpen, setIsSchedulePopUpOpen] = useState(false)
@@ -44,13 +45,20 @@ export default function Home() {
     }
   }, [])
 
-  const onSelect = async (data) => {
+  const onSelect = async (id, data) => {
     if (data) {
-      const response = await getLastFightDetailsByEvent(data)
+      setIsLoading(true)
+      const response = await getFightDetailsByEventId(id)
       if (response) {
         setIsSchedulePopUpOpen(true)
-        setFightDetails(response)
+        const result = {
+          ...data,
+          fights: response
+        }
+        setFightDetails(result)
       }
+
+      setIsLoading(false)
     }
   }
 
@@ -59,8 +67,7 @@ export default function Home() {
     router.replace('/profile')
   }
   const getData = async () => {
-    const response = await getOpenOrClosedFightEvents();
-
+    const response = await getOpenOrClosedEvents();
     const userProfile = await getProfile()
     if (userProfile) {
       if (!userProfile?.pin) {
@@ -106,7 +113,7 @@ export default function Home() {
             <Carousel items={carouselItems} />
           </React.Fragment>
         }
-        {!isLoaded && <Loading />}
+        {(!isLoaded || isLoading )&& <Loading />}
 
 
       </div>

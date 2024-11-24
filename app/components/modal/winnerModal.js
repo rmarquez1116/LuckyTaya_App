@@ -18,7 +18,7 @@ function WinnerModal({ winnerSide, data, onClose }) {
     }
 
     return (
-        <div className='z-50 absolute flex justify-center items-center flex w-full overflow-hidden backdrop-blur'>
+        <div className='z-50 absolute flex justify-center items-center flex w-full  h-full overflow-hidden backdrop-blur'>
             <div className="flex flex-col items-center  w-full max-w-sm card gap-10 p-6 bg-white rounded-3xl shadow">
                 <Image alt="resultImage" src={getWinnerImage()} />
 
@@ -43,14 +43,8 @@ function FighterDetail({ data }) {
             <div className='col-span-2 font-bold'>
                 Entry Name
             </div>
-            <div>
-                Owner : {data.owner}
-            </div>
-            <div>
-                Weight : {data.weight}
-            </div>
-            <div>
-               Tag : {data.tag}
+            <div className='col-span-2 font-bold'>
+                Player Name : {data.owner} {data.breed}
             </div>
         </div>
         <br />
