@@ -2,9 +2,8 @@ import React, { useState,useEffect } from 'react'
 import Input from '../input'
 import dollar from '../../../public/images/dollar.png'
 import Image from 'next/image'
-const denomination = [
-    "100", "200", "300", "1,000", "2,000", "3,000", "10,000", "15,000", "20,000"
-]
+
+import {denomination} from '../../lib/denomination';
 function BetModal({ type, onClose, balance,data,setAmountToBet }) {
     // type 1 Meron
     // type 2 wala

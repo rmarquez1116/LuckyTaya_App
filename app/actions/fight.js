@@ -327,7 +327,7 @@ export async function getOpenOrClosedFightEvents() {
             logout()
         } return null;
     } catch (error) {
-        console.log(error, 'hello')
+        console.log(error, 'error')
         if (error.status == 401) {
             logout()
         }

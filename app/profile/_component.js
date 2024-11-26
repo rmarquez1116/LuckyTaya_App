@@ -20,7 +20,6 @@ export default function ProfileComponent(
     useEffect(() => {
         form[regionIndex].onSelect = async (code) => {
             const currentForm = Object.assign([], formData)
-            console.log('region selecting', code)
             currentForm[regionIndex].value = code.value
             currentForm[provinceIndex].items = await provinces(code.value);
             currentForm[cityIndex].items = []
@@ -29,7 +28,6 @@ export default function ProfileComponent(
         }
 
         form[provinceIndex].onSelect = async (code) => {  
-            console.log('Province selecting', code)
             const currentForm = Object.assign([], formData)
             currentForm[provinceIndex].value = code.value
             currentForm[cityIndex].items = await cities(code.value);
@@ -38,14 +36,12 @@ export default function ProfileComponent(
         }
 
         form[cityIndex].onSelect = async (code) => {
-            console.log('city selecting', code)
             const currentForm = Object.assign([], formData)
             currentForm[cityIndex].value = code.value
             currentForm[barangayIndex].items = await barangays(code.value)
             setFormData(currentForm);
         }
         form[barangayIndex].onSelect = async (code) => {
-            console.log('barangay selecting', code)
             const currentForm = Object.assign([], formData)
             currentForm[barangayIndex].value = code.value
             setFormData(currentForm);

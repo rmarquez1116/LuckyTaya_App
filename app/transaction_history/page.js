@@ -24,13 +24,18 @@ export default function TransactionHistory() {
     try {
       const startDateDateTime = new Date(startDate)
       startDateDateTime.setHours(0, 0, 0, 0);
+      // Adjust for the local timezone offset
+      const localStartDateTime = new Date(startDateDateTime.getTime() - startDateDateTime.getTimezoneOffset() * 60000);
+
 
       const endDateDateTime = new Date(endDate)
       endDateDateTime.setHours(23, 59, 59, 999);
-
+      // Adjust for the local timezone offset
+      const localEndDateTime = new Date(endDateDateTime.getTime() - endDateDateTime.getTimezoneOffset() * 60000);
+      console.log(localStartDateTime.toISOString(),localEndDateTime.toISOString())
       const result = await getTransactionsByDate({
-        dateFrom: startDateDateTime.toISOString(),
-        dateTo: endDateDateTime.toISOString(),
+        dateFrom: localStartDateTime.toISOString(),
+        dateTo: localEndDateTime.toISOString(),
         isBettingHistory: false
       })
       setTransactionList(result)

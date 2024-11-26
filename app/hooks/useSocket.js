@@ -24,7 +24,7 @@ const useSocket = (onMessageReceived) => {
   }, [])
 
   useEffect(() => {
-    console.log(sessionCookie, 'session-------------')
+    // console.log(sessionCookie, 'session-------------')
     if (sessionCookie)
       gettingSession();
   }, [sessionCookie])
@@ -33,7 +33,7 @@ const useSocket = (onMessageReceived) => {
   useEffect(() => {
     const setup = async () => {
 
-      console.log(sessionCookie, 'session[-------------')
+      // console.log(sessionCookie, 'session[-------------')
       const socket = new WebSocket(url);
       socket.onmessage = (event) => {
         setMessages(event.data);

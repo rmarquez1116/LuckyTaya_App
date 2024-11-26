@@ -84,7 +84,7 @@ async function getToken(username, password) {
         }
     } catch (error) {
 
-        console.log(error, 'hello')
+        console.log(error, 'error')
         return null
     }
 

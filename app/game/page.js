@@ -88,7 +88,7 @@ function Game() {
     useEffect(() => {
 
         try {
-            console.log({ messages, data }, 'socket Message')
+            // console.log({ messages, data }, 'socket Message')
             if (messages != null && !isJsonEmpty(data)) {
                 const parseMessage = JSON.parse(messages)
                 const betDetail = JSON.parse(parseMessage.jsonPacket)
@@ -180,7 +180,7 @@ function Game() {
         if (result == true) {
             setIsShowPin(false);
 
-            var response = await placeABet(data.fight.fightId, amountToBet.amount, amountToBet.type)
+            var response = await placeABet(data.fight.fightId, amountToBet.amount.replaceAll(',',''), amountToBet.type)
             if (response) {
                 setModalObject({ isOpen: false, type: modalObject.type })
 

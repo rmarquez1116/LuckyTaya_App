@@ -12,10 +12,8 @@ import { formatMoney, formatMoneyV2 } from '../helpers/Common'
 import { validateMpin } from "../actions/pin";
 import PinV2 from "../components/modal/pinModalV2";
 import ConfirmationModal from "../components/confirmationModal";
+import {denomination} from '../lib/denomination';
 
-const denomination = [
-    "100", "200", "300", "1,000", "2,000", "3,000", "10,000", "15,000", "20,000"
-]
 
 
 export default function CashIn({ config }) {
@@ -62,7 +60,7 @@ export default function CashIn({ config }) {
         if (result == true) {
             setIsShowPin(false);
             var payment = await Repayment({
-                trxAmount: `${(Number.parseFloat(total)).toFixed(2)}`.replaceAll(",", "").replace(".", ""),
+                trxAmount: `${(Number.parseFloat(total.replaceAll(",", ""))).toFixed(2)}`.replaceAll(",", "").replace(".", ""),
                 fee: fee
             });
             if (payment.response.code == "200") {

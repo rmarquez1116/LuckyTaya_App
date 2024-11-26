@@ -8,9 +8,7 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { formatMoney, formatMoneyV2 } from "../helpers/Common";
-const denomination = [
-    "100", "200", "300", "1,000", "2,000", "3,000", "10,000", "15,000", "20,000"
-]
+import {denomination} from '../lib/denomination';
 export default function CashOutComponent({ banks, config }) {
     const [amount, setAmount] = useState('');
 

@@ -32,7 +32,7 @@ export default function Home() {
   const [fightDetails, setFightDetails] = useState({})
 
   useEffect(() => {
-    console.log(messages, 'socket Message')
+    // console.log(messages, 'socket Message')
     if (messages != null) {
 
       getData();
