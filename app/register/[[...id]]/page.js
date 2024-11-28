@@ -1,16 +1,17 @@
 'use client'
-import CommonLayout from "../layout/commonLayout";
+import CommonLayout from "@layout/commonLayout";
 import { useActionState, useEffect, useState } from "react";
-import Input from "../components/input";
+import Input from "@components/input";
 import Image from "next/image";
-import otp from '../../public/images/otp.png'
-import otpVerify from '../../public/images/otp_verify.png';
-import Terms from '../components/modal/terms'
-import { register } from "../actions/account";
+import otp from '@public/images/otp.png'
+import otpVerify from '@public/images/otp_verify.png';
+import Terms from '@components/modal/terms'
+import { register } from "@actions/account";
 import dynamic from "next/dynamic";
-import Alert from "../components/alert";
+import Alert from "@components/alert";
+import { usePathname } from 'next/navigation';
 
-const Form = dynamic(() => import('../components/form'), { ssr: false })
+const Form = dynamic(() => import('@components/form'), { ssr: false })
 
 const form = [
 
@@ -56,30 +57,6 @@ const form = [
     value: "",
     label: "Birthdate"
   },
-  // {
-  //   id: "region",
-  //   type: "text",
-  //   value: "",
-  //   label: "Region"
-  // },
-  // {
-  //   id: "province",
-  //   type: "text",
-  //   value: "",
-  //   label: "Province"
-  // },
-  // {
-  //   id: "city",
-  //   type: "text",
-  //   value: "",
-  //   label: "City / Municipality"
-  // },
-  // {
-  //   id: "barangay",
-  //   type: "text",
-  //   value: "",
-  //   label: "Barangay"
-  // },
   {
     type: "separator",
     label: "Account Details"
@@ -104,12 +81,30 @@ const form = [
   },
 ]
 export default function Register() {
+  const pathname = usePathname();
+  const id = pathname.split('/').filter(Boolean);
+
   const [step, setStep] = useState(1);
   const [isShowModal, setIsShowModal] = useState(false)
   const [alert, setAlert] = useState({ timeout: 3000, isOpen: false, message: "", type: "success" })
 
   const [state, registerAction] = useActionState(register, undefined);
+
   useEffect(() => {
+    console.log(id)
+
+    if (id.length > 1) {
+      let indexToInsert = 1;
+      form.splice(indexToInsert, 0,
+        {
+          id: "agentReferralCode",
+          type: "text",
+          value: id[1],
+          label: "Referral Code",
+          isReadonly: true
+        });
+    }
+
     if (state && state.errors) {
 
       var error = state.errors
@@ -122,7 +117,7 @@ export default function Register() {
 
   const body = () => {
     if (step == 1) {
-      return <div className="flex flex-col card w-10/12 max-w-md p-6 mt-10 bg-white rounded-3xl shadow">
+      return <div className="flex flex-col card  w-10/12 max-w-sm p-6 mt-10 bg-white rounded-3xl shadow">
         <Form hasBackButton={true} action={registerAction} state={state} fields={form} buttonText="Register!"></Form>
       </div>
     }
@@ -160,10 +155,12 @@ export default function Register() {
   const onCloseAlert = () => {
     setAlert({ timeout: 3000, isOpen: false, type: "", message: "" })
 
-}
+  }
   return (
     <CommonLayout>
+
       {alert.isOpen && <Alert timeout={alert.timeout} onClose={onCloseAlert} title="Lucky Taya" message={alert.message} type={alert.type}></Alert>}
+
 
       {body()}
 

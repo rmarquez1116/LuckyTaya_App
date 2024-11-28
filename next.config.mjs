@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
-    // If using the next.js app behind a proxy, make sure the headers are properly passed
     headers: async () => {
         return [
             {

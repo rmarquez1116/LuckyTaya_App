@@ -90,6 +90,7 @@ export default async function Profile() {
       regionIndex = index
       form[index].items = region;
     }
+
     else if (element.id == 'province') {
       provinceIndex = index
       form[index].items = user['region'] ? await getProvince(user['region']) : []
@@ -101,6 +102,23 @@ export default async function Profile() {
     else if (element.id == 'barangay') {
       barangayIndex = index;
       form[index].items = user['city'] ? await getBarangays(user['city']) : []
+    }
+  }
+
+  if (user.agentReferralCode) {
+    //check if existing 
+    const exists = form.find(x => x.id == 'agentReferralCode')
+    if (!exists) {
+
+      let indexToInsert = 0;
+      form.splice(indexToInsert, 0,
+        {
+          id: "agentReferralCode",
+          type: "text",
+          value: user.agentReferralCode,
+          label: "Referral Code",
+          isReadonly: true
+        });
     }
   }
 

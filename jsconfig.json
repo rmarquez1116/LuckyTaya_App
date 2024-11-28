@@ -1,7 +1,12 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@app/*": ["./app/*"],         // Maps @app to the app folder
+      "@public/*": ["./public/*"],   // Maps @public to the public folder
+      "@components/*": ["./app/components/*"], // Maps @components to app/components
+      "@layout/*": ["./app/layout/*"], // Maps @layout to app/layout
+      "@actions/*": ["./app/actions/*"] // Maps @actions to app/actions
     }
   }
 }

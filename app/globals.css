@@ -99,7 +99,7 @@ nav {
   background-color: #0c0c0c;
 }
 
-div.bg-background {
+.bg-background {
   background-image: url("/images/bg.png");
   background-attachment: fixed;
   min-width: 100dvw;

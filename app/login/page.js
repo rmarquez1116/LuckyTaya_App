@@ -31,7 +31,7 @@ export default function Login() {
   
   return (
     <CommonLayout>
-      <div className="flex flex-col card max-w-sm p-6 mt-10 bg-white rounded-3xl shadow">
+      <div className="flex flex-col card max-w-sm p-6 m-10 bg-white rounded-3xl shadow">
         <label className="label-header1 text-center">Login</label>
         <Form action={loginAction} state={state} fields={form} buttonText="Login"></Form>
 

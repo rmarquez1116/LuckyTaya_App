@@ -17,7 +17,7 @@ function CommonLayout({ children }) {
                 </nav>
             </div>
             <div>
-                <div className="bg-background min-h-screen py-10 flex justify-center items-center ">
+                <div className="min-h-screen py-10 flex justify-center items-center ">
 
                     {children}
 

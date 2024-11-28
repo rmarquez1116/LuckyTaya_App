@@ -32,7 +32,7 @@ const registerSchema = z.object({
         .string()
         .min(1, { message: "Invalid Last Name" })
         .trim(),
-    // referralCode: z.string().optional(),
+    agentReferralCode: z.string().optional(),
     re_password: z.string(),
     birthdate: z.string(),
     // region: z.string(),
