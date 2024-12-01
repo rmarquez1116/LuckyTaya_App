@@ -67,16 +67,16 @@ function SchedulePopUp({ data, onClose }) {
                     headers={[
                         {
                             key: 'fightNumber',
-                            label: 'Fight #',
+                            label: 'Game #',
                         }, {
                             key: 'player1',
-                            label: 'Meron'
+                            label: 'Pula'
                         }, {
                             key: 'player2',
-                            label: 'Wala'
+                            label: 'Asul'
                         }, {
                             key: 'winner',
-                            label: 'result'
+                            label: 'Result'
                         },
                     ]}
                     items={tableFight}

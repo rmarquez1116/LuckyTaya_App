@@ -8,7 +8,7 @@ import BetModal from '../components/modal/betModal'
 import { memo, useEffect, useState } from "react";
 import BetConfirmation from "../components/modal/betConfirmation";
 import Loading from "../components/loading";
-import { getEventTrend, getLatestFight, placeABet } from "../actions/fight";
+import { getEventTrend, getFightDetailsByEventId, getLatestFight, placeABet } from "../actions/fight";
 import { isJsonEmpty } from "../lib/utils";
 import Alert from "../components/alert";
 import { getInitialBetDetails } from "../actions/wsApi";
@@ -18,6 +18,7 @@ import { useWebSocketContext } from '../context/webSocketContext';
 import Trend from '../components/trend'
 import PinV2 from "../components/modal/pinModalV2";
 import { validateMpin } from "../actions/pin";
+import SchedulePopUp from "../components/modal/schedulePopUp";
 
 function Game() {
     const { socket, messages } = useWebSocketContext();
@@ -31,8 +32,10 @@ function Game() {
         s1a: 0,
         s1o: 0
     })
- 
+
     const [isShowPin, setIsShowPin] = useState(false)
+    const [isSchedulePopUpOpen, setIsSchedulePopUpOpen] = useState(false)
+    const [schedules, setSchedules] = useState([])
     const [isLoaded, setIsLoaded] = useState(false)
     const [data, setData] = useState(null)
     const [amountToBet, setAmountToBet] = useState({ type: 1, amount: 0 })
@@ -49,11 +52,22 @@ function Game() {
     })
     const [showTrend, setShowTrend] = useState(false)
 
+    const getFightSchedules = async(event)=>{
+        const response = await getFightDetailsByEventId(event.event.eventId)
+        if (response) {
+          const result = {
+            ...event,
+            fights: response
+          }
+          setSchedules(result)
+        }
+    }
     const getData = async () => {
         try {
             const response = await getLatestFight();
             if (response) {
                 setData(response);
+                getFightSchedules(response)
             }
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -180,7 +194,7 @@ function Game() {
         if (result == true) {
             setIsShowPin(false);
 
-            var response = await placeABet(data.fight.fightId, amountToBet.amount.replaceAll(',',''), amountToBet.type)
+            var response = await placeABet(data.fight.fightId, amountToBet.amount.replaceAll(',', ''), amountToBet.type)
             if (response) {
                 setModalObject({ isOpen: false, type: modalObject.type })
 
@@ -222,6 +236,10 @@ function Game() {
                 <WinnerModal onClose={onWinnerModalClose} winnerSide={bettingEndedResult.winnerSide} data={data.fightDetails}></WinnerModal>
             }
 
+            {isLoaded && isSchedulePopUpOpen && !isJsonEmpty(data) &&
+                <SchedulePopUp data={schedules} onClose={() => setIsSchedulePopUpOpen(false)} />
+            }
+
             {isLoaded && !isJsonEmpty(data) &&
                 <div className="flex overflow-auto flex-col items-center gap-5 justify-center align-center  p-6">
                     <div className="rounded-[20px] card max-w-md  bg-center  p-5 w-full"
@@ -231,7 +249,7 @@ function Game() {
                                 backgroundSize: '100% 100%'
                             }
                         }>
-                        <div className="grid grid-cols-5 grid-rows-1 gap-4">
+                        <div className="grid grid-cols-4 grid-rows-1 gap-4">
                             <div className="col-span-4 uppercase label-header1">
                                 <div>
                                     <label>{data.event.eventName}</label>
@@ -239,8 +257,10 @@ function Game() {
                                 <div>
                                     <label>{data.venue.venueName}</label>
                                 </div>
-                                <div>
+                                <div className="grid grid-cols-2 grid-rows-1 gap-4 justify-between">
                                     <label>{formatDisplayDate(data.event.eventDate)}</label>
+                                    
+                                    <label onClick={()=>setIsSchedulePopUpOpen(true)} className="text-right underline text-blue-600 hover:text-blue-800 visited:text-purple-600 cursor-pointer">See Game Schedule</label>
                                 </div>
 
                             </div>
@@ -259,11 +279,11 @@ function Game() {
                         <br />
                         <div className="grid grid-cols-5 grid-rows-1 gap-4">
                             <div className="col-span-2 card rounded-[10px] p-3  text-center">
-                                <label> Betting {data.fightStatus.name}:</label>
+                                <label> Status : {data.fightStatus.name}</label>
                             </div>
                             <div className="col"></div>
                             <div className="col-span-2 card rounded-[10px] p-3 text-center">
-                                <label> Fight# {data.fight.fightNum}</label>
+                                <label> Game# {data.fight.fightNum}</label>
                             </div>
                         </div>
                     </div>

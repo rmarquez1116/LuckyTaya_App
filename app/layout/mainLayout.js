@@ -29,20 +29,23 @@ export default function MainLayout({ children }) {
           </div>
         </nav>
       </header>
-      <main>
+      <main class="min-h-screen">
         <div className="bg-background py-[52px] ">
           <Sidebar isOpen={isOpen} toggle={toggle} />
 
           {children}
-          <div className="text-center">
+          <footer class="text-white py-4 text-center">
 
-            <div className='flex justify-center items-center'>
+            <div className="text-center ">
 
-              <Image alt='footer' src={iconFooter}></Image>
+              <div className='flex justify-center items-center'>
+
+                <Image alt='footer' src={iconFooter}></Image>
+              </div>
+              <a href='mailto:luckytaya.com.ph'>Contact Us: luckytaya.com.ph</a>
+
             </div>
-            <a href='mailto:luckytaya.com.ph'>Contact Us: luckytaya.com.ph</a>
-
-          </div>
+          </footer>
         </div>
       </main>
 

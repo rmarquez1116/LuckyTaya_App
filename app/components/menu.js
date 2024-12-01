@@ -19,7 +19,7 @@ const menus = [
     }, {
         href: "/fight_schedule",
         icon: fight,
-        label: "Fight Schedule"
+        label: "Game Schedule"
     }, {
         href: "/transaction_history",
         icon: transhistory,

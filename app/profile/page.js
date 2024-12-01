@@ -2,6 +2,7 @@ import MainLayout from "../layout/mainLayout";
 import { getProfile } from "../actions/profile";
 import ProfileComponent from './_component'
 import { regions, provinces, cities, barangays } from '../actions/address'
+import { formatAccountNumber } from "../lib/utils";
 
 const form = [
   {
@@ -66,7 +67,9 @@ const form = [
 export default async function Profile() {
 
   const user = await getProfile();
-
+  if(user){
+    user.accountNumber = formatAccountNumber((user.accountNumber).toString())
+  }
   var regionIndex = -1, provinceIndex = -1, cityIndex = -1, barangayIndex = -1;
   const region = await regions();
 

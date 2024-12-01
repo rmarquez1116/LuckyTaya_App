@@ -84,27 +84,27 @@ export default function BettingHistory() {
               headers={[
                 {
                   key: 'transactionDateTime',
-                  label: 'DATE',
+                  label: 'Date',
                   format: (val) => {
                     const formatDate = new Date(val)
                     return format(formatDate, 'yyyy-MM-dd hh:mm:ss a')
                   }
                 }, {
                   key: 'transactionNumber',
-                  label: 'TXN ID'
+                  label: 'Transaction Id'
                 }, {
                   key: 'fromFullName',
                   concatKey: ['fromAccountNumber'],
                   concatSeparator: ' | ',
-                  label: 'SENDER'
+                  label: 'Sender'
                 }, {
                   key: 'toFullName',
                   concatKey: ['toAccountNumber'],
                   concatSeparator: ' | ',
-                  label: 'RECEIVER'
+                  label: 'Receiver'
                 }, {
                   key: 'amount',
-                  label: 'AMOUNT',
+                  label: 'Amount',
                   customValueClass: 'text-semiYellow',
                   format: (val) => {
                     return formatMoneyV2(val)
@@ -113,7 +113,7 @@ export default function BettingHistory() {
                   key: 'transactionDesc',
                   concatKey: ['transCategoryDesc'],
                   concatSeparator: ' ',
-                  label: 'TYPE'
+                  label: 'Type'
                 },
               ]}
               items={transactionList}

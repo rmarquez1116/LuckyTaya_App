@@ -94,10 +94,10 @@ export default function Home() {
 
       {isLoaded && <Pin title="Set Pin" isOpen={!hasPin} onClose={() => { }} onSubmit={(e) => onNominatePin(e)} />}
       <div className="className=' p-8 pb-20">
-        <div className='flex min-w-md justify-center items-center'>
+        {/* <div className='flex min-w-md justify-center items-center'>
 
           <button onClick={() => router.push('/transaction_history')} className="w-full rounded-[20px] p-2  max-w-md dark-gradient">Transaction History   →</button>
-        </div>
+        </div> */}
         <br />
         <div className='grid grid-cols-2 grid-rows-1 gap-4 text-center w-full'>
 

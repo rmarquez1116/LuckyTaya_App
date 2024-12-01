@@ -32,7 +32,6 @@ export default function TransactionHistory() {
       endDateDateTime.setHours(23, 59, 59, 999);
       // Adjust for the local timezone offset
       const localEndDateTime = new Date(endDateDateTime.getTime() - endDateDateTime.getTimezoneOffset() * 60000);
-      console.log(localStartDateTime.toISOString(),localEndDateTime.toISOString())
       const result = await getTransactionsByDate({
         dateFrom: localStartDateTime.toISOString(),
         dateTo: localEndDateTime.toISOString(),
@@ -89,27 +88,27 @@ export default function TransactionHistory() {
               headers={[
                 {
                   key: 'transactionDateTime',
-                  label: 'DATE',
+                  label: 'Date',
                   format: (val) => {
                     const formatDate = new Date(val)
                     return format(formatDate, 'yyyy-MM-dd hh:mm:ss a')
                   }
                 }, {
                   key: 'transactionNumber',
-                  label: 'TXN ID'
+                  label: 'Transaction Id'
                 }, {
                   key: 'fromFullName',
                   concatKey: ['fromAccountNumber'],
                   concatSeparator: ' | ',
-                  label: 'SENDER'
+                  label: 'Sender'
                 }, {
                   key: 'toFullName',
                   concatKey: ['toAccountNumber'],
                   concatSeparator: ' | ',
-                  label: 'RECEIVER'
+                  label: 'Receiver'
                 }, {
                   key: 'amount',
-                  label: 'AMOUNT',
+                  label: 'Amount',
                   customValueClass: 'text-semiYellow',
                   format: (val) => {
                     return formatMoneyV2(val)
@@ -118,7 +117,7 @@ export default function TransactionHistory() {
                   key: 'transactionDesc',
                   concatKey: ['transCategoryDesc'],
                   concatSeparator: ' ',
-                  label: 'TYPE'
+                  label: 'Type'
                 },
               ]}
               items={transactionList}

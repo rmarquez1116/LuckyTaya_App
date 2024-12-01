@@ -45,13 +45,13 @@ function Trend({ items }) {
                 <div className="card p-2 rounded-[20px] border-transparent  text-center">
                     <div className={`meronColor rounded-full h-10 w-10 mt-[-20]  flex justify-self-center`}>
                     </div>
-                    Meron
+                    Pula
                 </div>
 
                 <div className="card p-2 rounded-[20px] border-transparent  text-center">
                     <div className={`walaColor rounded-full h-10 w-10 mt-[-20]  flex justify-self-center`}>
                     </div>
-                    Wala
+                    Asul
                 </div>
                 <div className="card p-2 rounded-[20px] border-transparent  text-center">
                     <div className={`cancelColor rounded-full h-10 w-10 mt-[-20] flex justify-self-center`}>

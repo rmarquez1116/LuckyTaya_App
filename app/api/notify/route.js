@@ -26,17 +26,17 @@ export async function POST(req) {
 
             
             // transfer to convenience fee
-            var transferConFee = {
-                accountNumber: config.convenienceAccountNumber,
-                amount: newData.fee
-            }
-            const transferFee = await transferV2(transferConFee, token)
-            newData.masterToFee = transferFee;
+            // var transferConFee = {
+            //     accountNumber: config.convenienceAccountNumber,
+            //     amount: newData.fee
+            // }
+            // const transferFee = await transferV2(transferConFee, token)
+            // newData.masterToFee = transferFee;
 
             // first Leg
             // get Fee in trxAmount
             var amountBeforeFee = insertDecimalAtThirdToLast(newData.request.trxAmount)
-            amountBeforeFee = parseFloat(amountBeforeFee) - newData.fee;
+            // amountBeforeFee = parseFloat(amountBeforeFee) - newData.fee;
             var transferRequest = {
                 accountNumber: newData.accountNumber,
                 amount: amountBeforeFee

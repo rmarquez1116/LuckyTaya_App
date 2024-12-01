@@ -9,6 +9,7 @@ import { dataFilterByCurrentMonth } from "../lib/DataFilter";
 import { isJsonEmpty } from "../lib/utils";
 import SchedulePopUp from "../components/modal/schedulePopUp";
 import Loading from "../components/loading";
+import BalanceHeader from "../components/balanceHeader";
 
 export default function Home() {
   const [data, setData] = useState([])
@@ -38,7 +39,7 @@ export default function Home() {
     const getData = async () => {
       const response = await getFightSchedule();
       const result = dataFilterByCurrentMonth(response, 'eventDate')
-      
+      console.log(result)
       setData(result);
       setIsLoaded(true)
     }
@@ -51,20 +52,22 @@ export default function Home() {
 
   return (
     <MainLayout>
+       <BalanceHeader type={1} ></BalanceHeader>
+     
       {isSchedulePopUpOpen && !isJsonEmpty(fightDetails) &&
         <SchedulePopUp data={fightDetails} onClose={() => setIsSchedulePopUpOpen(false)} />
       }
 
       <div className="w-full min-h-full p-8 pb-20 font-[family-name:var(--font-geist-sans)] flex flex-col items-center">
 
-        <CenterLabel label="FIGHT SCHEDULE" />
+        <CenterLabel label="GAME SCHEDULE" />
         <br />
         <div className="p-5  max-w-md   card2 rounded-[20px] grid grid-cols-2 grid-rows-2 gap-4 w-full">
           <Legends></Legends>
         </div>
         <br />
         {!isLoaded || isLoading && <Loading />}
-        {isLoaded && !isJsonEmpty(data) && <Calendar onSelect={onSelect} schedule={data} currentDate={new Date()} />}
+        {isLoaded && <Calendar onSelect={onSelect} schedule={data} currentDate={new Date()} />}
       </div>
     </MainLayout>
   );

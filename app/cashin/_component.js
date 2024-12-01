@@ -29,16 +29,17 @@ export default function CashIn({ config }) {
         isOkayOnly: true
     })
     const getFee = (isForDisplay) => {
-        if (config) {
-            if (config.type == 1) {
-                return config.convenienceStatic
-            } else {
-                if (isForDisplay) {
-                    return `${config.conveniencePercentage * 100}%`
-                }
-                return config.conveniencePercentage
-            }
-        }
+        return 0;
+        // if (config) {
+        //     if (config.type == 1) {
+        //         return config.convenienceStatic
+        //     } else {
+        //         if (isForDisplay) {
+        //             return `${config.conveniencePercentage * 100}%`
+        //         }
+        //         return config.conveniencePercentage
+        //     }
+        // }
     }
     useEffect(() => {
         if (amount) {
@@ -77,7 +78,16 @@ export default function CashIn({ config }) {
     }
 
     const onCashIn = async () => {
-        setIsShowPin(true);
+        // setIsShowPin(true);
+        setIsShowPin(false);
+        var payment = await Repayment({
+            trxAmount: `${(Number.parseFloat(total.replaceAll(",", ""))).toFixed(2)}`.replaceAll(",", "").replace(".", ""),
+            fee: fee
+        });
+        if (payment.response.code == "200") {
+            setIsShowQr(true)
+            setQrData(payment.response.codeUrl)
+        }
     }
     const router = useRouter();
     const onQrClose = () => {
@@ -118,13 +128,13 @@ export default function CashIn({ config }) {
                         <label className="text-center label-header1">Cash-In</label>
                     </div>
                     <div className="bg-gray p-3 rounded-[20px] w-full">
-                        <div className=" grid grid-cols-2 grid-rows-2 gap-4">
+                        <div className=" grid grid-cols-2 grid-rows-1 gap-4 items-center">
                             <label>Amount : </label>
                             <label className='text-right bg-dark p-2'>
                                 {formatMoneyV2(amount)}
                             </label>
-                            <label>Fee :</label>
-                            <label className="text-right px-2 ">{formatMoneyV2(fee)}</label>
+                            {/* <label>Fee :</label>
+                            <label className="text-right px-2 ">{formatMoneyV2(fee)}</label> */}
                         </div>
                         {/* <div className="inline-flex gap-3 items-center justify-center">
                                <label className="text-center">{total}</label>
@@ -132,11 +142,11 @@ export default function CashIn({ config }) {
 
                     </div>
 
-                    <div className="grid grid-cols-3 items-center grid-rows-1 gap-1">
+                    {/* <div className="grid grid-cols-3 items-center grid-rows-1 gap-1">
                         <label className="col-span-2">Total amount to be charge :</label>
                         <input readOnly className="px-2 text-[18px] transparent-input font-bold text-right" type="text" id="amount" value={`${formatMoneyV2(total)}`} onChange={(e) => onAmountChange(e)}></input>
 
-                    </div>
+                    </div> */}
                     <div className="grid grid-cols-3 grid-rows-3 gap-4  align-middle   place-items-center">
                         {denomination.map((object, i) => {
                             return <div onClick={() => setAmount(object)} key={`denomination-${i}`} className="amount-button text-center rounded-[20px] w-full p-3">{object}</div>
