@@ -4,9 +4,9 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import axios from "axios";
 import { Agent } from "https";
-import { fetchData, saveData } from "../helpers/DB";
+import { fetchData, saveData, updateData } from "../helpers/DB";
 import { calculateAge } from "../lib/utils";
-import { changePasswordSchema,registerSchema } from "../forms/schema";
+import { changePasswordSchema, registerSchema } from "../forms/schema";
 
 
 export async function register(prevState, formData) {
@@ -48,7 +48,7 @@ export async function register(prevState, formData) {
             };
         }
         const age = calculateAge(request.birthdate)
-        if(age <18){
+        if (age < 18) {
             return {
                 errors: {
                     alert: ["Can't proceed with registration. You must be 18 years old and above"],
@@ -98,6 +98,8 @@ export async function register(prevState, formData) {
         request.userId = responseData.userId;
         request.accountNumber = responseData.accountNumber
         await saveData('taya_user', request)
+
+        await updatePlayerRole({ accountNumber: responseData.accountNumber, count: 0 })
 
         await processLogin({ username: request.username, password: request.password })
         redirect("/");
@@ -164,7 +166,7 @@ export async function changePassword(prevState, formData) {
     try {
         session = JSON.parse(session.value);
         delete request.password;
-        console.log(request,'hello-')
+        console.log(request, 'hello-')
         const response = await axios.post(`${process.env.BASE_URL}/api/v1/User/ChangePassword/V3`, request, {
             headers: {
                 "Content-Type": "application/json",
@@ -173,7 +175,7 @@ export async function changePassword(prevState, formData) {
             httpsAgent
         })
         if (response.status >= 200 && response.status <= 300) {
-            return {success :true}
+            return { success: true }
         } else {
             return {
                 errors: {
@@ -209,4 +211,53 @@ export async function changePassword(prevState, formData) {
             username: ["Invalid email or password"],
         },
     };
+}
+
+
+async function updatePlayerRole({ accountNumber, count }) {
+
+    console.log(count)
+    let config
+    const httpsAgent = new Agent({
+        rejectUnauthorized: false
+    })
+    try {
+        config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
+        console.log(config)
+        const response = await axios.put(`${process.env.BASE_URL}/api/v1/UserAccount/UpdateAccountType`, {
+            accountNumber,
+            accountType: 7
+        }, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${config.sysAdAuth}`,
+            },
+            httpsAgent
+        })
+
+    } catch (e) {
+
+        console.log(e)
+        if (count < 3) {
+            const adminLoginResponse = await axios.post(`${process.env.BASE_URL}/api/v1/User/Login`,
+                {
+                    username: config.sysAdUsername,
+                    password: config.sysAdPassword
+                }, {
+
+                headers: {
+                    "Content-Type": "application/json",
+                }
+                , httpsAgent
+            })
+            if (adminLoginResponse.status == 200) {
+
+                let token = adminLoginResponse.data.token;
+                await updateData('config', { "code": { $eq: "CFG0001" } }, { ...config, sysAdAuth: token })
+            }
+
+            updatePlayerRole({ accountNumber, count: count + 1 })
+        }
+    }
+
 }
