@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 
-function Alert({ title, message, type, onClose, timeout = 3000 }) {
+function Alert({ title, message, type, onClose, timeout = 3000 ,isAnimating = true}) {
     useEffect(() => {
         setTimeout(() => {
             onClose()
@@ -31,7 +31,7 @@ function Alert({ title, message, type, onClose, timeout = 3000 }) {
                 {/* <p>
                     {title}
                 </p> */}
-                <p className='label-header1 scrolling-text whitespace-nowrap '>{message}</p>
+                <p className={`label-header1 whitespace-nowrap ${isAnimating ? ' scrolling-text ' : ''}`}>{message}</p>
             </div>
         </div>
     )

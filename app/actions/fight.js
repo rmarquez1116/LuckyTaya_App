@@ -13,8 +13,8 @@ export async function getFightSchedule() {
         return redirect('/login')
     }
     try {
-        var types = await getSabongEventStatus();
         session = JSON.parse(session.value);
+        var types = await getSabongEventStatus();
 
         var url = `${process.env.BASE_URL}/api/v1/SabongEvent/V2`
 

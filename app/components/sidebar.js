@@ -12,10 +12,22 @@ import { logout } from '../actions/auth';
 import { redirect } from 'next/navigation';
 import logoutIcon from '../../public/images/logout.svg'
 
-function Sidebar({ toggle, isOpen }) {
+function Sidebar({ isEnabled = false, toggle, isOpen }) {
+
   const onLogout = async () => {
     await logout()
     redirect('/login')
+  }
+
+  const renderSideBarMenu = (link, image, title) => {
+
+    if (isEnabled)
+      return <Link href={link} className='cursor-pointer'>
+        <SidebarButton img={image} label={title}></SidebarButton>
+      </Link>
+    else return <div className='cursor-not-allowed'>
+      <SidebarButton img={image} label={title}></SidebarButton>
+    </div>
   }
   return (
 
@@ -40,21 +52,15 @@ function Sidebar({ toggle, isOpen }) {
       >
 
         <div className='p-3 grid grid-cols-3 grid-rows-1 gap-4 text-center'>
-          <Link href="/game">
-            <SidebarButton img={play} label="Play"></SidebarButton>
-          </Link>
-          <Link href="/cashin">
-            <SidebarButton img={cashIn} label="Cash In"></SidebarButton>
-          </Link>
-          
-          <Link href="/request_fund">
-            <SidebarButton img={cashIn} label="Request Fund"></SidebarButton>
-          </Link>
+          {renderSideBarMenu('/game', play, 'Play')}
+          {renderSideBarMenu('/cashin', cashIn, 'Cash In')}
+          {renderSideBarMenu('/request_fund', cashIn, 'Request Fund')}
+
           {/* <Link href="/cashout">
             <SidebarButton img={cashOut} label="Cash Out"></SidebarButton>
           </Link> */}
         </div>
-        <Menu></Menu>
+        <Menu isEnabled={isEnabled}></Menu>
 
 
         <button onClick={() => onLogout()} className='justify-center w-full p-4 text-red hover:bg-cursedBlack hover:rounded-xlg hover:text-[#E7DE54] flex gap-2'>
@@ -63,14 +69,11 @@ function Sidebar({ toggle, isOpen }) {
         <div className='p-3 grid grid-cols-3 grid-rows-1 gap-4 text-center  z-20'>
           <div></div>
           <div>
-
-            <Link href="/support">
-              <SidebarButton img={cs} label="Support"></SidebarButton>
-            </Link>
+            {renderSideBarMenu('/support',cs,'Support')}
           </div>
           <div></div>
         </div>
-        <br/>
+        <br />
         <div className='w-full z-0'>
 
           <div className='w-full flex justify-center items-center'>

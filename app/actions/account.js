@@ -1,50 +1,13 @@
 "use server";
 
-import { z } from "zod";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import axios from "axios";
 import { Agent } from "https";
 import { fetchData, saveData } from "../helpers/DB";
 import { calculateAge } from "../lib/utils";
+import { changePasswordSchema,registerSchema } from "../forms/schema";
 
-const phoneRegex = new RegExp(
-    /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
-);
-const registerSchema = z.object({
-    username: z
-        .string()
-        .min(1, { message: "Invalid Username" })
-        .trim(),
-    password: z
-        .string()
-        .min(1, { message: "Invalid Password" })
-        .trim(),
-    phoneNumber: z.string().regex(phoneRegex, 'Invalid Mobile Number'),
-    email: z.string().email({ message: "Invalid email address" }).trim(),
-
-    firstname: z
-        .string()
-        .min(1, { message: "Invalid First Name" })
-        .trim(),
-
-    lastname: z
-        .string()
-        .min(1, { message: "Invalid Last Name" })
-        .trim(),
-    agentReferralCode: z.string().optional(),
-    re_password: z.string(),
-    birthdate: z.string(),
-    // region: z.string(),
-    // province: z.string(),
-    // city: z.string(),
-    // barangay: z.string(),
-
-}).refine((data) => (data.password === data.re_password)
-    && (data.password != "" && data.re_password != ""), {
-    message: "Passwords don't match",
-    path: ["re_password"], // path of error
-});
 
 export async function register(prevState, formData) {
     var isSuccess = false;
@@ -176,4 +139,74 @@ async function processLogin(request) {
         return true;
     }
     return false;
+}
+
+
+export async function changePassword(prevState, formData) {
+    var isSuccess = false;
+    var responseData = null;
+    const result = changePasswordSchema.safeParse(Object.fromEntries(formData));
+    if (!result.success) {
+        return {
+            errors: result.error.flatten().fieldErrors,
+        };
+    }
+
+    const httpsAgent = new Agent({
+        rejectUnauthorized: false
+    })
+    const request = result.data
+    const cookieStore = await cookies()
+    var session = cookieStore.get('app_session');
+    if (!session) {
+        return redirect('/login')
+    }
+    try {
+        session = JSON.parse(session.value);
+        delete request.password;
+        console.log(request,'hello-')
+        const response = await axios.post(`${process.env.BASE_URL}/api/v1/User/ChangePassword/V3`, request, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${session.token}`,
+            },
+            httpsAgent
+        })
+        if (response.status >= 200 && response.status <= 300) {
+            return {success :true}
+        } else {
+            return {
+                errors: {
+                    alert: ["Can't Process your Request"],
+                },
+            };
+        }
+    } catch (e) {
+        const errorMessages = e.response.data.error
+        var errorMesssagees = ''
+        if (errorMessages) {
+            if (errorMessagees['Not found']) {
+                errorMesssagees = errorMessages['Not found'][0]
+            } else if (errorMessages['Bad request']) {
+                errorMesssagees = errorMessages['Bad request'][0]
+            } else if (errorMessages['Unexpexted Error']) {
+                errorMesssagees = errorMessages['Unexpexted Error'][0]
+            } else {
+                errorMesssagees = 'Oops! something went wrong'
+            }
+        }
+        else {
+            errorMesssagees = 'Oops! something went wrong'
+        }
+        return {
+            errors: {
+                alert: [errorMesssagees],
+            },
+        };
+    }
+    return {
+        errors: {
+            username: ["Invalid email or password"],
+        },
+    };
 }

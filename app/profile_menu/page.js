@@ -1,6 +1,6 @@
 'use client'
 import {  useState } from 'react';
-import { FaChevronDown, FaChevronUp, FaWifi, FaVolumeUp, FaUserCog, FaLock } from 'react-icons/fa';
+import { FaChevronDown, FaChevronUp, FaWifi, FaVolumeUp, FaUserCog, FaLock, FaFileUpload } from 'react-icons/fa';
 import MainLayout from '../layout/mainLayout';
 import BalanceHeader from '../components/balanceHeader';
 import { useRouter } from 'next/navigation';
@@ -11,6 +11,7 @@ const sections = [
     items: [
       { link: "/profile", title: 'Profile', icon: <FaUserCog /> },
       { link: "/change_password", title: 'Change Password', icon: <FaUserCog /> },
+      { link: "/upload_id", title: 'Upload Id', icon: <FaFileUpload /> },
     ]
   }
 ];
@@ -33,7 +34,7 @@ export default function SettingsMenu() {
   return (
     <MainLayout>
       <BalanceHeader type={1} />
-      <div className="max-w-lg  mt-4 mx-auto p-4 space-y-4 bg-black shadow-md rounded-lg">
+      <div className="max-w-lg  mt-4 mx-auto p-4 space-y-4 bg-dark-no-border shadow-md rounded-md">
         {sections.map((section, index) => (
           <div key={index} className="border-b pb-4">
             <div

@@ -35,13 +35,14 @@ const menus = [
     },
 ]
 
-export default function Menu() {
+export default function Menu({isEnabled}) {
     return (
         <ul className="p-5 sidebar-nav leading-relaxed text-xl">
             {menus.map((object, i) => {
                 return <React.Fragment key={`li-${i}`}>
                     <li>
                         <MenuItem
+                            isEnabled={isEnabled}
                             href={object.href}
                             icon={object.icon}
                             label={object.label}>

@@ -1,6 +1,7 @@
 import React from 'react'
 import "./globals.css";
-import {WebSocketProvider} from './context/webSocketContext'
+import { WebSocketProvider } from './context/webSocketContext'
+import { ProfileProvider } from './context/profileContext';
 
 export default function RootLayout({ children }) {
     return (
@@ -12,10 +13,11 @@ export default function RootLayout({ children }) {
                 />
             </head>
             <body className='bg-background'>
-                <WebSocketProvider>
-
-                    {children}
-                </WebSocketProvider>
+                <ProfileProvider>
+                    <WebSocketProvider>
+                        {children}
+                    </WebSocketProvider>
+                </ProfileProvider>
             </body>
         </html>
     )

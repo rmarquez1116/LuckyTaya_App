@@ -12,12 +12,12 @@ function FightScheduleBox({ data ,onSelect}) {
     return (
         <div  onClick={()=>onSelect(data.event.eventId,data)} className="cursor-pointer  flex flex-col justify-self-center card dark-gradient w-full max-w-sm p-6 mt-10 bg-white rounded-3xl shadow">
             <div className='flex justify-between'>
-                <label className="yellow label-header1">Fight Schedule</label>
+                <label className="yellow label-header1">Game Schedule</label>
 
                 <button className="dark">• • •</button>
             </div>
 
-            <label className='label-subHeader'>Fight schedules may change anytime</label>
+            <label className='label-subHeader'>Game schedules may change anytime</label>
             <br />
             <div className="col-span-4">
                 <div>

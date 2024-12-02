@@ -5,18 +5,8 @@ import { cookies } from "next/headers";
 import axios from "axios";
 import { Agent } from "https";
 import { redirect } from "next/navigation";
+import { forgotPasswordSchema, loginSchema } from "../forms/schema";
 
-
-const loginSchema = z.object({
-    username: z
-        .string()
-        .min(1, { message: "Invalid Username" })
-        .trim(),
-    password: z
-        .string()
-        .min(1, { message: "Invalid Password" })
-        .trim(),
-});
 
 export async function login(prevState, formData) {
     var isSuccess = false;
@@ -134,4 +124,62 @@ export async function getSession() {
     } else {
         return JSON.parse(session.value);
     }
+}
+
+
+export async function forgotPassword(prevState, formData) {
+    var isSuccess = false;
+    const result = forgotPasswordSchema.safeParse(Object.fromEntries(formData));
+
+    if (!result.success) {
+        return {
+            errors: result.error.flatten().fieldErrors,
+        };
+    }
+    const { username } = result.data;
+    const request = { username };
+    const httpsAgent = new Agent({
+        rejectUnauthorized: false
+    })
+    try {
+        const response = await axios.get(`${process.env.BASE_URL}/api/v1/User/ForgotPassword/V2?username=${request.username}`, {
+
+            headers: {
+                "Content-Type": "application/json",
+            }
+            , httpsAgent
+        })
+        if (response.status == 200) {
+
+            return true;
+        }
+    } catch (e) {
+        console.log(e,'----')
+        const errorMessages = e.response.data.error
+        var errorMesssagees = ''
+        if (errorMessages) {
+            if (errorMessagees['Not found']) {
+                errorMesssagees = errorMessages['Not found'][0]
+            } else if (errorMessages['Bad request']) {
+                errorMesssagees = errorMessages['Bad request'][0]
+            } else if (errorMessages['Unexpexted Error']) {
+                errorMesssagees = errorMessages['Unexpexted Error'][0]
+            } else {
+                errorMesssagees = 'Oops, Something went wrong'
+            }
+        }
+        else {
+                errorMesssagees = 'Oops, Something went wrong'
+        }
+        return {
+            errors: {
+                username: [errorMesssagees],
+            },
+        };
+    }
+    return {
+        errors: {
+            username: ["Invalid UserName"],
+        },
+    };
 }

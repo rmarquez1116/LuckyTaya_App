@@ -53,7 +53,7 @@ export default function ProfileComponent(
     useEffect(() => {
         if (state?.success) {
             const result = confirm("Profile Updated")
-            router.push("/")
+            router.push("/upload_id")
         }
     }, [state])
 

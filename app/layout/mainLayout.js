@@ -2,12 +2,24 @@
 import Image from "next/image";
 import logo from '../../public/images/logo.png'
 import Hamburger from "../components/hamburger";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from '../components/sidebar'
 import iconFooter from '../../public/images/logo-footer.png';
 import Link from "next/link";
+import { useProfileContext } from "../context/profileContext";
 
 export default function MainLayout({ children }) {
+  const { profile } = useProfileContext();
+  const [isEnableMenus, setIsEnableMenus] = useState(false)
+
+  useEffect(() => {
+    if (profile) {
+      if (profile.status && profile.status == "APPROVED") {
+        setIsEnableMenus(true)
+      }
+    }
+  }, [profile])
+
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => {
     setIsOpen(!isOpen);
@@ -31,9 +43,12 @@ export default function MainLayout({ children }) {
       </header>
       <main className="min-h-screen">
         <div className="bg-background py-[52px] ">
-          <Sidebar isOpen={isOpen} toggle={toggle} />
+          <Sidebar isEnabled={isEnableMenus} profile={profile} isOpen={isOpen} toggle={toggle} />
 
           {children}
+
+
+
           <footer className="text-white py-4 text-center">
 
             <div className="text-center ">
@@ -45,8 +60,7 @@ export default function MainLayout({ children }) {
               <a href='mailto:luckytaya.com.ph'>Contact Us: luckytaya.com.ph</a>
 
             </div>
-          </footer>
-        </div>
+          </footer></div>
       </main>
 
     </React.Fragment>

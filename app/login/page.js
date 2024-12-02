@@ -37,7 +37,7 @@ export default function Login() {
 
         <br />
         <div className="flex flex-col gap-1">
-          <Link className="text-center underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href='/forgot-password'>Forgot your password?</Link>
+          <Link className="text-center underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href='/forgot_password'>Forgot your password?</Link>
           <label className="text-center">New to E-Billiards</label>
           <Link className="text-center underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href='/register'>Sign-up</Link>
           <label className="text-center">By continuing you agree to our User Agreement and Privacy Policy</label>
