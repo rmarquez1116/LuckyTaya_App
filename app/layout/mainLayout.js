@@ -29,12 +29,12 @@ export default function MainLayout({ children }) {
           </div>
         </nav>
       </header>
-      <main class="min-h-screen">
+      <main className="min-h-screen">
         <div className="bg-background py-[52px] ">
           <Sidebar isOpen={isOpen} toggle={toggle} />
 
           {children}
-          <footer class="text-white py-4 text-center">
+          <footer className="text-white py-4 text-center">
 
             <div className="text-center ">
 

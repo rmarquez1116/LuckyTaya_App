@@ -13,7 +13,7 @@ const menus = [
         icon: home,
         label: "Home"
     }, {
-        href: "/profile",
+        href: "/profile_menu",
         icon: profile,
         label: "Profile"
     }, {

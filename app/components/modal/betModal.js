@@ -47,27 +47,27 @@ function BetModal({ type, onClose, balance,data,setAmountToBet }) {
 
                 <div className="grid grid-cols-3 grid-rows-1 gap-4">
                     <div ></div>
-                    <div className='inline-flex  items-center gap-2 text-center label-header1'><div className='meronColor rounded-full h-5 w-5'></div>Meron</div>
+                    <div className='inline-flex  items-center gap-2 text-center label-header1'><div className='meronColor rounded-full h-5 w-5'></div>Pula</div>
                     <div className='text-right' onClick={()=>onClose(false)}>X</div>
 
 
                 </div>
                 {renderDescription()}
                 {renderDemonimation()}
-                <button onClick={()=>onClose(true)} className='p-2 meronColor rounded-[20px] w-full'>PLACE BET ON MERON</button>
+                <button onClick={()=>onClose(true)} className='p-2 meronColor rounded-[20px] w-full'>PLACE BET ON PULA</button>
 
             </>
         else return <>
             <div className="grid grid-cols-3 grid-rows-1 gap-4">
                     <div ></div>
-                    <div className='inline-flex items-center gap-2 text-center  label-header1'><div className='walaColor rounded-full h-5 w-5'></div>Wala</div>
+                    <div className='inline-flex items-center gap-2 text-center  label-header1'><div className='walaColor rounded-full h-5 w-5'></div>Asul</div>
                     <div className='text-right' onClick={()=>onClose(false)}>X</div>
 
 
                 </div>
                 {renderDescription()}
                 {renderDemonimation()}
-                <button onClick={()=>onClose(true)} className='p-2 walaColor rounded-[20px] w-full'>PLACE BET ON WALA</button>
+                <button onClick={()=>onClose(true)} className='p-2 walaColor rounded-[20px] w-full'>PLACE BET ON ASUL</button>
 
 
         </>

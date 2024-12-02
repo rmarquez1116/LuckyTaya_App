@@ -66,21 +66,25 @@ const Tables = ({ headers, items, primaryId, isCentered = false }) => {
     const pageNumbers = getPaginationRange()
 
     const populateItem = (i, h, item) => {
-        const className = `p-3 font-semibold ${h.customValueClass ? h.customValueClass : ""
-            } ${isCentered ? "text-center" : ""}`
+        const className = `p-3 font-semibold ${h.customValueClass ? h.customValueClass : ''} ${isCentered ? 'text-center' : ''}`
         let value = item[h.key]
 
         if (h.concatKey) {
-            h.concatKey.forEach(concateKeyIndex => {
+            h.concatKey.forEach((concateKeyIndex) => {
                 value = `${value}${h.concatSeparator}${item[concateKeyIndex]}`
             })
         }
 
-        return (
-            <td key={`row-key-${h.key}-${i}`} className={className}>
-                {h.format ? h.format(value) : value}
-            </td>
-        )
+        let showFormatCustom
+
+        if (h.format) {
+            showFormatCustom = h.format(value)
+        } else if (h.customValue) {
+            showFormatCustom = h.customValue(item)
+        }
+
+        return <td key={`row-key-${h.key}-${i}`} className={className} style={{whiteSpace:'pre'}}>{showFormatCustom ?? value}</td>
+ 
     }
 
     return (
@@ -131,8 +135,8 @@ const Tables = ({ headers, items, primaryId, isCentered = false }) => {
                             }
                         }}
                         className={`py-2 px-4 rounded border border-[#3A3A3A] hover:bg-[#3A3A3A] hover:text-white ${currentPage === number
-                                ? "bg-[#3A3A3A] text-white"
-                                : "bg-[#080808] text-[#C4CDD5]"
+                            ? "bg-[#3A3A3A] text-white"
+                            : "bg-[#080808] text-[#C4CDD5]"
                             }`}
                         // Disable button for ellipses
                         disabled={typeof number === "string"}

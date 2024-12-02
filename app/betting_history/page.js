@@ -6,7 +6,7 @@ import { getTransactionsByDate } from "../actions/transaction";
 import Loading from "../components/loading";
 import Tables from "../components/tables";
 import { format } from 'date-fns'
-import { getStartOfWeek } from "../lib/utils";
+import { formatAccountNumber, getStartOfWeek } from "../lib/utils";
 import { formatMoney, formatMoneyV2 } from "../helpers/Common";
 
 export default function BettingHistory() {
@@ -92,16 +92,26 @@ export default function BettingHistory() {
                 }, {
                   key: 'transactionNumber',
                   label: 'Transaction Id'
-                }, {
-                  key: 'fromFullName',
-                  concatKey: ['fromAccountNumber'],
-                  concatSeparator: ' | ',
-                  label: 'Sender'
-                }, {
-                  key: 'toFullName',
-                  concatKey: ['toAccountNumber'],
-                  concatSeparator: ' | ',
-                  label: 'Receiver'
+                },
+                {
+                  key: '',
+                  label: 'Sender',
+                  customValue: (val) =>
+                    <div>
+                      {val.fromFullName}<br />
+                      {formatAccountNumber(val.fromAccountNumber.toString())}
+                    </div>
+
+                },
+                {
+                  key: '',
+                  label: 'Receiver',
+                  customValue: (val) =>
+                    <div>
+                      {val.toFullName}<br />
+                      {formatAccountNumber(val.toAccountNumber.toString())}
+                    </div>
+
                 }, {
                   key: 'amount',
                   label: 'Amount',

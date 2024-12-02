@@ -39,12 +39,16 @@ function Sidebar({ toggle, isOpen }) {
       // onClick={toggle}
       >
 
-        <div className='p-3 grid grid-cols-2 grid-rows-1 gap-4 text-center'>
+        <div className='p-3 grid grid-cols-3 grid-rows-1 gap-4 text-center'>
           <Link href="/game">
             <SidebarButton img={play} label="Play"></SidebarButton>
           </Link>
           <Link href="/cashin">
             <SidebarButton img={cashIn} label="Cash In"></SidebarButton>
+          </Link>
+          
+          <Link href="/request_fund">
+            <SidebarButton img={cashIn} label="Request Fund"></SidebarButton>
           </Link>
           {/* <Link href="/cashout">
             <SidebarButton img={cashOut} label="Cash Out"></SidebarButton>

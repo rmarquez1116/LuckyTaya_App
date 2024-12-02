@@ -30,7 +30,7 @@ function WinnerModal({ winnerSide, data, onClose }) {
 }
 
 function FighterDetail({ data }) {
-    const title = data.side == 1 ? "Meron" : "Wala"
+    const title = data.side == 1 ? "Pula" : "Asul"
     const color = data.side == 1 ? "meronColor" : "walaColor"
     return <React.Fragment>
         <div className='inline-flex gap-2 justify-center w-full z-40'>

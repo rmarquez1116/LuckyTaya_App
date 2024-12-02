@@ -10,7 +10,7 @@ function BetConfirmation({ type, onClose, balance,amount }) {
 
     const renderBody = () => {
         var className = type == 1 ? "meron" : "wala"
-        var title = type == 1 ? "Meron" : "Wala"
+        var title = type == 1 ? "Pula" : "Asul"
         return <div className="grid grid-cols-3 grid-rows-1 gap-4 items-center mx-[-23px]">
             <div>
                 <Image alt="tacoLeft" src={tacoLeft}></Image>

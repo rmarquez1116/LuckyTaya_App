@@ -15,9 +15,9 @@ const ConfirmationModal = ({
   if (isOkOnly) {
     buttons = (
       <div className="flex justify-end space-x-4">
-        <Button type="button" onClick={onConfirm}>
+        <button type="button" className="primary" onClick={onConfirm}>
           Confirm
-        </Button>
+        </button>
       </div>
     )
   } else {
@@ -26,9 +26,9 @@ const ConfirmationModal = ({
         <Button onClick={onCancel} type="button" textColor="text-red">
           Cancel
         </Button>
-        <Button onClick={onConfirm} type={"button"}>
+        <button onClick={onConfirm}  className="primary" type={"button"}>
           Confirm
-        </Button>
+        </button>
       </div>
     )
   }

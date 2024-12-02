@@ -16,7 +16,7 @@ function SchedulePopUp({ data, onClose }) {
     }
     const getWinnerDescription = (result)=>{
         if(result){
-            return result.winSide == 1 ? "Meron Wins" : result.winSide == 0 ? "Wala Wins" : "Cancelled"
+            return result.winSide == 1 ? "Pula Wins" : result.winSide == 0 ? "Asul Wins" : "Cancelled"
         }
         return ""
     }
