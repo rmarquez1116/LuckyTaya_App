@@ -22,7 +22,7 @@ import SchedulePopUp from "../components/modal/schedulePopUp";
 import VideoPlayer from "../components/videoPlayer";
 
 function Game() {
-    const { socket, messages } = useWebSocketContext();
+    const { socket, messages,closeBet } = useWebSocketContext();
 
     const [betDetails, setBetDetails] = useState({
         fId: 0,
@@ -44,6 +44,13 @@ function Game() {
         isOpen: false,
         type: 1
     })
+
+    useEffect(() => {
+      if(closeBet){
+        getData()
+      }
+    }, [closeBet])
+    
 
     const [randomText, setRandomText] = useState("1234")
     const [trends, setTrends] = useState([])
@@ -77,7 +84,7 @@ function Game() {
         }
     }
 
-    const [alert, setAlert] = useState({ timeout: 5000, isOpen: false, message: "", type: "success" })
+    const [alert, setAlert] = useState({hasTimer : false, timeout: 5000, isOpen: false, message: "", type: "success" })
     const [modalConfirmObject, setModalConfirmObject] = useState({
         isOpen: false,
         type: 1
@@ -117,7 +124,7 @@ function Game() {
                         break;
                     // last call
                     case 22:
-                        setAlert({ timeout: 60000, isOpen: true, type: "info", message: "Last Call !!!" })
+                        setAlert({hasTimer : true, timeout: 60000, isOpen: true, type: "info", message: "Last Call !!!" })
                         break;
                     // result
                     case 50:
@@ -184,7 +191,7 @@ function Game() {
     }
 
     const onCloseAlert = () => {
-        setAlert({ timeout: 3000, isOpen: false, type: "", message: "" })
+        setAlert({hasTimer : false, timeout: 3000, isOpen: false, type: "", message: "" })
 
     }
 
@@ -203,10 +210,10 @@ function Game() {
 
                 setModalConfirmObject({ isOpen: false, type: modalConfirmObject.type })
             } else {
-                setAlert({ timeout: 3000, isOpen: true, type: "error", message: "Can not place a bet as of the moment" })
+                setAlert({hasTimer : false, timeout: 3000, isOpen: true, type: "error", message: "Can not place a bet as of the moment" })
             }
         } else {
-            setAlert({ timeout: 3000, isOpen: true, type: "error", message: "Invalid Pin" })
+            setAlert({hasTimer : false, timeout: 3000, isOpen: true, type: "error", message: "Invalid Pin" })
         }
     }
     const renderModals = () => {
@@ -230,7 +237,7 @@ function Game() {
             {isShowPin && <PinV2 title="Enter Pin" isOpen={isShowPin} onClose={() => { setIsShowPin(false) }} onSubmit={(e) => onValidatePin(e)} />}
 
             {isLoaded && <BalanceHeader type={2} forceUpdate={randomText}></BalanceHeader>}
-            {isLoaded && alert.isOpen && <Alert timeout={alert.timeout} onClose={onCloseAlert} title="Lucky Taya" message={alert.message} type={alert.type}></Alert>}
+            {isLoaded && alert.isOpen && <Alert timeout={alert.timeout} hasTimer={alert.hasTimer} onClose={onCloseAlert} title="Lucky Taya" message={alert.message} type={alert.type}></Alert>}
             {renderModals()}
             {isLoaded && bettingEndedResult.isOpen &&
                 !isJsonEmpty(data) &&

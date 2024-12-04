@@ -16,6 +16,7 @@ export const WebSocketProvider = ({ children }) => {
   const [messages, setMessages] = useState(null);
   const [socket, setsocket] = useState(null);
   const [sessionCookie, setSessionCookie] = useState('')
+  const [closeBet, setCloseBet] = useState(false)  
   const [alert, setAlert] = useState({hasTimer : false, timeout: 3000, isOpen: false, message: "testing", type: "success" })
 
   const getSess = async () => {
@@ -63,8 +64,9 @@ export const WebSocketProvider = ({ children }) => {
 
     };
   }, [sessionCookie]);
-  const onCloseAlert = () => {
+  const onCloseAlert = (hasTimer) => {
     setAlert({ timeout: 3000, isOpen: false, type: "", message: "",hasTimer : false, })
+    setCloseBet(true)
   }
 
   useEffect(() => {
@@ -98,8 +100,8 @@ export const WebSocketProvider = ({ children }) => {
     }
   }, [messages])
   return (
-    <WebSocketContext.Provider value={{ messages, socket }}>
-      {alert.isOpen && <Alert timeout={alert.timeout} onClose={onCloseAlert} title="Lucky Taya" message={alert.message} type={alert.type}></Alert>}
+    <WebSocketContext.Provider value={{ messages, socket ,closeBet}}>
+      {alert.isOpen && <Alert timeout={alert.timeout} hasTimer={alert.hasTimer} onClose={onCloseAlert} title="Lucky Taya" message={alert.message} type={alert.type}></Alert>}
       {children}
     </WebSocketContext.Provider>
   );

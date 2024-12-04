@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 export default function Timer({duration}) {
-  const [seconds, setSeconds] = useState(duration); // Initial time (5 minutes = 300 seconds)
+  const [seconds, setSeconds] = useState(duration/1000); // Initial time (5 minutes = 300 seconds)
 
   useEffect(() => {
     // Start a timer that updates every second

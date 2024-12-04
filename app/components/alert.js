@@ -3,9 +3,9 @@ import Timer from './timer';
 
 function Alert({ title, message, type, onClose, timeout = 3000, isAnimating = true, hasTimer = false }) {
     useEffect(() => {
-        // setTimeout(() => {
-        //     onClose()
-        // }, timeout);
+        setTimeout(() => {
+            onClose(hasTimer)
+        }, timeout);
 
         return () => {
         }
