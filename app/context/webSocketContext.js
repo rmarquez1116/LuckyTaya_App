@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from 'react';
 import { getSession } from '../actions/auth'
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Alert from '../components/alert';
 
 const WebSocketContext = createContext();
@@ -10,7 +10,7 @@ const WebSocketContext = createContext();
 export const useWebSocketContext = () => useContext(WebSocketContext);
 
 export const WebSocketProvider = ({ children }) => {
-
+  const router = useRouter();
   const pathname = usePathname();
 
   const [messages, setMessages] = useState(null);
@@ -72,7 +72,6 @@ export const WebSocketProvider = ({ children }) => {
     try {
       if (messages != null) {
         const parseMessage = JSON.parse(messages)
-
         switch (parseMessage.PacketType) {
           case 22:
             setAlert({ timeout: 60000, isOpen: true, type: "info", message: "Last Call !!!" })
@@ -82,6 +81,12 @@ export const WebSocketProvider = ({ children }) => {
             const message = JSON.parse(parseMessage.jsonPacket)
             setAlert({ timeout: message.Duration * 1000, isOpen: true, type: "info", message: message.Message })
 
+            break;
+          case 101:
+            router.replace('/payment/success')
+            break;
+          case 102:
+            router.replace('/payment/failed')
             break;
           default:
             break;

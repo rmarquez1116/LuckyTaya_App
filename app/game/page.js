@@ -19,6 +19,7 @@ import Trend from '../components/trend'
 import PinV2 from "../components/modal/pinModalV2";
 import { validateMpin } from "../actions/pin";
 import SchedulePopUp from "../components/modal/schedulePopUp";
+import VideoPlayer from "../components/videoPlayer";
 
 function Game() {
     const { socket, messages } = useWebSocketContext();
@@ -276,6 +277,7 @@ function Game() {
                             allow="autoplay;encrypted-media;"
                             referrerPolicy="strict-origin-when-cross-origin"
                             allowFullScreen></iframe>
+                        {/* <VideoPlayer src="https://live.restream.io/pull/play_6857745_c3675be3ad89804e8c30"/> */}
                         <br />
                         <div className="grid grid-cols-5 grid-rows-1 gap-4">
                             <div className="col-span-2 card rounded-[10px] p-3  text-center">
