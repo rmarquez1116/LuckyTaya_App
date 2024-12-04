@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react'
+import Timer from './timer';
 
-function Alert({ title, message, type, onClose, timeout = 3000 ,isAnimating = true}) {
+function Alert({ title, message, type, onClose, timeout = 3000, isAnimating = true, hasTimer = false }) {
     useEffect(() => {
-        setTimeout(() => {
-            onClose()
-        }, timeout);
+        // setTimeout(() => {
+        //     onClose()
+        // }, timeout);
 
         return () => {
         }
-    }, [timeout,onClose])
+    }, [timeout, onClose])
 
     const color = m => {
         switch (m) {
@@ -26,14 +27,20 @@ function Alert({ title, message, type, onClose, timeout = 3000 ,isAnimating = tr
     };
 
     return (
-        <div role="alert" className='fixed top-0 right-0 w-[60%] top-0 z-20'>
-            <div className={`${color(type)} overflow-hidden text-white font-bold rounded-t px-4 py-2`}>
-                {/* <p>
+        <div role="alert" className={`${color(type)} fixed bottom-0 right-0 w-[100%] z-20 `}>
+            <div className='items-center grid grid-cols-5 grid-rows-1 gap-4'>
+                <div className={`col-span-${hasTimer ? '4' : '5'} overflow-hidden text-white font-bold rounded-t px-4 py-2`}>
+                    {/* <p>
                     {title}
                 </p> */}
-                <p className={`label-header1 whitespace-nowrap ${isAnimating ? ' scrolling-text ' : ''}`}>{message}</p>
-            </div>
-        </div>
+                    <p className={`label-header1 whitespace-nowrap ${isAnimating ? ' scrolling-text ' : ''}`}>{message}</p>
+                </div>
+                {hasTimer && <div>
+                    <Timer duration={timeout}></Timer>
+                </div>
+                }
+            </div >
+        </div >
     )
 }
 

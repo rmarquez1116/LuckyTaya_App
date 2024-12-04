@@ -4,16 +4,11 @@ import Image from "next/image";
 import cashin from '../../public/images/cashin.png'
 // import dollar from '../../public/images/dollar.png'
 import BalanceHeader from '../components/balanceHeader'
-import Input from "../components/input";
-import { useRouter } from 'next/navigation'
-import Repayment from "../actions/payment";
-import QrCode from "../components/modal/qrCode";
 import { formatMoney, formatMoneyV2 } from '../helpers/Common'
-import { validateMpin } from "../actions/pin";
-import PinV2 from "../components/modal/pinModalV2";
 import ConfirmationModal from "../components/confirmationModal";
 import { denomination } from '../lib/denomination';
 import Loading from "../components/loading";
+import {requestFund} from '../actions/request_fund'
 
 
 
@@ -32,7 +27,7 @@ export default function RequestFund({ config }) {
 
     const onRequestFund = async () => {
         setIsLoading(true)
-        var payment = await Repayment({
+        var payment = await requestFund({
             amount: `${(Number.parseFloat(amount.replaceAll(",", ""))).toFixed(2)}`.replaceAll(",", ""),
         });
         setIsLoading(false)

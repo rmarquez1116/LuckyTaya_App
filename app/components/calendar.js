@@ -1,11 +1,10 @@
 'use client';
 import React, { useEffect, useState } from 'react'
 import Day from './day';
-import CenterLabel from './centerLabel';
 
-const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
 function Calendar({ currentDate, schedule, onSelect }) {
-
+    currentDate = new Date(currentDate);
     const [data, setData] = useState([])
     useEffect(() => {
         setData(schedule)
@@ -18,7 +17,7 @@ function Calendar({ currentDate, schedule, onSelect }) {
     const firstDayOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
     const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
 
-    const label = months[currentMonthIndex] + " " + currentDate.getFullYear();
+    const label = `${currentDate.getFullYear()}-${currentDate.getMonth()+1}`
 
     function getDayClassName(date) {
         var fightDetail = [...data].reverse().find(x => (new Date(x.eventDate).toLocaleDateString() == date.toLocaleDateString()))
@@ -80,7 +79,7 @@ function Calendar({ currentDate, schedule, onSelect }) {
 
     return (
         <>
-            <CenterLabel label={label} /><br />
+            {/* <CenterLabel label={label} /> */}
             <div className="card2 rounded-[20px] max-w-md  p-3  w-full text-center w-min-sm">
 
                 <div className="grid grid-cols-7 grid-rows-1 gap-1">

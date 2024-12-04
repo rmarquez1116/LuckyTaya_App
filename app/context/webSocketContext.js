@@ -16,7 +16,7 @@ export const WebSocketProvider = ({ children }) => {
   const [messages, setMessages] = useState(null);
   const [socket, setsocket] = useState(null);
   const [sessionCookie, setSessionCookie] = useState('')
-  const [alert, setAlert] = useState({ timeout: 3000, isOpen: false, message: "", type: "success" })
+  const [alert, setAlert] = useState({hasTimer : false, timeout: 3000, isOpen: false, message: "testing", type: "success" })
 
   const getSess = async () => {
     const session = await getSession();
@@ -64,7 +64,7 @@ export const WebSocketProvider = ({ children }) => {
     };
   }, [sessionCookie]);
   const onCloseAlert = () => {
-    setAlert({ timeout: 3000, isOpen: false, type: "", message: "" })
+    setAlert({ timeout: 3000, isOpen: false, type: "", message: "",hasTimer : false, })
   }
 
   useEffect(() => {
@@ -74,12 +74,12 @@ export const WebSocketProvider = ({ children }) => {
         const parseMessage = JSON.parse(messages)
         switch (parseMessage.PacketType) {
           case 22:
-            setAlert({ timeout: 60000, isOpen: true, type: "info", message: "Last Call !!!" })
+            setAlert({hasTimer : true, timeout: 60000, isOpen: true, type: "info", message: "Last Call !!!" })
             break;
           case 73:
           case 75:
             const message = JSON.parse(parseMessage.jsonPacket)
-            setAlert({ timeout: message.Duration * 1000, isOpen: true, type: "info", message: message.Message })
+            setAlert({hasTimer : false, timeout: message.Duration * 1000, isOpen: true, type: "info", message: message.Message })
 
             break;
           case 101:

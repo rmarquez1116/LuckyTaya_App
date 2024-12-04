@@ -104,12 +104,11 @@ nav {
   background-attachment: fixed;
   min-width: 100dvw;
   min-height: 100dvh;
-  background-size: cover;  /* Or use 100% 100% for stretching */
+  background-size: cover; /* Or use 100% 100% for stretching */
   background-position: center;
   background-repeat: no-repeat;
   height: 100vh;
   margin: 0;
-
 }
 
 .sidebar-container {
@@ -232,7 +231,7 @@ nav {
     rgba(139, 139, 139, 1) 0%,
     rgba(255, 255, 255, 1) 100%
   );
-  
+
   color: white;
 }
 
@@ -358,7 +357,7 @@ label {
 
 .drop-down__input {
   border: 0px;
-  color :white !important;
+  color: white !important;
 }
 
 .separator {
@@ -369,17 +368,17 @@ label {
 
 .separator::before,
 .separator::after {
-  content: '';
+  content: "";
   flex: 1;
   border-bottom: 1px solid #000;
 }
 
 .separator:not(:empty)::before {
-  margin-right: .25em;
+  margin-right: 0.25em;
 }
 
 .separator:not(:empty)::after {
-  margin-left: .25em;
+  margin-left: 0.25em;
 }
 
 .transparent-input {
@@ -395,17 +394,21 @@ label {
   outline: none; /* Remove default focus outline */
 }
 
-   /* Define the scrolling animation */
-   @keyframes scroll-text {
-    0% {
-      transform: translateX(100%);
-    }
-    100% {
-      transform: translateX(-100%);
-    }
+/* Define the scrolling animation */
+@keyframes scroll-text {
+  0% {
+    transform: translateX(100%);
   }
+  100% {
+    transform: translateX(-100%);
+  }
+}
 
-  /* Apply the animation to the element */
-  .scrolling-text {
-    animation: scroll-text 5s linear infinite;
-  }
+/* Apply the animation to the element */
+.scrolling-text {
+  animation: scroll-text 5s linear infinite;
+}
+
+.bg-transparent {
+  background-color: #0000 !important;
+}

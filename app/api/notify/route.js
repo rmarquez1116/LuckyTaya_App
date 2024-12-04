@@ -50,7 +50,7 @@ export async function POST(req) {
             newData.transType = "cashin"
             const updateResult = await updateData('qr_transactions', query, newData);
             //notify user
-            notifyUser(newData.accountNumber,token)
+           await  notifyUser(newData.accountNumber,token)
         }
     }
     return new Response(JSON.stringify({ code: 200, message: "success" }), { status: 200, headers: { 'Content-Type': 'application/json' } });
@@ -65,16 +65,14 @@ const notifyUser = async(accountNumber,token,isSuccess = true) =>{
             })
             const type = isSuccess ? "PAYMENT_SUCCESS" : "PAYMENT_FAILED";
             const packet = isSuccess ? 101 : 102;
-            const response = await axios.get(`${process.env.BASE_URL}/api/v1/SendMessagePersonal?message=${type}&packetType=${packet}&username=${user.username}`, {
+            const response = await axios.get(`${process.env.BASE_URL}/api/v1/WsMessaging/SendMessagePersonal?message=${type}&packetType=${packet}&username=${user.username}`, {
                 headers: {
                     "Content-Type": "application/json",
-                    'Authorization' : `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
                 }
                 , httpsAgent
             })
-            if (response.status == 200) {
-                return response.data.token
-            }
+         
         } catch (error) {
             console.log(error, 'error')
             return null

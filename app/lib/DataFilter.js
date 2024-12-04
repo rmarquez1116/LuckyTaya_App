@@ -9,8 +9,8 @@ function dataFilterByDate(data,dateField,dateFrom,dateTo) {
     return results
 }
 
-function dataFilterByCurrentMonth(data,dateField) {
-    var date = new Date();
+function dataFilterByCurrentMonth(currentDate,data,dateField) {
+    var date = new Date(currentDate);
     var startDate = new Date(date.getFullYear(), date.getMonth(), 1);
     var endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
    

@@ -10,6 +10,7 @@ import { register } from "@actions/account";
 import dynamic from "next/dynamic";
 import Alert from "@components/alert";
 import { usePathname } from 'next/navigation';
+import { decrypt } from "../../lib/cryptoUtils";
 
 const Form = dynamic(() => import('@components/form'), { ssr: false })
 
@@ -94,12 +95,14 @@ export default function Register() {
     console.log(id)
 
     if (id.length > 1) {
+      const newId = id.slice(1)
+      const decryptedId = decrypt(newId.join('/'))
       let indexToInsert = 1;
       form.splice(indexToInsert, 0,
         {
           id: "agentReferralCode",
           type: "text",
-          value: id[1],
+          value: decryptedId,
           label: "Referral Code",
           isReadonly: true
         });
