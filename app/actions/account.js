@@ -41,7 +41,7 @@ export async function register(prevState, formData) {
         // const query = { username: { $eq: request.username } }
         const query = {
             $or: [
-                {username: request.username}
+                {username: request.username},
                 {phoneNumber: request.phoneNumber},
                 {email: request.email}
             ]

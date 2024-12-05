@@ -27,6 +27,7 @@ const form = [
     id: "email",
     type: "email",
     value: "",
+    isReadonly : true,
     label: "Email"
   },
   {
