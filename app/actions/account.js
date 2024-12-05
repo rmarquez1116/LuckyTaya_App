@@ -38,7 +38,14 @@ export async function register(prevState, formData) {
             facebookAccount: "",
             referralCode: request.referralCode
         }
-        const query = { username: { $eq: request.username } }
+        // const query = { username: { $eq: request.username } }
+        const query = {
+            $or: [
+                {username: request.username}
+                {phoneNumber: request.phoneNumber},
+                {email: request.email}
+            ]
+        }
         const existingPlayer = await fetchData('taya_user', query)
         if (existingPlayer.length > 0) {
             return {
@@ -99,6 +106,7 @@ export async function register(prevState, formData) {
         request.accountNumber = responseData.accountNumber
         await saveData('taya_user', request)
 
+        if(request.referralCode)
         await updatePlayerRole({ accountNumber: responseData.accountNumber, count: 0 })
 
         await processLogin({ username: request.username, password: request.password })
