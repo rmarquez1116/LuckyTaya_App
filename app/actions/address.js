@@ -2,22 +2,42 @@
 import { fetchData } from '../helpers/DB'
 
 export async function regions() {
-    const region = await fetchData('taya_regions', {})
-    return region;
+    try {
+        const region = await fetchData('taya_regions', {})
+        return region;
+        
+    } catch (error) {
+        return []
+    }
 }
 
 export async function provinces(regionCode) {
-    const province = await fetchData('taya_provinces', { 'regCode': { $eq: regionCode } })
-    return province
+    try {
+       const province = await fetchData('taya_provinces', { 'regCode': { $eq: regionCode } })
+       return province
+    
+   } catch (error) {
+    return []
+   }
 }
 
 
 export async function cities(provinceCode) {
-    const city = await fetchData('taya_cities', { 'provCode': { $eq: provinceCode } })
-    return city
+    try {
+        const city = await fetchData('taya_cities', { 'provCode': { $eq: provinceCode } })
+        return city
+        
+    } catch (error) {
+        return []
+    }
 }
 
 export async function barangays(cityCode) {
-    const barangay = await fetchData('taya_barangays', { 'citymunCode': { $eq: cityCode } })
-    return barangay
+    try {
+        const barangay = await fetchData('taya_barangays', { 'citymunCode': { $eq: cityCode } })
+        return barangay
+        
+    } catch (error) {
+        return []
+    }
 }

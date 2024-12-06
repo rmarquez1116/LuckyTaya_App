@@ -69,7 +69,7 @@ export default function UploadId() {
       if (response.status != 200) {
         message = "Image cannot be uploaded. Please try again later";
       }
-      
+
       setIsSuccess(response.status == 200)
       setAlert({
         isAnimating: false,
@@ -92,13 +92,13 @@ export default function UploadId() {
     setIsLoading(false);
   };
   const onConfirm = () => {
-    console.log(isSuccess,'hello')
+    console.log(isSuccess, 'hello')
     setAlert({
       isAnimating: false,
       timeout: 3000, isShow: false, message: "",
       type: "success"
     })
-    if(isSuccess){router.replace('/profile_menu')}
+    if (isSuccess) { router.replace('/profile_menu') }
   }
   return (
     <MainLayout>
@@ -111,7 +111,7 @@ export default function UploadId() {
       ></ConfirmationModal>
       <div className="w-full mt-5 card max-w-sm mx-auto  p-6 rounded-lg shadow-lg space-y-4">
         <h2 className="text-2xl font-semibold text-center">Upload ID</h2>
-        {profile && (profile.status).toLowerCase() != 'approved' &&
+        {profile && (profile.status ?? "").toLowerCase() != 'approved' &&
           <input
             type="file"
             accept="image/*"
@@ -125,7 +125,7 @@ export default function UploadId() {
             <img src={image} alt="Preview" className="w-48 h-48 object-cover rounded-md" />
           </div>
         )}
-        {profile && (profile.status).toLowerCase() != 'approved' &&
+        {profile && (profile.status?? "").toLowerCase() != 'approved' &&
 
           <div className="flex justify-center">
             <button
