@@ -57,6 +57,7 @@ export async function POST(req) {
     // fs.writeFileSync(path.join(uploadDir, fileName), Buffer.from(buffer));
 
     const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]
+    console.log(user)
     user['id'] = `/uploads/${fileName}`
     user.status = "PENDING"
 
