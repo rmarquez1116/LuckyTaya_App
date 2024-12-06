@@ -48,7 +48,7 @@ export async function POST(req) {
     if (!file.type.startsWith('image/')) {
       return new Response('Invalid file type', { status: 400 });
     }
-    
+
     const filePath = path.join(uploadDir, fileName);
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);  // Delete the old file
@@ -57,7 +57,7 @@ export async function POST(req) {
     // fs.writeFileSync(path.join(uploadDir, fileName), Buffer.from(buffer));
 
     const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]
-    user.id = `/uploads/${fileName}`
+    user['id'] = `/uploads/${fileName}`
     user.status = "PENDING"
 
     const updateResult = await updateData('taya_user', { 'userId': { $eq: session.userId } }, user);
