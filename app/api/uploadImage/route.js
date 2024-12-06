@@ -2,6 +2,7 @@ import fs from 'fs';
 import { cookies } from 'next/headers';
 import path from 'path';
 import { fetchData, updateData } from '../../helpers/DB';
+import { getToken } from '../../helpers/StringGenerator';
 
 export const config = {
   api: {
@@ -32,7 +33,7 @@ export async function POST(req) {
     session = JSON.parse(session.value);
 
     const buffer = await file.arrayBuffer();
-    const fileName = session.userId + path.extname(file.name);
+    const fileName = session.userId + '_' + getToken(4) + path.extname(file.name);
     const uploadDir = path.join(process.cwd(), 'public/uploads');
 
     // Create the upload directory if it doesn't exist
@@ -57,7 +58,6 @@ export async function POST(req) {
     // fs.writeFileSync(path.join(uploadDir, fileName), Buffer.from(buffer));
 
     const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]
-    console.log(user)
     user['id'] = `/uploads/${fileName}`
     user.status = "PENDING"
 
