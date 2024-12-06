@@ -111,7 +111,7 @@ export default function UploadId() {
       ></ConfirmationModal>
       <div className="w-full mt-5 card max-w-sm mx-auto  p-6 rounded-lg shadow-lg space-y-4">
         <h2 className="text-2xl font-semibold text-center">Upload ID</h2>
-        {profile && !profile.id &&
+        {profile && profile.status != 'Approved' &&
           <input
             type="file"
             accept="image/*"
@@ -125,7 +125,7 @@ export default function UploadId() {
             <img src={image} alt="Preview" className="w-48 h-48 object-cover rounded-md" />
           </div>
         )}
-        {profile && !profile.id &&
+        {profile && profile.status != 'Approved' &&
 
           <div className="flex justify-center">
             <button

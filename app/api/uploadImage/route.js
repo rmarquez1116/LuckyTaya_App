@@ -25,7 +25,7 @@ export async function POST(req) {
     if (!file) {
       return new Response('No file uploaded', { status: 400 });
     }
-   
+
 
     const cookieStore = await cookies()
     var session = cookieStore.get('app_session');
@@ -41,8 +41,21 @@ export async function POST(req) {
     }
 
     // Save the file to the uploads folder
-    fs.writeFileSync(path.join(uploadDir, fileName), Buffer.from(buffer));
+
+    if (file.size > 5 * 1024 * 1024) {  // 5MB limit
+      return new Response('File is too large', { status: 400 });
+    }
+    if (!file.type.startsWith('image/')) {
+      return new Response('Invalid file type', { status: 400 });
+    }
     
+    const filePath = path.join(uploadDir, fileName);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);  // Delete the old file
+    }
+    fs.writeFileSync(filePath, Buffer.from(buffer));
+    // fs.writeFileSync(path.join(uploadDir, fileName), Buffer.from(buffer));
+
     const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]
     user.id = `/uploads/${fileName}`
     user.status = "PENDING"
