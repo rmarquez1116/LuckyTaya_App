@@ -8,7 +8,6 @@ import Loading from '../components/loading';
 import ConfirmationModal from '../components/confirmationModal';
 import axios from 'axios';
 import { useProfileContext } from '../context/profileContext';
-import Image from 'next/image';
 
 
 export default function UploadId() {
@@ -123,7 +122,7 @@ export default function UploadId() {
 
         {image && (
           <div className="flex justify-center mt-4">
-            <Image src={image} alt="Preview" className="w-48 h-48 object-cover rounded-md" />
+            <img src={image} alt="Preview" className="w-48 h-48 object-cover rounded-md" />
           </div>
         )}
         {profile && profile.status != 'Approved' &&
