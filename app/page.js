@@ -27,7 +27,7 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [carouselItems, setCarouselItems] = useState([])
-  const [hasPin, setHasPin] = useState(true)
+  // const [hasPin, setHasPin] = useState(true)
   const [isSchedulePopUpOpen, setIsSchedulePopUpOpen] = useState(false)
   const [fightDetails, setFightDetails] = useState({})
 
@@ -62,19 +62,19 @@ export default function Home() {
     }
   }
 
-  const onNominatePin = async (e) => {
-    await nominatePin(e)
-    setHasPin(true)
-    // router.replace('/profile')
-  }
+  // const onNominatePin = async (e) => {
+  //   await nominatePin(e)
+  //   setHasPin(true)
+  //   // router.replace('/profile')
+  // }
   const getData = async () => {
     const response = await getOpenOrClosedEvents();
     const userProfile = await getProfile()
-    if (userProfile) {
-      if (!userProfile?.pin) {
-        setHasPin(false)
-      }
-    }
+    // if (userProfile) {
+    //   if (!userProfile?.pin) {
+    //     setHasPin(false)
+    //   }
+    // }
     if (response) {
       const items = []
       for (let index = 0; index < response.length; index++) {
@@ -93,7 +93,7 @@ export default function Home() {
         <SchedulePopUp data={fightDetails} onClose={() => setIsSchedulePopUpOpen(false)} />
       }
 
-      {isLoaded && <Pin title="Set Pin" isOpen={!hasPin} onClose={() => { }} onSubmit={(e) => onNominatePin(e)} />}
+      {/* {isLoaded && <Pin title="Set Pin" isOpen={!hasPin} onClose={() => { }} onSubmit={(e) => onNominatePin(e)} />} */}
       <div className="className=' p-8 pb-20">
         {/* <div className='flex min-w-md justify-center items-center'>
 
