@@ -5,7 +5,7 @@ import bg from '../../public/images/game-bg.png'
 import MeronWala from "../components/meronWala";
 import BetModal from '../components/modal/betModal'
 
-import { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import BetConfirmation from "../components/modal/betConfirmation";
 import Loading from "../components/loading";
 import { getEventTrend, getFightDetailsByEventId, getLatestFight, placeABet } from "../actions/fight";
@@ -207,7 +207,7 @@ function Game() {
     // }
     const placeBet = async () => {
         var response = await placeABet(data.fight.fightId, amountToBet.amount.replaceAll(',', ''), amountToBet.type)
-        console.log(response,'helo')
+        console.log(response, 'helo')
         if (response) {
             setModalObject({ isOpen: false, type: modalObject.type })
 
@@ -286,7 +286,7 @@ function Game() {
                             allow="autoplay;encrypted-media;"
                             referrerPolicy="strict-origin-when-cross-origin"
                             allowFullScreen></iframe>
-                         <br />
+                        <br />
                         <div className="grid grid-cols-5 grid-rows-1 gap-4">
                             <div className="col-span-2 card rounded-[10px] p-3  text-center">
                                 <label> Status : {data.fightStatus.name}</label>
@@ -314,6 +314,15 @@ function Game() {
                     </div>}
                 </div>
             }
+            {isLoaded && isJsonEmpty(data) && <React.Fragment>
+                <div className="w-full flex  justify-center">
+
+                    <div className="flex flex-col justify-center card max-w-sm p-6 m-10 bg-white rounded-3xl shadow">
+
+                        <h1 className="text-3xl text-center">No event scheduled today.</h1>
+                    </div>
+                </div>
+            </React.Fragment>}
             {!isLoaded && <Loading />}
 
         </MainLayout >
