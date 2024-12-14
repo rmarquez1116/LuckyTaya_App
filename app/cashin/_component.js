@@ -22,7 +22,7 @@ export default function CashIn({ config }) {
     const [qrData, setQrData] = useState('')
     const [total, setTotal] = useState(0)
     const [fee, setFee] = useState(0)
-    const [isShowPin, setIsShowPin] = useState(false)
+    // const [isShowPin, setIsShowPin] = useState(false)
     const [alert, setAlert] = useState({
         isShow: false,
         message: "Invalid Pin",
@@ -55,31 +55,31 @@ export default function CashIn({ config }) {
         }
     }, [amount])
 
-    const onValidatePin = async (pin) => {
-        const result = await validateMpin(pin);
+    // const onValidatePin = async (pin) => {
+    //     const result = await validateMpin(pin);
 
-        if (result == true) {
-            setIsShowPin(false);
-            var payment = await Repayment({
-                trxAmount: `${(Number.parseFloat(total.replaceAll(",", ""))).toFixed(2)}`.replaceAll(",", "").replace(".", ""),
-                fee: fee
-            });
-            if (payment.response.code == "200") {
-                setIsShowQr(true)
-                setQrData(payment.response.codeUrl)
-            }
-        } else {
-            setAlert({
-                isShow: true,
-                message: "Invalid Pin",
-                isOkayOnly: true
-            })
-        }
-    }
+    //     if (result == true) {
+    //         setIsShowPin(false);
+    //         var payment = await Repayment({
+    //             trxAmount: `${(Number.parseFloat(total.replaceAll(",", ""))).toFixed(2)}`.replaceAll(",", "").replace(".", ""),
+    //             fee: fee
+    //         });
+    //         if (payment.response.code == "200") {
+    //             setIsShowQr(true)
+    //             setQrData(payment.response.codeUrl)
+    //         }
+    //     } else {
+    //         setAlert({
+    //             isShow: true,
+    //             message: "Invalid Pin",
+    //             isOkayOnly: true
+    //         })
+    //     }
+    // }
 
     const onCashIn = async () => {
         // setIsShowPin(true);
-        setIsShowPin(false);
+        // setIsShowPin(false);
         var payment = await Repayment({
             trxAmount: `${(Number.parseFloat(total.replaceAll(",", ""))).toFixed(2)}`.replaceAll(",", "").replace(".", ""),
             fee: fee
@@ -113,7 +113,7 @@ export default function CashIn({ config }) {
         <React.Fragment>
 
             <BalanceHeader type={2}></BalanceHeader>
-            {isShowPin && <PinV2 title="Enter Pin" isOpen={isShowPin} onClose={() => { setIsShowPin(false) }} onSubmit={(e) => onValidatePin(e)} />}
+            {/* {isShowPin && <PinV2 title="Enter Pin" isOpen={isShowPin} onClose={() => { setIsShowPin(false) }} onSubmit={(e) => onValidatePin(e)} />} */}
             <ConfirmationModal
                 isOpen={alert.isOpen}
                 isOkOnly={alert.isOkayOnly}

@@ -417,8 +417,18 @@ export async function getLatestFight() {
                 var statusDesc = await getFightStatus(fightStatusCode);
                 // if (fightStatusCode == 10 || fightStatusCode == 11) {
                 const fightDetails = await getFightDetailsByFightId(fightId)
-                if (!isJsonEmpty(fightDetails))
-                    return { ...fightDetails, fight: data, fightStatus: statusDesc, webRtc }
+                if (!isJsonEmpty(fightDetails)) {
+                    const eventDate = new Date(fightDetails.event.eventDate);
+                    const currentDate = new Date();
+                    // Normalize the dates by setting their time to midnight
+                    eventDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
+                    currentDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
+                    if (eventDate.getTime() === currentDate.getTime()) {
+                        return { ...fightDetails, fight: data, fightStatus: statusDesc, webRtc }
+                    } else {
+                        return null;
+                    }
+                 }
                 // }
             }
             return null;

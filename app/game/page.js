@@ -5,7 +5,7 @@ import bg from '../../public/images/game-bg.png'
 import MeronWala from "../components/meronWala";
 import BetModal from '../components/modal/betModal'
 
-import { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import BetConfirmation from "../components/modal/betConfirmation";
 import Loading from "../components/loading";
 import { getEventTrend, getFightDetailsByEventId, getLatestFight, placeABet } from "../actions/fight";
@@ -16,13 +16,10 @@ import WinnerModal from "../components/modal/winnerModal";
 import { getToken } from "../helpers/StringGenerator";
 import { useWebSocketContext } from '../context/webSocketContext';
 import Trend from '../components/trend'
-import PinV2 from "../components/modal/pinModalV2";
-import { validateMpin } from "../actions/pin";
 import SchedulePopUp from "../components/modal/schedulePopUp";
-import VideoPlayer from "../components/videoPlayer";
 
 function Game() {
-    const { socket, messages,closeBet } = useWebSocketContext();
+    const { socket, messages, closeBet } = useWebSocketContext();
 
     const [betDetails, setBetDetails] = useState({
         fId: 0,
@@ -34,7 +31,7 @@ function Game() {
         s1o: 0
     })
 
-    const [isShowPin, setIsShowPin] = useState(false)
+    // const [isShowPin, setIsShowPin] = useState(false)
     const [isSchedulePopUpOpen, setIsSchedulePopUpOpen] = useState(false)
     const [schedules, setSchedules] = useState([])
     const [isLoaded, setIsLoaded] = useState(false)
@@ -46,11 +43,11 @@ function Game() {
     })
 
     useEffect(() => {
-      if(closeBet){
-        getData()
-      }
+        if (closeBet) {
+            getData()
+        }
     }, [closeBet])
-    
+
 
     const [randomText, setRandomText] = useState("1234")
     const [trends, setTrends] = useState([])
@@ -60,14 +57,14 @@ function Game() {
     })
     const [showTrend, setShowTrend] = useState(false)
 
-    const getFightSchedules = async(event)=>{
+    const getFightSchedules = async (event) => {
         const response = await getFightDetailsByEventId(event.event.eventId)
         if (response) {
-          const result = {
-            ...event,
-            fights: response
-          }
-          setSchedules(result)
+            const result = {
+                ...event,
+                fights: response
+            }
+            setSchedules(result)
         }
     }
     const getData = async () => {
@@ -84,7 +81,7 @@ function Game() {
         }
     }
 
-    const [alert, setAlert] = useState({hasTimer : false, timeout: 5000, isOpen: false, message: "", type: "success" })
+    const [alert, setAlert] = useState({ hasTimer: false, timeout: 5000, isOpen: false, message: "", type: "success" })
     const [modalConfirmObject, setModalConfirmObject] = useState({
         isOpen: false,
         type: 1
@@ -124,7 +121,7 @@ function Game() {
                         break;
                     // last call
                     case 22:
-                        setAlert({hasTimer : true, timeout: 60000, isOpen: true, type: "info", message: "Last Call !!!" })
+                        setAlert({ hasTimer: true, timeout: 60000, isOpen: true, type: "info", message: "Last Call !!!" })
                         break;
                     // result
                     case 50:
@@ -186,34 +183,39 @@ function Game() {
     const closeConfirmation = async (isForCompletion = false) => {
         setModalConfirmObject({ isOpen: false, type: modalConfirmObject.type })
         if (isForCompletion) {
-            setIsShowPin(true)
+            // setIsShowPin(true)
+            placeBet()
         }
     }
 
     const onCloseAlert = () => {
-        setAlert({hasTimer : false, timeout: 3000, isOpen: false, type: "", message: "" })
+        setAlert({ hasTimer: false, timeout: 3000, isOpen: false, type: "", message: "" })
 
     }
 
 
-    const onValidatePin = async (pin) => {
-        const result = await validateMpin(pin);
+    // const onValidatePin = async (pin) => {
+    //     const result = await validateMpin(pin);
 
-        if (result == true) {
-            setIsShowPin(false);
+    //     if (result == true) {
+    //         setIsShowPin(false);
 
-            var response = await placeABet(data.fight.fightId, amountToBet.amount.replaceAll(',', ''), amountToBet.type)
-            if (response) {
-                setModalObject({ isOpen: false, type: modalObject.type })
+    //         placeBet()
+    //     } else {
+    //         setAlert({ hasTimer: false, timeout: 3000, isOpen: true, type: "error", message: "Invalid Pin" })
+    //     }
+    // }
+    const placeBet = async () => {
+        var response = await placeABet(data.fight.fightId, amountToBet.amount.replaceAll(',', ''), amountToBet.type)
+        console.log(response, 'helo')
+        if (response) {
+            setModalObject({ isOpen: false, type: modalObject.type })
 
-                setModalConfirmObject({ isOpen: false, type: modalConfirmObject.type })
+            setModalConfirmObject({ isOpen: false, type: modalConfirmObject.type })
 
-                setModalConfirmObject({ isOpen: false, type: modalConfirmObject.type })
-            } else {
-                setAlert({hasTimer : false, timeout: 3000, isOpen: true, type: "error", message: "Can not place a bet as of the moment" })
-            }
+            setModalConfirmObject({ isOpen: false, type: modalConfirmObject.type })
         } else {
-            setAlert({hasTimer : false, timeout: 3000, isOpen: true, type: "error", message: "Invalid Pin" })
+            setAlert({ hasTimer: false, timeout: 5000, isOpen: true, type: "error", message: "Can not place a bet. Please check your balance" })
         }
     }
     const renderModals = () => {
@@ -234,7 +236,7 @@ function Game() {
 
     return (
         <MainLayout>
-            {isShowPin && <PinV2 title="Enter Pin" isOpen={isShowPin} onClose={() => { setIsShowPin(false) }} onSubmit={(e) => onValidatePin(e)} />}
+            {/* {isShowPin && <PinV2 title="Enter Pin" isOpen={isShowPin} onClose={() => { setIsShowPin(false) }} onSubmit={(e) => onValidatePin(e)} />} */}
 
             {isLoaded && <BalanceHeader type={2} forceUpdate={randomText}></BalanceHeader>}
             {isLoaded && alert.isOpen && <Alert timeout={alert.timeout} hasTimer={alert.hasTimer} onClose={onCloseAlert} title="Lucky Taya" message={alert.message} type={alert.type}></Alert>}
@@ -267,8 +269,8 @@ function Game() {
                                 </div>
                                 <div className="grid grid-cols-2 grid-rows-1 gap-4 justify-between">
                                     <label>{formatDisplayDate(data.event.eventDate)}</label>
-                                    
-                                    <label onClick={()=>setIsSchedulePopUpOpen(true)} className="text-right underline text-blue-600 hover:text-blue-800 visited:text-purple-600 cursor-pointer">See Game Schedule</label>
+
+                                    <label onClick={() => setIsSchedulePopUpOpen(true)} className="text-right underline text-blue-600 hover:text-blue-800 visited:text-purple-600 cursor-pointer">See Game Schedule</label>
                                 </div>
 
                             </div>
@@ -284,7 +286,6 @@ function Game() {
                             allow="autoplay;encrypted-media;"
                             referrerPolicy="strict-origin-when-cross-origin"
                             allowFullScreen></iframe>
-                        {/* <VideoPlayer src="https://live.restream.io/pull/play_6857745_c3675be3ad89804e8c30"/> */}
                         <br />
                         <div className="grid grid-cols-5 grid-rows-1 gap-4">
                             <div className="col-span-2 card rounded-[10px] p-3  text-center">
@@ -313,6 +314,15 @@ function Game() {
                     </div>}
                 </div>
             }
+            {isLoaded && isJsonEmpty(data) && <React.Fragment>
+                <div className="w-full flex  justify-center">
+
+                    <div className="flex flex-col justify-center card max-w-sm p-6 m-10 bg-white rounded-3xl shadow">
+
+                        <h1 className="text-3xl text-center">No event scheduled today.</h1>
+                    </div>
+                </div>
+            </React.Fragment>}
             {!isLoaded && <Loading />}
 
         </MainLayout >
