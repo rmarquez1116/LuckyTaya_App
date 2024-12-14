@@ -47,8 +47,13 @@ const Repayment = (req) => {
     let api = '/v1/repayment'
     const response = instance.post(api, request)
       .then(response => {
+        
+        console.log(response.data,'hello')
         return response.data
       })
+      .catch(e=>{
+        console.log(e,'hello')
+      });
     return response
   }
 
@@ -80,6 +85,7 @@ const Repayment = (req) => {
     saveTransaction(request)
     return response
   } catch (error) {
+    console.log(error, 'hello12')
     return error
   }
 }
