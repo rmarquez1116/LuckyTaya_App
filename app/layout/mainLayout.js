@@ -57,7 +57,7 @@ export default function MainLayout({ children }) {
 
                 <Image alt='footer' src={iconFooter}></Image>
               </div>
-              <a href='mailto:luckytaya.com.ph'>Contact Us: luckytaya.com.ph</a>
+              <a href='mailto:luckytaya02@gmail.com'>Contact Us: luckytaya.online</a>
 
             </div>
           </footer></div>
