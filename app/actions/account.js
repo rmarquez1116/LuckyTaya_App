@@ -106,8 +106,8 @@ export async function register(prevState, formData) {
         request.accountNumber = responseData.accountNumber
         await saveData('taya_user', request)
 
-        if(request.referralCode)
-        await updatePlayerRole({ accountNumber: responseData.accountNumber, count: 0 })
+        // if(request.referralCode)
+        // await updatePlayerRole({ accountNumber: responseData.accountNumber, count: 0 })
 
         await processLogin({ username: request.username, password: request.password })
         redirect("/");
