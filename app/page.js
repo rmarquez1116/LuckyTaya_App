@@ -102,9 +102,9 @@ export default function Home() {
         <br />
         <div className='grid grid-cols-2 grid-rows-2 gap-4 text-center w-full'>
 
-          <DashboardButton onClick={() => router.push('/game')} img={play} label="Play"></DashboardButton>
           <DashboardButton onClick={() => router.push('/cashin')} img={cashIn} label="Cash In"></DashboardButton>
           <DashboardButton onClick={() => router.push('/request_fund')} img={cashIn} label="Request Fund"></DashboardButton>
+          <DashboardButton onClick={() => router.push('/game')} img={play} label="Play"></DashboardButton>
 
           <DashboardButton onClick={() => router.push('/cashout')} img={cashOut} label="Cash Out"></DashboardButton>
         </div>

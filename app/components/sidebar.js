@@ -52,10 +52,10 @@ function Sidebar({ isEnabled = false, toggle, isOpen }) {
       >
 
         <div className='p-3 grid grid-cols-2 grid-rows-2 gap-4 text-center'>
-          {renderSideBarMenu('/game', play, 'Play')}
           {renderSideBarMenu('/cashin', cashIn, 'Cash In')}
           {renderSideBarMenu('/request_fund', cashIn, 'Request Fund')}
 
+          {renderSideBarMenu('/game', play, 'Play')}
           {renderSideBarMenu('/cashout', cashOut, 'Cash Out')}
           {/* <Link href="/cashout">
             <SidebarButton img={cashOut} label="Cash Out"></SidebarButton>
