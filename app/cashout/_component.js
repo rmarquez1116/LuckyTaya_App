@@ -78,7 +78,7 @@ export default function CashOutComponent({ config }) {
     };
 
     const onCashOut = async () => {
-      
+
         if (!total) {
             setAlert({
                 isOpen: true,
@@ -126,13 +126,22 @@ export default function CashOutComponent({ config }) {
                     'Content-Type': 'application/json',
                 },
             });
+            console.log(response)
             if (response.status != 200) {
-                message = "Can not process your request. Please try again later";
+                setAlert({
+                    isOpen: true,
+                    isAnimating: false,
+                    timeout: 5000,
+                    isShow: true,
+                    message: "Can not process your request. Please check your balance",
+                    type: "error"
+                });
+                return 0
             }
             setTotal(0);
             setFormData({
-                accountName :"" ,
-                accountNumber : ""
+                accountName: "",
+                accountNumber: ""
             })
             setAlert({
                 isOpen: true,
@@ -149,7 +158,7 @@ export default function CashOutComponent({ config }) {
                 isAnimating: false,
                 timeout: 5000,
                 isShow: true,
-                message: "An error occurred while processing your request.",
+                message: "Can not process your request. Please check your balance",
                 type: "error"
             });
         }

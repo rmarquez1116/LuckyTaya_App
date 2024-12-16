@@ -21,7 +21,7 @@ export async function POST(req) {
     }
     const transfer = await transferV2(transferRequest, session.token)
     if(transfer == null){
-        return new Response(JSON.stringify({ code: "500", message: "Can not process your request. Please check your balance" }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+        return new Response(JSON.stringify({ code: "500", message: "Can not process your request. Please check your balance" }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   
     }
     const transaction = {
