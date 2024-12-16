@@ -129,7 +129,11 @@ export default function CashOutComponent({ config }) {
             if (response.status != 200) {
                 message = "Can not process your request. Please try again later";
             }
-
+            setTotal(0);
+            setFormData({
+                accountName :"" ,
+                accountNumber : ""
+            })
             setAlert({
                 isOpen: true,
                 isAnimating: false,
