@@ -201,10 +201,10 @@ export default function CashOutComponent({ config }) {
                     /> */}
 
                     <div className='separator'>GCash</div>
-                    <label>Account Name</label>
+                    <label>Recipient Name</label>
 
                     <Input value={formData.accountName} onChange={onAccountNameChange} type="text" id="account_name" ></Input>
-                    <label>Account Number</label>
+                    <label>Mobile Number</label>
 
                     <Input value={formData.accountNumber} onChange={onAccountNumberChange} type="text" id="account_number" ></Input>
 
