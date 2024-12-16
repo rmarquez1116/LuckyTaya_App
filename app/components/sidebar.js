@@ -51,11 +51,12 @@ function Sidebar({ isEnabled = false, toggle, isOpen }) {
       // onClick={toggle}
       >
 
-        <div className='p-3 grid grid-cols-3 grid-rows-1 gap-4 text-center'>
+        <div className='p-3 grid grid-cols-2 grid-rows-2 gap-4 text-center'>
           {renderSideBarMenu('/game', play, 'Play')}
           {renderSideBarMenu('/cashin', cashIn, 'Cash In')}
           {renderSideBarMenu('/request_fund', cashIn, 'Request Fund')}
 
+          {renderSideBarMenu('/cashout', cashOut, 'Cash Out')}
           {/* <Link href="/cashout">
             <SidebarButton img={cashOut} label="Cash Out"></SidebarButton>
           </Link> */}
@@ -80,9 +81,9 @@ function Sidebar({ isEnabled = false, toggle, isOpen }) {
 
             <Image alt='footer' src={iconFooter}></Image>
           </div>
-          <a href='mailto:luckytaya.com.ph'>Contact Us: luckytaya.com.ph</a>
+          <a href='mailto:luckytaya02@gmail.com'>Contact Us: luckytaya.online</a>
         </div>
-      </div>
+      </div>  
       <div />
     </React.Fragment >
   )
