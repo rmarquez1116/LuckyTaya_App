@@ -100,13 +100,13 @@ export default function Home() {
           <button onClick={() => router.push('/transaction_history')} className="w-full rounded-[20px] p-2  max-w-md dark-gradient">Transaction History   →</button>
         </div> */}
         <br />
-        <div className='grid grid-cols-3 grid-rows-1 gap-4 text-center w-full'>
+        <div className='grid grid-cols-2 grid-rows-2 gap-4 text-center w-full'>
 
-          <DashboardButton onClick={() => router.push('/game')} img={play} label="Play"></DashboardButton>
           <DashboardButton onClick={() => router.push('/cashin')} img={cashIn} label="Cash In"></DashboardButton>
           <DashboardButton onClick={() => router.push('/request_fund')} img={cashIn} label="Request Fund"></DashboardButton>
-         
-          {/* <DashboardButton onClick={() => router.push('/cashout')} img={cashOut} label="Cash Out"></DashboardButton> */}
+          <DashboardButton onClick={() => router.push('/game')} img={play} label="Play"></DashboardButton>
+
+          <DashboardButton onClick={() => router.push('/cashout')} img={cashOut} label="Cash Out"></DashboardButton>
         </div>
         <br />
 
@@ -116,7 +116,7 @@ export default function Home() {
             <Carousel items={carouselItems} />
           </React.Fragment>
         }
-        {(!isLoaded || isLoading )&& <Loading />}
+        {(!isLoaded || isLoading) && <Loading />}
 
 
       </div>
