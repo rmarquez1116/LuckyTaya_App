@@ -17,7 +17,7 @@ export async function POST(req) {
     
     var transferRequest = {
         accountNumber: config.mainAgentAccount,
-        amount: request.trxAmount
+        amount: Number.parseFloat(request.trxAmount)
     }
     const transfer = await transferV2(transferRequest, session.token)
     const transaction = {

@@ -78,8 +78,44 @@ export default function CashOutComponent({ config }) {
     };
 
     const onCashOut = async () => {
+      
+        if (!total) {
+            setAlert({
+                isOpen: true,
+                isAnimating: false,
+                timeout: 5000,
+                isShow: true,
+                message: "Please Enter Amount",
+                type: "error"
+            });
+            return
+        }
+
+        if (!formData.accountName) {
+            setAlert({
+                isOpen: true,
+                isAnimating: false,
+                timeout: 5000,
+                isShow: true,
+                message: "Please Enter Account Name",
+                type: "error"
+            });
+            return
+        }
+        if (!formData.accountNumber) {
+            setAlert({
+                isOpen: true,
+                isAnimating: false,
+                timeout: 5000,
+                isShow: true,
+                message: "Please Enter Account Number",
+                type: "error"
+            });
+            return
+        }
+
         const request = {
-            trxAmount: `${(Number.parseFloat(total.replaceAll(",", ""))).toFixed(2)}`.replaceAll(",", "").replace(".", ""),
+            trxAmount: Number.parseFloat(total.replaceAll(",", "")).toFixed(2),
             accountName: formData.accountName,
             accountNumber: formData.accountNumber
         }
@@ -95,7 +131,7 @@ export default function CashOutComponent({ config }) {
             }
 
             setAlert({
-                isOpen : true,
+                isOpen: true,
                 isAnimating: false,
                 timeout: 5000,
                 isShow: true,
@@ -105,7 +141,7 @@ export default function CashOutComponent({ config }) {
         } catch (error) {
             console.error("Error cashout:", error);
             setAlert({
-                isOpen : true,
+                isOpen: true,
                 isAnimating: false,
                 timeout: 5000,
                 isShow: true,
@@ -122,7 +158,8 @@ export default function CashOutComponent({ config }) {
     }
     return (
         <React.Fragment>
-            <BalanceHeader type={2}></BalanceHeader>
+            {!isLoading &&
+                <BalanceHeader type={2}></BalanceHeader>}
             {isLoading && <Loading></Loading>}
             {alert.isOpen && <Alert isAnimating={false} timeout={alert.timeout} hasTimer={alert.hasTimer} onClose={onCloseAlert} title="Lucky Taya" message={alert.message} type={alert.type}></Alert>}
 
