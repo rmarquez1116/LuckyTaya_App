@@ -20,6 +20,10 @@ export async function POST(req) {
         amount: Number.parseFloat(request.trxAmount)
     }
     const transfer = await transferV2(transferRequest, session.token)
+    if(transfer == null){
+        return new Response(JSON.stringify({ code: "500", message: "Can not process your request. Please check your balance" }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  
+    }
     const transaction = {
         ...request,
         ...transfer,
