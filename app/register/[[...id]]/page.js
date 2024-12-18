@@ -92,8 +92,6 @@ export default function Register() {
   const [state, registerAction] = useActionState(register, undefined);
 
   useEffect(() => {
-    console.log(id)
-
     if (id.length > 1) {
       const newId = id.slice(1)
       const decryptedId = decrypt(newId.join('/'))

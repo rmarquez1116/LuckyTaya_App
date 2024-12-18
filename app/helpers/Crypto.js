@@ -11,8 +11,6 @@ const CryptoJS = require("crypto-js");
 const sha256withRSAsign = (stringtoencrypt = '') => {
     const data = Buffer.from(stringtoencrypt)
     const signature = crypto.sign('RSA-SHA256', data, privateKey).toString("base64");
-    console.log("Signing done", signature);
-
     return signature
 }
 

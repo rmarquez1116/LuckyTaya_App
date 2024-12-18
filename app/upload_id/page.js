@@ -92,7 +92,6 @@ export default function UploadId() {
     setIsLoading(false);
   };
   const onConfirm = () => {
-    console.log(isSuccess, 'hello')
     setAlert({
       isAnimating: false,
       timeout: 3000, isShow: false, message: "",
