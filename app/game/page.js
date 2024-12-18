@@ -106,6 +106,8 @@ function Game() {
 
     useEffect(() => {
         try {
+            console.log(messages,'Websocket fromGame')
+            // console.log({ messages, data }, 'socket Message')
             if (messages != null && !isJsonEmpty(data)) {
                 const parseMessage = JSON.parse(messages)
                 const betDetail = JSON.parse(parseMessage.jsonPacket)
