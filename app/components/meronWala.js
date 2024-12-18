@@ -5,7 +5,7 @@ import React from 'react'
 // import wala from '../../public/images/wala.png'
 // import { isJsonEmpty } from '../lib/utils';
 
-function MeronWala({ type, data }) {
+function MeronWala({player, type, data }) {
     const color = type == 1 ? "meronColor" : "walaColor";
     const title = type == 1 ? "Pula" : "Asul";
     const getSafeData = (data, field) => {
@@ -17,11 +17,11 @@ function MeronWala({ type, data }) {
     }
     return (<div className="col card rounded-[20] text-center  p-3 mt-10 cursor-pointer">
         <div className={`${color} rounded-full h-20 w-20 mt-[-40px] items-center  flex justify-center justify-self-center`}>
-            {title}
+            {/* {title} */}
         </div>
         <br />
+            <h1 className='text-base'>{player}</h1>
         <span className='label-header1'>
-
             {getSafeData(data, `s${type}a`)} <br />
         </span>
         Bet<br />

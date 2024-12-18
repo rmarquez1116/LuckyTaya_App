@@ -12,6 +12,7 @@ export default function RootLayout({ children }) {
                     rel="stylesheet"
                 />
             </head>
+
             <body className='bg-background'>
                 <ProfileProvider>
                     <WebSocketProvider>
@@ -19,6 +20,6 @@ export default function RootLayout({ children }) {
                     </WebSocketProvider>
                 </ProfileProvider>
             </body>
-        </html>
+        </html >
     )
 }
