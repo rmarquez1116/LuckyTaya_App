@@ -119,6 +119,7 @@ export const WebSocketProvider = ({ children }) => {
           default:
             break;
         }
+        setMessages(null)
       }
     } catch (error) {
       console.error('Error processing WebSocket message', error);
