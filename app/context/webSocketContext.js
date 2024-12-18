@@ -4,54 +4,49 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import { getSession } from '../actions/auth'
 import { usePathname, useRouter } from 'next/navigation';
 import Alert from '../components/alert';
+import { useProfileContext } from './profileContext';
+import { isJsonEmpty } from '@app/lib/utils';
 
 const WebSocketContext = createContext();
 
 export const useWebSocketContext = () => useContext(WebSocketContext);
 
 export const WebSocketProvider = ({ children }) => {
+  const { profile } = useProfileContext();
   const router = useRouter();
-  const pathname = usePathname();
 
+  const [isConnected, setIsConnected] = useState(false)
   const [messages, setMessages] = useState(null);
   const [socket, setsocket] = useState(null);
-  const [sessionCookie, setSessionCookie] = useState('')
-  const [closeBet, setCloseBet] = useState(false)  
-  const [alert, setAlert] = useState({hasTimer : false, timeout: 3000, isOpen: false, message: "testing", type: "success" })
-
-  const getSess = async () => {
-    const session = await getSession();
-    if (session != sessionCookie)
-      setSessionCookie(session)
-  }
-
-  useEffect(() => {
-    getSess();
-  }, [pathname]);
+  const [closeBet, setCloseBet] = useState(false)
+  const [alert, setAlert] = useState({ hasTimer: false, timeout: 3000, isOpen: false, message: "testing", type: "success" })
 
   useEffect(() => {
 
     const setup = async () => {
-      const serverUrl = process.env.NEXT_PUBLIC_WEB_SOCKET_URL + sessionCookie.token;
+      const serverUrl = process.env.NEXT_PUBLIC_WEB_SOCKET_URL + profile.token;
 
       const socket = new WebSocket(serverUrl);
 
       socket.onmessage = (event) => {
         setMessages(event.data);
+        console.log(event.data, 'helloo00')
       };
 
       socket.onopen = () => {
+        setIsConnected(true)
         console.log('WebSocket connected');
       };
 
       socket.onerror = (error) => {
+        setIsConnected(false)
         console.error('WebSocket error', error);
       };
 
       setsocket(socket);
 
     }
-    if (sessionCookie) {
+    if (!isJsonEmpty(profile)) {
       if (socket)
         try {
           socket.close();
@@ -63,9 +58,9 @@ export const WebSocketProvider = ({ children }) => {
     return () => {
 
     };
-  }, [sessionCookie]);
+  }, [profile]);
   const onCloseAlert = (hasTimer) => {
-    setAlert({ timeout: 3000, isOpen: false, type: "", message: "",hasTimer : false, })
+    setAlert({ timeout: 3000, isOpen: false, type: "", message: "", hasTimer: false, })
     setCloseBet(true)
   }
 
@@ -76,12 +71,12 @@ export const WebSocketProvider = ({ children }) => {
         const parseMessage = JSON.parse(messages)
         switch (parseMessage.PacketType) {
           case 22:
-            setAlert({hasTimer : true, timeout: 60000, isOpen: true, type: "info", message: "Last Call !!!" })
+            setAlert({ hasTimer: true, timeout: 60000, isOpen: true, type: "info", message: "Last Call !!!" })
             break;
           case 73:
           case 75:
             const message = JSON.parse(parseMessage.jsonPacket)
-            setAlert({hasTimer : false, timeout: message.Duration * 1000, isOpen: true, type: "info", message: message.Message })
+            setAlert({ hasTimer: false, timeout: message.Duration * 1000, isOpen: true, type: "info", message: message.Message })
 
             break;
           case 101:
@@ -100,7 +95,7 @@ export const WebSocketProvider = ({ children }) => {
     }
   }, [messages])
   return (
-    <WebSocketContext.Provider value={{ messages, socket ,closeBet}}>
+    <WebSocketContext.Provider value={{ messages, socket, closeBet }}>
       {alert.isOpen && <Alert timeout={alert.timeout} hasTimer={alert.hasTimer} onClose={onCloseAlert} title="Lucky Taya" message={alert.message} type={alert.type}></Alert>}
       {children}
     </WebSocketContext.Provider>

@@ -207,7 +207,6 @@ function Game() {
     // }
     const placeBet = async () => {
         var response = await placeABet(data.fight.fightId, amountToBet.amount.replaceAll(',', ''), amountToBet.type)
-        console.log(response, 'helo')
         if (response) {
             setModalObject({ isOpen: false, type: modalObject.type })
 
@@ -232,6 +231,16 @@ function Game() {
 
             </>
         } else return <></>
+    }
+
+    const getPlayer = (side)=>{
+        if(data){
+            const player = data.fightDetails.find(x=>x.side == side);
+            if(player){
+                return `${player.owner} ${player.breed}`
+            }
+        }
+        return ""
     }
 
     return (
@@ -299,14 +308,14 @@ function Game() {
                     </div>
                     <br />
                     <br />
-                    {showTrend && <Trend items={trends} />}
+                    {showTrend && !isJsonEmpty(data) && <Trend data={data.fightDetails} items={trends} />}
                     {!showTrend && <div className="max-w-md w-full">
                         <div className="grid grid-cols-2 grid-rows-1 gap-4">
                             <div onClick={() => openBetting(1)}>
-                                <MeronWala type={1} data={betDetails} />
+                                <MeronWala player={getPlayer(1)} type={1} data={betDetails} />
                             </div>
                             <div onClick={() => openBetting(0)}>
-                                <MeronWala type={0} data={betDetails} />
+                                <MeronWala player={getPlayer(0)} type={0} data={betDetails} />
                                 <div>
                                 </div>
                             </div>

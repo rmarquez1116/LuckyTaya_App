@@ -82,9 +82,11 @@ export async function getProfile() {
     const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]
     if (!user) {
         const user1 = Object.assign({}, session);
-        delete user1.token
+        delete user1.pin
         return user1
     }
+    user.token = session.token           
+    delete user.pin
     return user;
 }
 

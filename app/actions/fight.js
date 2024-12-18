@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { isJsonEmpty } from "../lib/utils";
 import { logout } from "./auth";
 import { map } from "zod";
+import { fetchData } from "@app/helpers/DB";
 
 export async function getFightSchedule() {
     const cookieStore = await cookies()
@@ -423,7 +424,9 @@ export async function getLatestFight() {
                     // Normalize the dates by setting their time to midnight
                     eventDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
                     currentDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
-                    if (eventDate.getTime() === currentDate.getTime()) {
+                   const config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
+      
+                    if (config.environment == 'develop' || eventDate.getTime() === currentDate.getTime()) {
                         return { ...fightDetails, fight: data, fightStatus: statusDesc, webRtc }
                     } else {
                         return null;
@@ -556,17 +559,7 @@ async function getFightWithDetailsByEventIdV2(eventId) {
                 rejectUnauthorized: false
             })
         })
-
-        let data = [];
-        for (let index = 0; index < response.data.length; index++) {
-            const element = response.data[index];
-            const results = await getWinnerDetailsByEvent(element.eventId)
-
-            element.fights
-            data.push(element)
-        }
-
-
+        
         return response.data
     } catch (error) {
         if (error.status == 401) {

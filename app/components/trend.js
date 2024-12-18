@@ -1,13 +1,15 @@
 import React from 'react'
 
-function Trend({ items }) {
+function Trend({data, items }) {
     let previousWinner = -1;
     let columnIncrement = -1;
     let rowIncrement = -1;
     const rows = 6;
     const cols = 10;
     const trendArray = Array.from({ length: rows }, () => Array(cols).fill(<div className="text-center"></div>));
-
+    const player1 = data.find(x=>x.side == 1)
+    const player2 = data.find(x=>x.side == 0)
+    
     for (let index = 0; index < items.length; index++) {
         const element = items[index];
         const color = element.winSide == 1 ? "meronColor" : element.winSide == 0 ? "walaColor" : "cancelColor"
@@ -45,13 +47,14 @@ function Trend({ items }) {
                 <div className="card p-2 rounded-[20px] border-transparent  text-center">
                     <div className={`meronColor rounded-full h-10 w-10 mt-[-20]  flex justify-self-center`}>
                     </div>
-                    Pula
+                    {`${player1?.owner} ${player1?.breed}`}
                 </div>
 
                 <div className="card p-2 rounded-[20px] border-transparent  text-center">
                     <div className={`walaColor rounded-full h-10 w-10 mt-[-20]  flex justify-self-center`}>
                     </div>
-                    Asul
+                    
+                    {`${player2?.owner} ${player2?.breed}`}
                 </div>
                 <div className="card p-2 rounded-[20px] border-transparent  text-center">
                     <div className={`cancelColor rounded-full h-10 w-10 mt-[-20] flex justify-self-center`}>
