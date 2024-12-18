@@ -14,6 +14,7 @@ export const useProfileContext = () => useContext(ProfileContext);
 
 export const ProfileProvider = ({ children }) => {
   const router = useRouter();
+  const pathname = usePathname();
   const [profile, setProfile] = useState(null)
   const getSess = async () => {
     const session = await getProfile();
@@ -25,7 +26,7 @@ export const ProfileProvider = ({ children }) => {
 
   useEffect(() => {
     getSess();
-  }, []);
+  }, [pathname]);
 
   return (
     <ProfileContext.Provider value={{ profile }}>
