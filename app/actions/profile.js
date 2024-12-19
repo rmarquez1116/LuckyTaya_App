@@ -75,18 +75,22 @@ export async function profile(prevState, formData) {
 
 export async function getProfile() {
 
-    const cookieStore = await cookies()
-    var session = cookieStore.get('app_session');
+    try {
+        const cookieStore = await cookies()
+        var session = cookieStore.get('app_session');
 
-    session = JSON.parse(session.value);
-    const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]
-    if (!user) {
-        const user1 = Object.assign({}, session);
-        delete user1.pin
-        return user1
+        session = JSON.parse(session.value);
+        const user = (await fetchData('taya_user', { "userId": { $eq: session.userId } }))[0]
+        if (!user) {
+            const user1 = Object.assign({}, session);
+            delete user1.pin
+            return user1
+        }
+        user.token = session.token
+        delete user.pin
+        return user;
+    } catch (error) {
+        return null
     }
-    user.token = session.token           
-    delete user.pin
-    return user;
 }
 
