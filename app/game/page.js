@@ -86,16 +86,16 @@ function Game() {
         isOpen: false,
         type: 1
     })
+    const getBetDetails = async () => {
+        const initialBetDetails = await getInitialBetDetails(data.fight.fightId);
+        setBetDetails(initialBetDetails);
 
+        const eventTrend = await getEventTrend(data.event.eventId);
+        setTrends(eventTrend)
+        setRandomText(getToken(4))
+    }
     useEffect(() => {
-        const getBetDetails = async () => {
-            const initialBetDetails = await getInitialBetDetails(data.fight.fightId);
-            setBetDetails(initialBetDetails);
 
-            const eventTrend = await getEventTrend(data.event.eventId);
-            setTrends(eventTrend)
-            setRandomText(getToken(4))
-        }
         if (data) {
             getBetDetails();
             setShowTrend(data.fightStatus.name != "Open")
@@ -106,13 +106,27 @@ function Game() {
 
     useEffect(() => {
         try {
-            console.log(messages,'Websocket fromGame')
             // console.log({ messages, data }, 'socket Message')
             if (messages != null && !isJsonEmpty(data)) {
                 const parseMessage = JSON.parse(messages)
                 const betDetail = JSON.parse(parseMessage.jsonPacket)
-
                 switch (parseMessage.PacketType) {
+                    case 5:
+                        try {
+                            const betAmount = JSON.parse(parseMessage.jsonPacket)
+                            const details = Object.assign({}, betDetails)
+                            if (betAmount.Side == 1) {
+                                details.s1a = Number.parseInt(details.s1a) + Number.parseInt(betAmount.Amount)
+                            } else if (betAmount.Side == 0) {
+                                details.s0a = Number.parseInt(details.s0a) + Number.parseInt(betAmount.Amount)
+                            }
+                            setBetDetails(details)
+                            getBetDetails()
+                        } catch (error) {
+                            console.log(error, 'errooo')
+                        }
+                        break;
+
                     case 10:
                         if (data.fight.fightId == parseMessage.FightId &&
                             data.event.eventId == parseMessage.EventId) {
@@ -222,6 +236,7 @@ function Game() {
             return <>
                 {modalConfirmObject.isOpen &&
                     <BetConfirmation
+                        player={getPlayer(modalConfirmObject.type)}
                         type={modalConfirmObject.type}
                         balance={10000}
                         amount={amountToBet.amount}
@@ -233,10 +248,10 @@ function Game() {
         } else return <></>
     }
 
-    const getPlayer = (side)=>{
-        if(data){
-            const player = data.fightDetails.find(x=>x.side == side);
-            if(player){
+    const getPlayer = (side) => {
+        if (data) {
+            const player = data.fightDetails.find(x => x.side == side);
+            if (player) {
                 return `${player.owner} ${player.breed}`
             }
         }

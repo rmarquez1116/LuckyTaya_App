@@ -18,6 +18,7 @@ export const WebSocketProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [messages, setMessages] = useState(null);
   const [closeBet, setCloseBet] = useState(false);
+  const [token, setToken] = useState('')
   const [alert, setAlert] = useState({
     hasTimer: false,
     timeout: 3000,
@@ -27,17 +28,24 @@ export const WebSocketProvider = ({ children }) => {
   });
 
   const socketRef = useRef(null); // Ref to persist the WebSocket across renders
-
   useEffect(() => {
-    if (isJsonEmpty(profile)) return; // Don't attempt to connect if profile is empty
-
+    if(profile){
+      setToken(profile.token)
+    }
+    return () => {
+      
+    }
+  }, [profile])
+  
+  useEffect(() => {
+    if (!token) return; // Don't attempt to connect if profile is empty
     const setupWebSocket = () => {
       // Check if there's already a socket connection
       if (socketRef.current) {
         socketRef.current.close(); // Close any existing connection
       }
 
-      const serverUrl = `${process.env.NEXT_PUBLIC_WEB_SOCKET_URL}${profile.token}`;
+      const serverUrl = `${process.env.NEXT_PUBLIC_WEB_SOCKET_URL}${token}`;
       const socket = new WebSocket(serverUrl);
 
       socket.onopen = () => {
@@ -71,7 +79,7 @@ export const WebSocketProvider = ({ children }) => {
         socketRef.current.close();
       }
     };
-  }, [profile]); // Effect runs only when `profile` changes
+  }, [token]); // Effect runs only when `profile` changes
 
   const onCloseAlert = (hasTimer) => {
     setAlert({
