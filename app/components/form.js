@@ -7,7 +7,7 @@ import Select from 'react-select';
 export default function Form({ action, state, fields, buttonText, hasBackButton = false }) {
     const renderElement = (object) => {
         if (object.type == "select") {
-            const items = object.items.map((item) => { return { value: item.value, label: item.label } })
+            const items = object?.items?.map((item) => { return { value: item.value, label: item.label } })
             return <React.Fragment>
                 <input hidden defaultValue={object.value} name={object.id} />
                 <Select onChange={(e) => object.onSelect(e)} placeholder={` Select ${object.label}`} options={items}
