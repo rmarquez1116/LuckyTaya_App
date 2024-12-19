@@ -1,15 +1,15 @@
 import React from 'react'
 
-function Trend({data, items }) {
+function Trend({ data, items }) {
     let previousWinner = -1;
     let columnIncrement = -1;
     let rowIncrement = -1;
     const rows = 6;
     const cols = 10;
     const trendArray = Array.from({ length: rows }, () => Array(cols).fill(<div className="text-center"></div>));
-    const player1 = data.find(x=>x.side == 1)
-    const player2 = data.find(x=>x.side == 0)
-    
+    const player1 = data.find(x => x.side == 1)
+    const player2 = data.find(x => x.side == 0)
+
     for (let index = 0; index < items.length; index++) {
         const element = items[index];
         const color = element.winSide == 1 ? "meronColor" : element.winSide == 0 ? "walaColor" : "cancelColor"
@@ -32,12 +32,17 @@ function Trend({data, items }) {
             rowIncrement = 0
             columnIncrement += 1
         }
-        if (columnIncrement > cols) 
+        if (columnIncrement > cols)
             break;
-        trendArray[rowIncrement][columnIncrement] =
-            <div className={`${color} rounded-full h-6 w-6  text-center`}>
-                {element.fightNum}
-            </div>
+        try {
+            console.log('hello')
+            trendArray[rowIncrement][columnIncrement] =
+                <div className={`${color} rounded-full h-6 w-6  text-center`}>
+                    {element.fightNum}
+                </div>
+        } catch (error) {
+
+        }
     }
     return (
         <React.Fragment>
@@ -53,7 +58,7 @@ function Trend({data, items }) {
                 <div className="card p-2 rounded-[20px] border-transparent  text-center">
                     <div className={`walaColor rounded-full h-10 w-10 mt-[-20]  flex justify-self-center`}>
                     </div>
-                    
+
                     {`${player2?.owner} ${player2?.breed}`}
                 </div>
                 <div className="card p-2 rounded-[20px] border-transparent  text-center">
