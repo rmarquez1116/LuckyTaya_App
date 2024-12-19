@@ -35,7 +35,6 @@ function Trend({ data, items }) {
         if (columnIncrement > cols)
             break;
         try {
-            console.log('hello')
             trendArray[rowIncrement][columnIncrement] =
                 <div className={`${color} rounded-full h-6 w-6  text-center`}>
                     {element.fightNum}

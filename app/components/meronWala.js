@@ -26,10 +26,10 @@ function MeronWala({player, type, data }) {
         </span>
         Bet<br />
 
-        {/* <div className="bg-dark-no-border p-1 rounded-[20px] border-transparent">
+        <div className="bg-dark-no-border p-1 rounded-[20px] border-transparent">
             Payout<br />
             {parseFloat(getSafeData(data, `s${type}o`)).toFixed(2)}
-        </div> */}
+        </div>
     </div>
     )
 }
