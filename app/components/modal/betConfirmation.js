@@ -17,7 +17,7 @@ function BetConfirmation({ player, type, onClose, balance, amount }) {
             </div>
             <div className='text-center'>
                 <div className={`${className}Color h-[110px] w-[110px] rounded-full m-auto label-header1`}>
-                    <div className='h-full w-100 flex items-center'>
+                    <div className='h-full w-100 justify-center flex items-center'>
                         {title}
 
                     </div>
