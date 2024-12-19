@@ -230,7 +230,7 @@ function GameComponent({ fightData, initialBetDetails }) {
                             </div>
                             <div className="col"></div>
                             <div className="col-span-2 card rounded-[10px] p-3 text-center">
-                                <label> Fight# {data.fight.fightNum}</label>
+                                <label> Game/Rack # {data.fight.fightNum}</label>
                             </div>
                         </div>
                     </div>
