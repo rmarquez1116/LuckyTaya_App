@@ -1,21 +1,21 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Input from '../input'
 import dollar from '../../../public/images/dollar.png'
 import Image from 'next/image'
 
-import {denomination} from '../../lib/denomination';
-function BetModal({ type, onClose, balance,data,setAmountToBet }) {
+import { denomination } from '../../lib/denomination';
+function BetModal({ player, type, onClose, balance, data, setAmountToBet }) {
     // type 1 Meron
     // type 2 wala
     const [amount, setAmount] = useState(0)
     useEffect(() => {
-        setAmountToBet(type,amount)
-      return () => {
-        // setAmount(0)
-      }
+        setAmountToBet(type, amount)
+        return () => {
+            // setAmount(0)
+        }
     }, [amount])
-    
-    const setTheAmount = (e)=>{
+
+    const setTheAmount = (e) => {
         setAmount(e.value)
     }
 
@@ -36,7 +36,7 @@ function BetModal({ type, onClose, balance,data,setAmountToBet }) {
                 <Image alt="dollar" src={dollar}></Image>
                 {balance}
             </div> */}
-            <div className='p-2 rounded-[10px] default text-center'>Fight# {data.fight.fightNum}</div>
+            <div className='p-2 rounded-[10px] default text-center'>Game/Rack # {data.fight.fightNum}</div>
 
 
         </div>
@@ -45,30 +45,24 @@ function BetModal({ type, onClose, balance,data,setAmountToBet }) {
         if (type == 1)
             return <>
 
-                <div className="grid grid-cols-3 grid-rows-1 gap-4">
-                    <div ></div>
-                    <div className='inline-flex  items-center gap-2 text-center label-header1'><div className='meronColor rounded-full h-5 w-5'></div>Pula</div>
-                    <div className='text-right' onClick={()=>onClose(false)}>X</div>
+
+                <div className='text-right' onClick={() => onClose(false)}>X</div>
+                <div className='inline-flex justify-center items-center gap-2 text-center label-header1'><div className='meronColor rounded-full h-5 w-5'></div>{player}</div>
 
 
-                </div>
                 {renderDescription()}
                 {renderDemonimation()}
-                <button onClick={()=>onClose(true)} className='p-2 meronColor rounded-[20px] w-full'>PLACE BET ON PULA</button>
+                <button onClick={() => onClose(true)} className='p-2 meronColor rounded-[20px] w-full'>PLACE BET ON {player}</button>
 
             </>
         else return <>
-            <div className="grid grid-cols-3 grid-rows-1 gap-4">
-                    <div ></div>
-                    <div className='inline-flex items-center gap-2 text-center  label-header1'><div className='walaColor rounded-full h-5 w-5'></div>Asul</div>
-                    <div className='text-right' onClick={()=>onClose(false)}>X</div>
 
+            <div className='text-right' onClick={() => onClose(false)}>X</div>
+            <div className='inline-flex justify-center items-center gap-2 text-center  label-header1'><div className='walaColor rounded-full h-5 w-5'></div>{player}</div>
 
-                </div>
-                {renderDescription()}
-                {renderDemonimation()}
-                <button onClick={()=>onClose(true)} className='p-2 walaColor rounded-[20px] w-full'>PLACE BET ON ASUL</button>
-
+            {renderDescription()}
+            {renderDemonimation()}
+            <button onClick={() => onClose(true)} className='p-2 walaColor rounded-[20px] w-full'>PLACE BET ON {player}</button>
 
         </>
     }

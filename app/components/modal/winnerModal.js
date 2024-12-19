@@ -35,10 +35,10 @@ function FighterDetail({ data }) {
     return <React.Fragment>
         <div className='inline-flex gap-2 justify-center w-full z-40'>
             <div className={`${color} rounded-full h-5 w-5  text-center label-header1`}></div>
-            {title}
+            {data.owner} {data.breed}
         </div>
 
-        <div className="grid grid-cols-2 grid-rows-1 gap-4 bg-dark-no-border p-3 rounded-[20px]">
+        {/* <div className="grid grid-cols-2 grid-rows-1 gap-4 bg-dark-no-border p-3 rounded-[20px]">
 
             <div className='col-span-2 font-bold'>
                 Entry Name
@@ -46,7 +46,7 @@ function FighterDetail({ data }) {
             <div className='col-span-2 font-bold'>
                 Player Name : {data.owner} {data.breed}
             </div>
-        </div>
+        </div> */}
         <br />
     </React.Fragment>
 }

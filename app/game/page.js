@@ -227,7 +227,7 @@ function Game() {
                         amount={amountToBet.amount}
                         onClose={(isForCompletion) => closeConfirmation(isForCompletion)}>
                     </BetConfirmation>}
-                {modalObject.isOpen && <BetModal setAmountToBet={setAmountBet} data={data} type={modalObject.type} balance={10000} onClose={closeBetting}></BetModal>}
+                {modalObject.isOpen && <BetModal player={getPlayer(modalObject.type)} setAmountToBet={setAmountBet} data={data} type={modalObject.type} balance={10000} onClose={closeBetting}></BetModal>}
 
             </>
         } else return <></>
