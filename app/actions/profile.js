@@ -90,7 +90,7 @@ export async function getProfile() {
         delete user.pin
         return user;
     } catch (error) {
-        return null
+        return {}
     }
 }
 
