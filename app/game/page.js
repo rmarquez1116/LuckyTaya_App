@@ -53,7 +53,7 @@ function Game() {
     const [trends, setTrends] = useState([])
     const [bettingEndedResult, setBettingEndedResult] = useState({
         winnerSide: -1,
-        isOpen: true
+        isOpen: false
     })
     const [showTrend, setShowTrend] = useState(false)
 
