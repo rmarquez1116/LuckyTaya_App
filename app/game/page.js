@@ -53,7 +53,7 @@ function Game() {
     const [trends, setTrends] = useState([])
     const [bettingEndedResult, setBettingEndedResult] = useState({
         winnerSide: -1,
-        isOpen: false
+        isOpen: true
     })
     const [showTrend, setShowTrend] = useState(false)
 
@@ -106,7 +106,7 @@ function Game() {
 
     useEffect(() => {
         try {
-            // console.log({ messages, data }, 'socket Message')
+            // console.log({ messages }, 'socket Message')
             if (messages != null && !isJsonEmpty(data)) {
                 const parseMessage = JSON.parse(messages)
                 const betDetail = JSON.parse(parseMessage.jsonPacket)
@@ -138,6 +138,10 @@ function Game() {
                         setAlert({ hasTimer: true, timeout: 60000, isOpen: true, type: "info", message: "Last Call !!!" })
                         break;
                     // result
+
+                    case 30:
+                        setBettingEndedResult({ winnerSide: -1, isOpen: true })
+                        break;
                     case 50:
                         const betResult = JSON.parse(parseMessage.jsonPacket)
                         setBettingEndedResult({ winnerSide: betResult.WinSide, isOpen: true })
