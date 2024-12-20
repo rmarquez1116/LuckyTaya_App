@@ -1,16 +1,20 @@
 import React from 'react'
 import meronWin from '../../../public/images/meronWins.png'
 import walaWin from '../../../public/images/walaWins.png'
+import cancelled from '../../../public/images/cancel.png'
 import Image from 'next/image'
 
 function WinnerModal({ winnerSide, data, onClose }) {
     const getWinnerImage = () => {
-        return winnerSide == 1 ? meronWin : walaWin
+        return winnerSide == 1 ? meronWin : (winnerSide == 0 ? walaWin : cancelled)
     }
 
     const renderDetails = () => {
-        var findWinner = data.findIndex(x => x.side == winnerSide)
-        var findNotWinner = data.findIndex(x => x.side != winnerSide)
+        const winningSide = winnerSide == -1 ? 1 : winnerSide;
+        var findWinner = data.findIndex(x => x.side == winningSide)
+        var findNotWinner = data.findIndex(x => x.side != winningSide)
+
+        
         return <div className="grid grid-cols-1 grid-rows-2 gap-4 w-full">
             <div ><FighterDetail data={data[findWinner]}></FighterDetail></div>
             <div ><FighterDetail data={data[findNotWinner]}></FighterDetail></div>
