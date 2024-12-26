@@ -11,22 +11,24 @@ function BetConfirmation({ player, type, onClose, balance, amount }) {
     const renderBody = () => {
         var className = type == 1 ? "meron" : "wala"
         var title = player
-        return <div className="grid grid-cols-3 grid-rows-1 gap-4 items-center mx-[-23px]">
-            <div>
-                <Image alt="tacoLeft" src={tacoLeft}></Image>
-            </div>
-            <div className='text-center'>
-                <div className={`${className}Color h-[110px] w-[110px] rounded-full m-auto label-header1`}>
-                    <div className='h-full w-100 justify-center flex items-center'>
-                        {title}
-
+        return <>
+            <div className="grid grid-cols-3 grid-rows-1 gap-4 items-center mx-[-23px]">
+                <div>
+                    <Image alt="tacoLeft" src={tacoLeft}></Image>
+                </div>
+                <div className='text-center'>
+                    <div className={`${className}Color h-[80px] w-[80px] rounded-full m-auto`}>
                     </div>
                 </div>
+                <div className='justify-self-end'>
+                    <Image alt="tacoRight" src={tacoRight}></Image>
+                </div>
+            </div >
+            <div className='col-span-4 h-full w-100 text-center'>
+                {title}
+
             </div>
-            <div className='justify-self-end'>
-                <Image alt="tacoRight" src={tacoRight}></Image>
-            </div>
-        </div>
+        </>
 
     }
 
