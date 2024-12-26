@@ -15,11 +15,27 @@ function MeronWala({player, type, data }) {
             return "0"
         }
     }
+
+    const calculateOddPercentage = (data) => {
+
+        const numerator = parseFloat(getSafeData(data, `s${type}a`))
+        const denominator = parseFloat(getSafeData(data, 's1a')) + parseFloat(getSafeData(data, 's0a'))
+    
+        if(numerator === 0 || denominator === 0) {
+          return '0 %'
+        }
+    
+        return `${((numerator / denominator) * 100).toFixed(0)} %`
+      }
+    
+
+
+
     return (<div className="col card rounded-[20] text-center  p-3 mt-10 cursor-pointer">
         <div className={`${color} rounded-full h-20 w-20 mt-[-40px] items-center  flex justify-center justify-self-center`}>
             {/* {title} */}
             
-            {((parseFloat(getSafeData(data, `s${type}a`)) / (parseFloat(getSafeData(data, 's1a')) + parseFloat(getSafeData(data, 's0a')))) * 100).toFixed(0)} %
+            {calculateOddPercentage(data)}
         </div>
         <br />
             <h1 className='text-base'>{player}</h1>
