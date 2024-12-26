@@ -18,6 +18,8 @@ function MeronWala({player, type, data }) {
     return (<div className="col card rounded-[20] text-center  p-3 mt-10 cursor-pointer">
         <div className={`${color} rounded-full h-20 w-20 mt-[-40px] items-center  flex justify-center justify-self-center`}>
             {/* {title} */}
+            
+            {((parseFloat(getSafeData(data, `s${type}a`)) / (parseFloat(getSafeData(data, 's1a')) + parseFloat(getSafeData(data, 's0a')))) * 100).toFixed(0)} %
         </div>
         <br />
             <h1 className='text-base'>{player}</h1>
