@@ -68,7 +68,7 @@ export default function RequestFund() {
     try {
       setIsLoading(true);
       const response = await axios.post('/api/fund_payment', currentItem)
-      setFilterRequests(requests)
+     
     } catch (ex) {
       message = "Can't process your request. Please try again later."
     } finally {
@@ -82,6 +82,7 @@ export default function RequestFund() {
         isShow: true
       }))
       setIsLoading(false);
+      getData();
     }
   }
   const onAlertResponseConfirm = () => {
@@ -90,7 +91,7 @@ export default function RequestFund() {
       isShow: false
     }))
   }
-  
+
   const getStatusLabel = (item) => {
     let result = "Pending";
     if (item.status == "Created") return "Pending"
