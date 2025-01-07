@@ -90,7 +90,12 @@ export default function RequestFund() {
       isShow: false
     }))
   }
-
+const getStatusLabel = (item)=>{
+  let result = "Pending";
+  if(item.status == "Created") return "Pending"
+  if(item.status == "Approved" && item.isPaid) return "Paid"
+  return item.status
+}
   return (
     <MainLayout>
       <BalanceHeader type={2} forceUpdate={isLoading}/>
@@ -135,7 +140,7 @@ export default function RequestFund() {
                   label: 'Status',
                   customValue: (val) =>
                     <div>
-                      {val.status == "Created" ? "Pending" : val.status}
+                      {getStatusLabel(val)}
                     </div>
 
                 },
