@@ -59,7 +59,7 @@ function SchedulePopUp({ data, onClose }) {
                 {/* <div className={`h-2 w-full ${data.color}`}></div> */}
                 <div className="grid grid-cols-2 grid-rows-1 gap-4 p-3 rounded-[20px]">
                     <div className='inline-flex gap-2 items-center'><Image alt="calendar" className="w-[20px] h-[20px]" src={calendar}></Image>  <label>{formatDisplayDate(data.event.eventDate)}</label></div>
-                    <div className='inline-flex gap-2 items-center justify-end'><Image alt="time" className="w-[20px] h-[20px]" src={clock}></Image>  <label>{formatDisplayTime(data.event.eventDate)}</label></div>
+                    {/* <div className='inline-flex gap-2 items-center justify-end'><Image alt="time" className="w-[20px] h-[20px]" src={clock}></Image>  <label>{formatDisplayTime(data.event.eventDate)}</label></div> */}
 
                 </div>
                 <Tables
