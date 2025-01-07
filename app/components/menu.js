@@ -29,6 +29,10 @@ const menus = [
         icon: betting,
         label: "Betting History"
     }, {
+        href: "/request_fund/list",
+        icon: betting,
+        label: "Request Fund History"
+    },{
         href: "/terms_services",
         icon: terms,
         label: "Terms of Use"
@@ -37,7 +41,7 @@ const menus = [
 
 export default function Menu({isEnabled}) {
     return (
-        <ul className="p-5 sidebar-nav leading-relaxed text-xl">
+        <ul className="p-5 sidebar-nav leading-relaxed text-xl h-[45%] overflow-auto">
             {menus.map((object, i) => {
                 return <React.Fragment key={`li-${i}`}>
                     <li>

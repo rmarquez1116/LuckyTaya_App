@@ -54,7 +54,7 @@ export default function RequestFund() {
       ...e,
       isShow: true
     }))
-  }  
+  }
   const onCancel = () => {
     setCurrentItem({});
     setAlert(e => ({
@@ -78,7 +78,7 @@ export default function RequestFund() {
       }))
       setAlertResponse(e => ({
         ...e,
-        message : message,
+        message: message,
         isShow: true
       }))
       setIsLoading(false);
@@ -90,15 +90,17 @@ export default function RequestFund() {
       isShow: false
     }))
   }
-const getStatusLabel = (item)=>{
-  let result = "Pending";
-  if(item.status == "Created") return "Pending"
-  if(item.status == "Approved" && item.isPaid) return "Paid"
-  return item.status
-}
+  
+  const getStatusLabel = (item) => {
+    let result = "Pending";
+    if (item.status == "Created") return "Pending"
+    if (item.status == "Approved" && item.isPaid) return "Paid"
+    return item.status
+  }
+
   return (
     <MainLayout>
-      <BalanceHeader type={2} forceUpdate={isLoading}/>
+      <BalanceHeader type={2} forceUpdate={isLoading} />
       <div className="w-full flex flex-col gap-10 p-6">
         <ConfirmationModal
           isOpen={alert.isShow}
