@@ -35,6 +35,7 @@ export async function updateData(collection,query, data) {
         });
         return result.matchedCount >0
     } catch (error) {
+        console.log(error)
         return false;
     }
 }

@@ -174,7 +174,6 @@ export async function transferV2(request, token) {
 
     try {
         var url = `${process.env.BASE_URL}/api/v1/Account/transferV2?amount=${request.amount}&toAccountNumber=${request.accountNumber}`
-        console.log(request,'hello')
         const response = await axios.get(url, {
             headers: {
                 Authorization: `Bearer ${token}`,
