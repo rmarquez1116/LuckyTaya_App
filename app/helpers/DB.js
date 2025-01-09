@@ -10,6 +10,7 @@ export async function fetchData(collection, request) {
         const posts = await postsCollection.find(request).project({_id : 0}).toArray();
         return posts
     } catch (error) {
+        console.log(error,'hello')
         return null
     }
 }

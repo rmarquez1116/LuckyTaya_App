@@ -206,6 +206,55 @@ async function getFightStatus(status) {
 }
 
 
+export async function getOpenOrClosedEventsV2() {
+    const cookieStore = await cookies()
+    var session = cookieStore.get('app_session');
+    if (!session) {
+        return redirect('/login')
+    }
+    try {
+        session = JSON.parse(session.value);
+
+        var url = `${process.env.BASE_URL}/api/v1/SabongEvent/V2/EventWithStatusOpen`
+
+        const response = await axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${session.token}`,
+                "Content-Type": "application/json",
+            },
+            httpsAgent: new Agent({
+                rejectUnauthorized: false
+            })
+        })
+
+        const data = []
+
+        let events = response.data.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
+        events = events.filter(x => (new Date(x.eventDate)).toLocaleDateString() == (new Date()).toLocaleDateString())
+
+        for (let index = 0; index < events.length; index++) {
+            const element = events[index];
+            const venue = await getVenueById(element.venueId)
+            const eventStatus = await getEventStatusById(element.eventStatusCode)
+            data.push({
+                event: element,
+                venue: venue,
+                eventStatus: eventStatus
+            })
+        }
+
+
+        return data
+    } catch (error) {
+        console.log(error, 'hello')
+        if (error.status == 401) {
+            logout()
+        }
+        return null;
+    }
+}
+
+
 export async function getOpenOrClosedEvents() {
     const cookieStore = await cookies()
     var session = cookieStore.get('app_session');
@@ -248,7 +297,6 @@ export async function getOpenOrClosedEvents() {
         return null;
     }
 }
-
 
 export async function getOpenOrClosedEventsWithFightDetails() {
     const cookieStore = await cookies()
@@ -424,14 +472,105 @@ export async function getLatestFight() {
                     // Normalize the dates by setting their time to midnight
                     eventDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
                     currentDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
-                   const config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
-      
+                    const config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
+
                     if (config.environment == 'develop' || eventDate.getTime() === currentDate.getTime()) {
                         return { ...fightDetails, fight: data, fightStatus: statusDesc, webRtc }
                     } else {
                         return null;
                     }
-                 }
+                }
+                // }
+            }
+            return null;
+
+        } else return null;
+
+
+    } catch (error) {
+        console.log(error, 'Error')
+        return null;
+    }
+}
+
+export async function getLatestFightV2(event) {
+    const cookieStore = await cookies()
+    let webRtc = process.env.NEXT_PUBLIC_WEB_RTC_URL;
+    var session = cookieStore.get('app_session');
+    if (!session) {
+        return redirect('/login')
+    }
+    try {
+        session = JSON.parse(session.value);
+
+        var response;
+        if (event) {
+            var url = `${process.env.BASE_URL}/api/v1/SabongFight/ByEventId/${event.eventId}`
+            response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${session.token}`,
+                    "Content-Type": "application/json",
+                },
+                httpsAgent: new Agent({
+                    rejectUnauthorized: false
+                })
+            })
+        }
+        else {
+            var url = `${process.env.BASE_URL}/api/v1/SabongFight/GetLastFightNum`
+
+            response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${session.token}`,
+                    "Content-Type": "application/json",
+                },
+                httpsAgent: new Agent({
+                    rejectUnauthorized: false
+                })
+            })
+        }
+        if (response.status == 200) {
+            var data;
+            if (response.data instanceof Array) {
+                // data = [...response.data].reverse();
+                data = response.data;
+                var selectedIndex = -1
+                for (let index = 0; index < data.length; index++) {
+                    const element = data[index];
+                    if (element.fightStatusCode == 11) {
+                        selectedIndex = index
+                        break;
+                    } else if (element.fightStatusCode == 10) {
+                        selectedIndex = index;
+                        break;
+                    }
+
+                }
+                if (selectedIndex > -1)
+                    data = data[selectedIndex]
+                else data = data[data.length - 1]
+            }
+            else data = response.data
+            if (data) {
+
+                const { fightId, eventId, fightStatusCode } = data
+                var statusDesc = await getFightStatus(fightStatusCode);
+                // if (fightStatusCode == 10 || fightStatusCode == 11) {
+                const fightDetails = await getFightDetailsByFightId(fightId)
+                if (!isJsonEmpty(fightDetails)) {
+                    const eventDate = new Date(fightDetails.event.eventDate);
+                    const currentDate = new Date();
+                    // Normalize the dates by setting their time to midnight
+                    eventDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
+                    currentDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
+                    const config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
+
+                    if (config.environment == 'develop' || eventDate.getTime() === currentDate.getTime()) {
+                        return { ...fightDetails, fight: data, fightStatus: statusDesc, webRtc }
+                    } else {
+                        return null;
+                    }
+                }
                 // }
             }
             return null;
@@ -559,7 +698,7 @@ async function getFightWithDetailsByEventIdV2(eventId) {
                 rejectUnauthorized: false
             })
         })
-        
+
         return response.data
     } catch (error) {
         if (error.status == 401) {
