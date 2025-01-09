@@ -231,7 +231,7 @@ export async function getOpenOrClosedEventsV2() {
 
         let events = response.data.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
         events = events.filter(x => (new Date(x.eventDate)).toLocaleDateString() == (getCurrentPHTime()).toLocaleDateString())
-        console.log(events,(getCurrentPHTime()).toLocaleDateString())
+        console.log(events,(getCurrentPHTime()))
         for (let index = 0; index < events.length; index++) {
             const element = events[index];
             const venue = await getVenueById(element.venueId)
