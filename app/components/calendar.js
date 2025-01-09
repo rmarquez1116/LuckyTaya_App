@@ -7,6 +7,7 @@ function Calendar({ currentDate, schedule, onSelect }) {
     currentDate = new Date(currentDate);
     const [data, setData] = useState([])
     useEffect(() => {
+        // console.log(schedule)
         setData(schedule)
         return () => {
         }

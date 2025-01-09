@@ -9,7 +9,7 @@ import BetModal from '../components/modal/betModal'
 import React, { memo, useEffect, useState } from "react";
 import BetConfirmation from "../components/modal/betConfirmation";
 import Loading from "../components/loading";
-import { getEventTrend, getFightDetailsByEventId, getLatestFightV2, getOpenOrClosedEventsV2, placeABet } from "../actions/fight";
+import { getEventDetailsDB, getEventTrend, getFightDetailsByEventId, getLatestFightV2, getOpenOrClosedEventsV2, placeABet } from "../actions/fight";
 import { isJsonEmpty } from "../lib/utils";
 import Alert from "../components/alert";
 import { getInitialBetDetails } from "../actions/wsApi";
@@ -17,6 +17,7 @@ import WinnerModal from "../components/modal/winnerModal";
 import { getToken } from "../helpers/StringGenerator";
 import { useWebSocketContext } from '../context/webSocketContext';
 import Trend from '../components/trend'
+import ThreeManScore from '../components/threeManScore'
 import SchedulePopUp from "../components/modal/schedulePopUp";
 
 function Game() {
@@ -75,10 +76,10 @@ function Game() {
         try {
             if (!data)
                 data = selectedEvent;
-
+            const details = await getEventDetailsDB(data.eventId)
             const response = await getLatestFightV2(data);
             if (response) {
-                setData(response);
+                setData({ ...response, ...details });
                 getFightSchedules(response)
             }
         } catch (error) {
@@ -375,7 +376,8 @@ function Game() {
                             </div>
                         </div>
                     </div>}
-                    {!isJsonEmpty(data) && <Trend data={data.fightDetails} items={trends} />}
+                    {!isJsonEmpty(data) && data?.gameType == 4 && <ThreeManScore data={data}></ThreeManScore>}
+                    {!isJsonEmpty(data) && data?.gameType != 4 && <Trend data={data.fightDetails} items={trends} />}
                 </div>
             }
             {isLoaded && isJsonEmpty(data) && <React.Fragment>

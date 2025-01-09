@@ -2,7 +2,7 @@
 import axios from "axios";
 import { Agent } from "https";
 import { cookies } from "next/headers";
-import { isJsonEmpty } from "../lib/utils";
+import { isJsonEmpty, PHTimeOptions } from "../lib/utils";
 import { logout } from "./auth";
 import { map } from "zod";
 import { fetchData } from "@app/helpers/DB";
@@ -229,28 +229,20 @@ export async function getOpenOrClosedEventsV2() {
 
         const data = []
 
-        const options = {
-            timeZone: 'Asia/Manila',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true, // Use 12-hour format
-          };
+
 
         let events = response.data.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
-        events = events.filter(x => (new Date(x.eventDate)).toLocaleDateString() == (new Date()).toLocaleDateString(options))
-        console.log(response.data,(new Date()).toLocaleDateString(options))
+        events = events.filter(x => (new Date(x.eventDate)).toLocaleDateString() == (new Date()).toLocaleDateString(PHTimeOptions))
+
         for (let index = 0; index < events.length; index++) {
             const element = events[index];
+      
             const venue = await getVenueById(element.venueId)
             const eventStatus = await getEventStatusById(element.eventStatusCode)
             data.push({
                 event: element,
                 venue: venue,
-                eventStatus: eventStatus
+                eventStatus: eventStatus,
             })
         }
 
@@ -265,7 +257,11 @@ export async function getOpenOrClosedEventsV2() {
     }
 }
 
+export async function getEventDetailsDB(eventId) {
+    const eventDetails = (await fetchData('taya_events', { eventId: { $eq: parseInt(`${eventId}`) } }))[0]
+    return eventDetails
 
+}
 export async function getOpenOrClosedEvents() {
     const cookieStore = await cookies()
     var session = cookieStore.get('app_session');

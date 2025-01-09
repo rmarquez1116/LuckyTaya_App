@@ -36,23 +36,16 @@ function formatAccountNumber(str) {
   return str.replace(/(.{4})(?=.)/g, '$1-');
 }
 
-
-function getCurrentPHTime(){
-  const options = {
-    timeZone: 'Asia/Manila',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: true, // Use 12-hour clock (AM/PM)
-  };
-  
-  // Format the current date and time in Philippine Time
-  const dateInPHT = new Intl.DateTimeFormat('en-US', options).format(new Date());
-  return dateInPHT;
-}
+const PHTimeOptions = {
+  timeZone: 'Asia/Manila',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: true, // Use 12-hour format
+};
 
 
-export { getCurrentPHTime,isJsonEmpty, getStartOfWeek, calculateAge, formatAccountNumber }
+export { PHTimeOptions,isJsonEmpty, getStartOfWeek, calculateAge, formatAccountNumber }
