@@ -9,12 +9,16 @@ export async function POST(req) {
     const query = { "request.msgId": { $eq: request.request.originalMsgId } }
     const data = await fetchData('qr_transactions', query)
     const result = sha256withRSAverify(JSON.stringify(request.request), request.signature)
-    await saveData('taya_sp_request',request)
+    
+    if(request.request.trxState != 'SUCCESS'){
+        return new Response(JSON.stringify({ code: "200", message: `Transaction is ${request.request.trxState}`  }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    }
     if (!result)
         return new Response(JSON.stringify({ code: "401", message: "Unauthorized" }), { status: 401, headers: { 'Content-Type': 'application/json' } });
     if (!data) {
         return new Response(JSON.stringify({ code: "500", message: "Transaction Not found" }), { status: 200, headers: { 'Content-Type': 'application/json' } });
     } else {
+        await saveData('taya_sp_request',request)
         const newData = data[0];
         if (newData.response || newData.status == 'Completed') {
 
