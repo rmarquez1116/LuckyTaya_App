@@ -37,4 +37,22 @@ function formatAccountNumber(str) {
 }
 
 
-export { isJsonEmpty, getStartOfWeek, calculateAge, formatAccountNumber }
+function getCurrentPHTime(){
+  const options = {
+    timeZone: 'Asia/Manila',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true, // Use 12-hour clock (AM/PM)
+  };
+  
+  // Format the current date and time in Philippine Time
+  const dateInPHT = new Intl.DateTimeFormat('en-US', options).format(new Date());
+  return dateInPHT;
+}
+
+
+export { getCurrentPHTime,isJsonEmpty, getStartOfWeek, calculateAge, formatAccountNumber }
