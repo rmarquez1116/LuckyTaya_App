@@ -363,7 +363,6 @@ function Game() {
                     <br />
                     <br />
                     <br />
-                    {showTrend && !isJsonEmpty(data) && <Trend data={data.fightDetails} items={trends} />}
                     {!showTrend && <div className="max-w-md w-full">
                         <div className="grid grid-cols-2 grid-rows-1 gap-4">
                             <div onClick={() => openBetting(1)}>
@@ -376,6 +375,7 @@ function Game() {
                             </div>
                         </div>
                     </div>}
+                    {!isJsonEmpty(data) && <Trend data={data.fightDetails} items={trends} />}
                 </div>
             }
             {isLoaded && isJsonEmpty(data) && <React.Fragment>
