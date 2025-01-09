@@ -14,9 +14,9 @@ function SchedulePopUp({ data, onClose }) {
         }
         return ""
     }
-    const getWinnerDescription = (result)=>{
+    const getWinnerDescription = (fightDetails, result)=>{
         if(result){
-            return result.winSide == 1 ? "Pula Wins" : result.winSide == 0 ? "Asul Wins" : "Cancelled"
+            return result.winSide == 1 ? getMeronWalaName(fightDetails,1) : result.winSide == 0 ? getMeronWalaName(fightDetails,0) : "Cancelled"
         }
         return ""
     }
@@ -26,7 +26,7 @@ function SchedulePopUp({ data, onClose }) {
             fightNumber: item.fight.fightNum,
             player1: getMeronWalaName(item.fightDetails,1),
             player2: getMeronWalaName(item.fightDetails,0),
-            winner : getWinnerDescription(item.winnerResult)
+            winner : getWinnerDescription(item.fightDetails,item.winnerResult)
         }
 
     })
