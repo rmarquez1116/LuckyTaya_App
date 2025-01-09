@@ -10,7 +10,7 @@ function EventsModal({ data, onSelect }) {
                     <h1 className='text-xl'>Select Event</h1>
                     <div className='flex flex-col items-center gap-5 overflow-auto w-full'>
                         {data.map((item, index) => {
-                            return <EventDetails onSelect={onSelect} data={item} />
+                            return <EventDetails key={`event-${index}`} onSelect={onSelect} data={item} />
                         })}
 
                     </div>
