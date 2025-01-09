@@ -2,7 +2,7 @@
 import axios from "axios";
 import { Agent } from "https";
 import { cookies } from "next/headers";
-import { isJsonEmpty,getCurrentPHTime } from "../lib/utils";
+import { isJsonEmpty } from "../lib/utils";
 import { logout } from "./auth";
 import { map } from "zod";
 import { fetchData } from "@app/helpers/DB";
@@ -229,9 +229,20 @@ export async function getOpenOrClosedEventsV2() {
 
         const data = []
 
+        const options = {
+            timeZone: 'Asia/Manila',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true, // Use 12-hour format
+          };
+
         let events = response.data.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
-        console.log(events,(getCurrentPHTime()))
-        events = events.filter(x => (new Date(x.eventDate)).toLocaleDateString() == (getCurrentPHTime()).toLocaleDateString())
+        events = events.filter(x => (new Date(x.eventDate)).toLocaleDateString() == (new Date()).toLocaleDateString(options))
+        console.log(response.data,(new Date()).toLocaleDateString(options))
         for (let index = 0; index < events.length; index++) {
             const element = events[index];
             const venue = await getVenueById(element.venueId)
