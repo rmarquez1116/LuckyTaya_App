@@ -20,9 +20,9 @@ export const ProfileProvider = ({ children }) => {
     const session = await getProfile();
     setProfile(session)
 
-    if (session && session.status != 'APPROVED' && !pendingRoutes.includes(pathname)) {
-      router.replace('/profile')
-    }
+    // if (session && session.status != 'APPROVED' && !pendingRoutes.includes(pathname)) {
+    //   router.replace('/profile')
+    // }
   }
 
   useEffect(() => {

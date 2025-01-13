@@ -91,6 +91,7 @@ export async function getProfile() {
         user = user[0]
         user.token = session.token
         delete user.pin
+        user['status']   = "APPROVED";
         return user;
     }
     return null
