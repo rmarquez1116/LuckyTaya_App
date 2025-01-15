@@ -1,11 +1,9 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, useRef } from 'react';
-import { getSession } from '../actions/auth';
-import { usePathname, useRouter } from 'next/navigation';
-import Alert from '../components/alert';
+import { useRouter } from 'next/navigation';
 import { useProfileContext } from './profileContext';
-import { isJsonEmpty } from '@app/lib/utils';
+import Alert from '../components/alert';
 
 const WebSocketContext = createContext();
 
@@ -17,8 +15,6 @@ export const WebSocketProvider = ({ children }) => {
 
   const [isConnected, setIsConnected] = useState(false);
   const [messages, setMessages] = useState(null);
-  const [closeBet, setCloseBet] = useState(false);
-  const [token, setToken] = useState('')
   const [alert, setAlert] = useState({
     hasTimer: false,
     timeout: 3000,
@@ -26,23 +22,21 @@ export const WebSocketProvider = ({ children }) => {
     message: "testing",
     type: "success",
   });
+  const [token, setToken] = useState('');
+  const socketRef = useRef(null);
 
-  const socketRef = useRef(null); // Ref to persist the WebSocket across renders
   useEffect(() => {
-    if(profile){
-      setToken(profile.token)
+    if (profile) {
+      setToken(profile.token);
     }
-    return () => {
-      
-    }
-  }, [profile])
-  
+  }, [profile]);
+
   useEffect(() => {
-    if (!token) return; // Don't attempt to connect if profile is empty
+    if (!token) return; 
+
     const setupWebSocket = () => {
-      // Check if there's already a socket connection
       if (socketRef.current) {
-        socketRef.current.close(); // Close any existing connection
+        socketRef.current.close();
       }
 
       const serverUrl = `${process.env.NEXT_PUBLIC_WEB_SOCKET_URL}${token}`;
@@ -70,34 +64,43 @@ export const WebSocketProvider = ({ children }) => {
       socketRef.current = socket;
     };
 
-    // Setup WebSocket connection when profile is available
     setupWebSocket();
 
-    // Cleanup WebSocket connection when component unmounts or profile changes
     return () => {
       if (socketRef.current) {
         socketRef.current.close();
       }
     };
-  }, [token]); // Effect runs only when `profile` changes
-
-  const onCloseAlert = (hasTimer) => {
-    setAlert({
-      timeout: 3000,
-      isOpen: false,
-      type: '',
-      message: '',
-      hasTimer: false,
-    });
-    setCloseBet(true);
-  };
+  }, [token]);
 
   useEffect(() => {
-    // Process WebSocket messages and set alerts accordingly
-    try {
-      if (messages != null) {
-        const parseMessage = JSON.parse(messages);
-        switch (parseMessage.PacketType) {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        console.log('Tab Inactive')
+        if (socketRef.current) {
+          socketRef.current.close();
+        }
+      } else {
+        console.log('Tab Active')
+        if (token) {
+          setupWebSocket();
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [token]);
+
+  useEffect(() => {
+    if (messages != null) {
+      try {
+        const parsedMessage = JSON.parse(messages);
+
+        switch (parsedMessage.PacketType) {
           case 22:
             setAlert({
               hasTimer: true,
@@ -109,7 +112,7 @@ export const WebSocketProvider = ({ children }) => {
             break;
           case 73:
           case 75:
-            const message = JSON.parse(parseMessage.jsonPacket);
+            const message = JSON.parse(parsedMessage.jsonPacket);
             setAlert({
               hasTimer: false,
               timeout: message.Duration * 1000,
@@ -127,15 +130,26 @@ export const WebSocketProvider = ({ children }) => {
           default:
             break;
         }
-        setMessages(null)
+      } catch (error) {
+        console.error('Error processing WebSocket message', error);
       }
-    } catch (error) {
-      console.error('Error processing WebSocket message', error);
+
+      setMessages(null);
     }
-  }, [messages]); // Runs when new messages are received
+  }, [messages]);
+
+  const onCloseAlert = () => {
+    setAlert({
+      timeout: 3000,
+      isOpen: false,
+      type: '',
+      message: '',
+      hasTimer: false,
+    });
+  };
 
   return (
-    <WebSocketContext.Provider value={{ messages, socket: socketRef.current, closeBet }}>
+    <WebSocketContext.Provider value={{ messages, socket: socketRef.current }}>
       {alert.isOpen && (
         <Alert
           timeout={alert.timeout}
