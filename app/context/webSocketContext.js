@@ -30,39 +30,38 @@ export const WebSocketProvider = ({ children }) => {
       setToken(profile.token);
     }
   }, [profile]);
+  const setupWebSocket = () => {
+    if (socketRef.current) {
+      socketRef.current.close();
+    }
+
+    const serverUrl = `${process.env.NEXT_PUBLIC_WEB_SOCKET_URL}${token}`;
+    const socket = new WebSocket(serverUrl);
+
+    socket.onopen = () => {
+      setIsConnected(true);
+      console.log('WebSocket connected');
+    };
+
+    socket.onmessage = (event) => {
+      setMessages(event.data);
+    };
+
+    socket.onerror = (error) => {
+      setIsConnected(false);
+      console.error('WebSocket error', error);
+    };
+
+    socket.onclose = () => {
+      setIsConnected(false);
+      console.log('WebSocket connection closed');
+    };
+
+    socketRef.current = socket;
+  };
 
   useEffect(() => {
     if (!token) return; 
-
-    const setupWebSocket = () => {
-      if (socketRef.current) {
-        socketRef.current.close();
-      }
-
-      const serverUrl = `${process.env.NEXT_PUBLIC_WEB_SOCKET_URL}${token}`;
-      const socket = new WebSocket(serverUrl);
-
-      socket.onopen = () => {
-        setIsConnected(true);
-        console.log('WebSocket connected');
-      };
-
-      socket.onmessage = (event) => {
-        setMessages(event.data);
-      };
-
-      socket.onerror = (error) => {
-        setIsConnected(false);
-        console.error('WebSocket error', error);
-      };
-
-      socket.onclose = () => {
-        setIsConnected(false);
-        console.log('WebSocket connection closed');
-      };
-
-      socketRef.current = socket;
-    };
 
     setupWebSocket();
 
