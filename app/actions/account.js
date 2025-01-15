@@ -47,7 +47,7 @@ export async function register(prevState, formData) {
             ]
         }
         const existingPlayer = await fetchData('taya_user', query)
-        if (existingPlayer.length > 0) {
+        if (existingPlayer && existingPlayer.length > 0) {
             return {
                 errors: {
                     alert: ["Data already exists"],
@@ -79,6 +79,7 @@ export async function register(prevState, formData) {
             };
         }
     } catch (e) {
+        console.log(e,'helllo')
         const errorMessages = e.response.data.error
         var errorMesssagees = ''
         if (errorMessages) {
