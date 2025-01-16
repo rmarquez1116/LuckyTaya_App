@@ -358,11 +358,11 @@ export async function getLatestFight() {
             if (currentEvent > -1) {
                 eventId = events[currentEvent].event.eventId
                 if (events[currentEvent].webRtcStream)
-                    webRtc = events[currentEvent].webRtcStream
+                    webRtc = events[currentEvent].event.webRtcStream
             } else {
                 eventId = events[0].event.eventId;
                 if (events[0].webRtcStream)
-                    webRtc = events[0].webRtcStream
+                    webRtc = events[0].event.webRtcStream
             }
 
             var url = `${process.env.BASE_URL}/api/v1/SabongFight/ByEventId/${eventId}`
