@@ -364,7 +364,7 @@ function Game() {
                     <br />
                     <br />
                     <br />
-                    {!showTrend && <div className="max-w-md w-full">
+                    <div className="max-w-md w-full">
                         <div className="grid grid-cols-2 grid-rows-1 gap-4">
                             <div onClick={() => openBetting(1)}>
                                 <MeronWala player={getPlayer(1)} type={1} data={betDetails} />
@@ -375,7 +375,7 @@ function Game() {
                                 </div>
                             </div>
                         </div>
-                    </div>}
+                    </div>
                     {!isJsonEmpty(data) && data?.gameType == 4 && <ThreeManScore data={data}></ThreeManScore>}
                     {!isJsonEmpty(data) && data?.gameType != 4 && <Trend data={data.fightDetails} items={trends} />}
                 </div>

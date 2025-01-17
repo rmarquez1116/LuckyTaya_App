@@ -4,7 +4,7 @@ function Trend({ data, items }) {
     let previousWinner = -1;
     let columnIncrement = -1;
     let rowIncrement = -1;
-    const rows = 6;
+    const rows = 5;
     const cols = 10;
     const trendArray = Array.from({ length: rows }, () => Array(cols).fill(<div className="text-center"></div>));
     const player1 = data.find(x => x.side == 1)
@@ -36,7 +36,7 @@ function Trend({ data, items }) {
             break;
         try {
             trendArray[rowIncrement][columnIncrement] =
-                <div className={`${color} rounded-full h-6 w-6  text-center`}>
+                <div className={`${color} rounded-full h-5 w-6  text-center`}>
                     {element.fightNum}
                 </div>
         } catch (error) {
@@ -67,7 +67,7 @@ function Trend({ data, items }) {
                 </div>
             </div>
             <div className='border-2 mt-2 p-4 border-yellow-200 rounded-[20] w-full'>
-                <div className="grid grid-cols-10 grid-rows-6  h-[300]">
+                <div className="grid grid-cols-10 grid-rows-5  h-[300]">
                     {trendArray.map((row, rowIndex) => (
                         row.map((item, colIndex) => (
                             <div key={`trend-${rowIndex}-${colIndex}`} className="border  text-center flex justify-center items-center">

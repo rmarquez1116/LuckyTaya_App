@@ -39,7 +39,7 @@ function Calendar({ currentDate, schedule, onSelect }) {
     }
 
     function onSelectData(date, color) {
-        var fightDetail = [...data].reverse().find(x => (new Date(x.eventDate).toLocaleDateString() == date.toLocaleDateString()))
+        var fightDetail = [...data].reverse().filter(x => (new Date(x.eventDate).toLocaleDateString() == date.toLocaleDateString()))
         if (fightDetail) {
             fightDetail.color = color;
         }
