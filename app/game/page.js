@@ -19,9 +19,9 @@ import { useWebSocketContext } from '../context/webSocketContext';
 import Trend from '../components/trend'
 import ThreeManScore from '../components/threeManScore'
 import SchedulePopUp from "../components/modal/schedulePopUp";
-import { trendData } from '../context/trendData'
 import Tabs from '../components/tab'
 import Regla from '../components/regla'
+import axios from "axios";
 
 
 function Game() {
@@ -37,6 +37,7 @@ function Game() {
         s1o: 0
     })
 
+
     // const [isShowPin, setIsShowPin] = useState(false)
     const [isSchedulePopUpOpen, setIsSchedulePopUpOpen] = useState(false)
     const [schedules, setSchedules] = useState([])
@@ -51,6 +52,10 @@ function Game() {
         type: 1
     })
     const iframeRef = useRef(null);
+    const [feedConfig, setFeedConfig] = useState({
+        isShowFeed: false,
+        feedUrl: ""
+    })
 
     const reloadIframe = () => {
         // Get the iframe element and reload it by resetting its src
@@ -61,6 +66,22 @@ function Game() {
             iframe.src = src; // Reset the src to the original URL
         }
     };
+
+    const getFeedConfig = async () => {
+        try {
+            const response = await axios.get('/api/feed_config',)
+            const { data } = response;
+            const { details } = data
+            setFeedConfig({
+                isShowFeed: details.isShowFeed,
+                feedUrl: details.feedUrl
+            })
+            console.log(details, 'feed')
+        } catch (error) {
+
+            console.log(error, 'feed')
+        }
+    }
 
     useEffect(() => {
         if (closeBet) {
@@ -175,6 +196,9 @@ function Game() {
 
                         }
                         break;
+                    case 200:
+                        getFeedConfig();
+                        break;
                     default:
                         getData();
                         break;
@@ -208,7 +232,9 @@ function Game() {
         getData(data.event);
     }
     useEffect(() => {
+
         getEventLists();
+        getFeedConfig();
         return () => {
             setData(null)
             setIsLoaded(false);
@@ -325,7 +351,7 @@ function Game() {
                 <SchedulePopUp data={schedules} onClose={() => setIsSchedulePopUpOpen(false)} />
             }
 
-            {isLoaded && !isJsonEmpty(data) &&
+            {isLoaded && !isJsonEmpty(data) && !feedConfig.isShowFeed &&
                 <div className="flex overflow-auto flex-col items-center gap-3 justify-center align-center  p-6">
 
                     <div className="rounded-[20px] card max-w-md  bg-center  p-5 w-full"
@@ -403,13 +429,28 @@ function Game() {
                     }></Tabs>}
                 </div>
             }
-            {isLoaded && isJsonEmpty(data) && <React.Fragment>
+            {isLoaded && isJsonEmpty(data) && !feedConfig.feedUrl && <React.Fragment>
                 <div className="w-full flex  justify-center">
 
                     <div className="flex flex-col justify-center card max-w-sm p-6 m-10 bg-white rounded-3xl shadow">
 
                         <h1 className="text-3xl text-center">No event scheduled today.</h1>
                         <h1 className="text-l text-center">Please visit us again later or refresh the page to see if events are now available</h1>
+                    </div>
+                </div>
+            </React.Fragment>}
+
+            {feedConfig.feedUrl && feedConfig.isShowFeed && <React.Fragment>
+                <div className="flex overflow-auto flex-col items-center gap-3 justify-center align-center  p-6">
+
+                    <div className="max-w-md w-full h-[30vh]">
+                        <iframe className="relative h-full w-full z-0"
+                            src={feedConfig.feedUrl}
+                            title="YouTube video player"
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen>
+
+                        </iframe>
                     </div>
                 </div>
             </React.Fragment>}

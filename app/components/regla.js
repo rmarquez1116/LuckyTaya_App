@@ -44,7 +44,7 @@ const Regla = React.memo(({ data, items }) => {
        
         try {
             trendArray[rowIncrement][columnIncrement] =
-                <div className={`${color} rounded-full h-5 w-6  text-center`}>
+                <div className={`${color} rounded-full h-5 w-6  text-center m-auto`}>
                     {element.fightNum}
                 </div>
         } catch (error) {

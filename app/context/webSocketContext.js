@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useProfileContext } from './profileContext';
 import Alert from '../components/alert';
+import { isJsonEmpty } from '@app/lib/utils';
 
 const WebSocketContext = createContext();
 
@@ -26,13 +27,19 @@ export const WebSocketProvider = ({ children }) => {
   const socketRef = useRef(null);
 
   useEffect(() => {
-    if (profile) {
+    if (!isJsonEmpty(profile)) {
       setToken(profile.token);
     }
   }, [profile]);
+
   const setupWebSocket = () => {
+    // if (socketRef.current) {
+    //   socketRef.current.close();
+    // }
     if (socketRef.current) {
-      socketRef.current.close();
+      if (socketRef.current.readyState == WebSocket.OPEN) { 
+        return
+      }
     }
 
     const serverUrl = `${process.env.NEXT_PUBLIC_WEB_SOCKET_URL}${token}`;
@@ -55,35 +62,47 @@ export const WebSocketProvider = ({ children }) => {
     socket.onclose = () => {
       setIsConnected(false);
       console.log('WebSocket connection closed');
+      // setupWebSocket();
     };
 
     socketRef.current = socket;
+
+    // Ping every 30 seconds
+    const pingInterval = setInterval(() => {
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ message: "ping" }));
+      }
+    }, 10000);
+
+    return () => clearInterval(pingInterval);
   };
 
   useEffect(() => {
-    if (!token) return; 
-
+    if (!token) return;
     setupWebSocket();
 
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.close();
-      }
-    };
+    // return () => {
+    //   if (socketRef.current) {
+    //     socketRef.current.close();
+    //   }
+    // };
   }, [token]);
+
 
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
         console.log('Tab Inactive')
-        if (socketRef.current) {
-          socketRef.current.close();
-        }
+        // if (socketRef.current) {
+        //   socketRef.current.close();
+        // }
       } else {
         console.log('Tab Active')
         if (token) {
           setupWebSocket();
+
         }
+        setMessages(JSON.stringify({ "PacketType": 201, "SendDateTime": new Date(), "EventId": 0, "FightId": 0, "jsonPacket": "" }))
       }
     };
 

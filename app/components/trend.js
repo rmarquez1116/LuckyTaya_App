@@ -23,7 +23,7 @@ function Trend({ data, items }) {
 
         try {
             trendArray[rowIncrement][columnIncrement] =
-                <div className={`${color} rounded-full h-5 w-6  text-center`}>
+                <div className={`${color} rounded-full h-5 w-6  m-auto text-center`}>
                     {element.fightNum}
                 </div>
         } catch (error) {
