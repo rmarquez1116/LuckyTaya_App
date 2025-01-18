@@ -62,8 +62,8 @@ export const WebSocketProvider = ({ children }) => {
 
     socketRef.current = socket;
 
-     // Ping every 30 seconds
-     const pingInterval = setInterval(() => {
+    // Ping every 30 seconds
+    const pingInterval = setInterval(() => {
       if (socket.readyState === WebSocket.OPEN) {
         socket.send("ping");
       }
@@ -73,7 +73,7 @@ export const WebSocketProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (!token) return; 
+    if (!token) return;
     setupWebSocket();
 
     // return () => {
@@ -94,7 +94,9 @@ export const WebSocketProvider = ({ children }) => {
       } else {
         console.log('Tab Active')
         if (token) {
-          setupWebSocket();
+          if (socket.readyState != WebSocket.OPEN) {
+            setupWebSocket();
+          }
         }
       }
     };
