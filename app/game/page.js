@@ -6,7 +6,7 @@ import MeronWala from "../components/meronWala";
 import EventsModal from "../components/modal/eventsModal";
 import BetModal from '../components/modal/betModal'
 
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import BetConfirmation from "../components/modal/betConfirmation";
 import Loading from "../components/loading";
 import { getEventDetailsDB, getEventTrend, getFightDetailsByEventId, getLatestFightV2, getOpenOrClosedEventsV2, placeABet } from "../actions/fight";
@@ -19,6 +19,10 @@ import { useWebSocketContext } from '../context/webSocketContext';
 import Trend from '../components/trend'
 import ThreeManScore from '../components/threeManScore'
 import SchedulePopUp from "../components/modal/schedulePopUp";
+import { trendData } from '../context/trendData'
+import Tabs from '../components/tab'
+import Regla from '../components/regla'
+
 
 function Game() {
     const { socket, messages, closeBet } = useWebSocketContext();
@@ -46,6 +50,17 @@ function Game() {
         isOpen: false,
         type: 1
     })
+    const iframeRef = useRef(null);
+
+    const reloadIframe = () => {
+        // Get the iframe element and reload it by resetting its src
+        const iframe = iframeRef.current;
+        if (iframe) {
+            const src = iframe.src;
+            iframe.src = ''; // Temporarily set the src to empty
+            iframe.src = src; // Reset the src to the original URL
+        }
+    };
 
     useEffect(() => {
         if (closeBet) {
@@ -86,6 +101,7 @@ function Game() {
             console.error("Error fetching data:", error);
         } finally {
             setIsLoaded(true);
+            reloadIframe()
         }
     }
 
@@ -197,6 +213,7 @@ function Game() {
             setData(null)
             setIsLoaded(false);
         }
+
     }, [])
 
 
@@ -344,12 +361,13 @@ function Game() {
                     <div className="max-w-md w-full h-[30vh]">
 
                         <iframe className="relative h-full w-full z-0"
+                            ref={iframeRef}
                             // src="https://www.youtube.com/embed/4AbXp05VWoQ?si=zzaGMvrDOSoP9tBb?autoplay=1&cc_load_policy=1"
                             src={data.webRtc}
                             title="Lucky Taya" frameBorder="0"
                             allow="autoplay;encrypted-media;"
-                            referrerPolicy="strict-origin-when-cross-origin"
-                            allowFullScreen></iframe>
+                            allowFullScreen
+                        ></iframe>
                         <br />
                         <div className="grid grid-cols-5 grid-rows-1 gap-4">
                             <div className="col-span-2 card rounded-[10px] p-3  text-center">
@@ -377,7 +395,12 @@ function Game() {
                         </div>
                     </div>
                     {!isJsonEmpty(data) && data?.gameType == 4 && <ThreeManScore data={data}></ThreeManScore>}
-                    {!isJsonEmpty(data) && data?.gameType != 4 && <Trend data={data.fightDetails} items={trends} />}
+                    {!isJsonEmpty(data) && data?.gameType != 4 && <Tabs tabs={
+                        [
+                            { name: 'Trend', content: <Trend data={data.fightDetails} items={trends} /> },
+                            { name: 'Reglahan', content: <Regla data={data.fightDetails} items={trends} /> },
+                        ]
+                    }></Tabs>}
                 </div>
             }
             {isLoaded && isJsonEmpty(data) && <React.Fragment>

@@ -1,11 +1,15 @@
 import React from 'react'
 
-function Trend({ data, items }) {
+const Regla = React.memo(({ data, items }) => {
     let previousWinner = -1;
-    let columnIncrement = 0;
+    let columnIncrement = -1;
     let rowIncrement = -1;
+    let previousColumn = 0;
+    let isConsecutive = false;
     const rows = 5;
+    let maxRows = 5;
     const cols = 10;
+    let existRowCols = [];
     const trendArray = Array.from({ length: rows }, () => Array(cols).fill(<div className="text-center"></div>));
     const player1 = data.find(x => x.side == 1)
     const player2 = data.find(x => x.side == 0)
@@ -14,13 +18,30 @@ function Trend({ data, items }) {
         const element = items[index];
         const color = element.winSide == 1 ? "meronColor" : element.winSide == 0 ? "walaColor" : "cancelColor"
 
-        rowIncrement++;
-
-        if (rowIncrement >= rows) {
-            columnIncrement += 1;
-            rowIncrement = 0;
+        if (previousWinner != element.winSide && element.winSide < 3) {
+            previousWinner = element.winSide;
+            rowIncrement = 0
+            columnIncrement = previousColumn
+            previousColumn += 1;
+            maxRows = 5;
+        } else {
+            if (rowIncrement + 1 > maxRows - 1) {
+                columnIncrement += 1
+                rowIncrement = maxRows - 1
+            } else {
+                rowIncrement += 1
+                const findExist = existRowCols.findIndex(x => x == `${rowIncrement}|${columnIncrement}`);
+                if(findExist >= 0){
+                    maxRows = rowIncrement;
+                    columnIncrement +=1
+                    console.log(findExist,element.fightNum,'exists')
+                    rowIncrement -= 1;
+                }
+            }
         }
-
+        previousWinner = element.winSide < 3 ? element.winSide : previousWinner
+        existRowCols.push(`${rowIncrement}|${columnIncrement}`);
+       
         try {
             trendArray[rowIncrement][columnIncrement] =
                 <div className={`${color} rounded-full h-5 w-6  text-center`}>
@@ -30,6 +51,8 @@ function Trend({ data, items }) {
 
         }
     }
+
+
     return (
         <React.Fragment>
 
@@ -62,7 +85,7 @@ function Trend({ data, items }) {
                                     {row.map((item, colIndex) => (
                                         <td
                                             key={`cell-${rowIndex}-${colIndex}`}
-                                            className="border border-gray-300 text-center p-2  h-[40px] w-[40px]" // Set fixed width for each cell
+                                            className="border border-gray-300 text-center p-2 h-[40px] w-[40px]" // Set fixed width for each cell
                                         >
                                             {item}
                                         </td>
@@ -75,6 +98,6 @@ function Trend({ data, items }) {
             </div>
         </React.Fragment>
     )
-}
+})
 
-export default Trend
+export default Regla
