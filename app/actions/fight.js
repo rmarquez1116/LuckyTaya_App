@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { isJsonEmpty, PHTimeOptions } from "../lib/utils";
 import { logout } from "./auth";
 import { map } from "zod";
-import { fetchData, saveData } from "@app/helpers/DB";
+import { fetchData } from "@app/helpers/DB";
 
 export async function getFightSchedule() {
     const cookieStore = await cookies()
@@ -614,8 +614,6 @@ export async function placeABet(fightId, amount, side) {
             })
         })
         if (response.status == 200) {
-            
-            saveData('taya_bet_history', response.data)
             return response.data
         } else return null;
     } catch (error) {
