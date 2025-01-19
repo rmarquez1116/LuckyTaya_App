@@ -36,11 +36,11 @@ export const WebSocketProvider = ({ children }) => {
     // if (socketRef.current) {
     //   socketRef.current.close();
     // }
-    if (socketRef.current) {
-      if (socketRef.current.readyState == WebSocket.OPEN) { 
-        return
+      if (socketRef.current) {
+        if (socketRef.current.readyState == WebSocket.OPEN) { 
+          return
+        }
       }
-    }
 
     const serverUrl = `${process.env.NEXT_PUBLIC_WEB_SOCKET_URL}${token}`;
     const socket = new WebSocket(serverUrl);

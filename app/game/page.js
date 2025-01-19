@@ -429,7 +429,7 @@ function Game() {
                     }></Tabs>}
                 </div>
             }
-            {isLoaded && isJsonEmpty(data) && !feedConfig.feedUrl && <React.Fragment>
+            {isLoaded && isJsonEmpty(data) && (!feedConfig.isShowFeed  || !feedConfig.feedUrl) && <React.Fragment>
                 <div className="w-full flex  justify-center">
 
                     <div className="flex flex-col justify-center card max-w-sm p-6 m-10 bg-white rounded-3xl shadow">
