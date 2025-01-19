@@ -100,4 +100,6 @@ const Regla = React.memo(({ data, items }) => {
     )
 })
 
+Regla.displayName = 'Regla'
+
 export default Regla
