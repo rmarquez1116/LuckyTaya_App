@@ -7,6 +7,7 @@ function Calendar({ currentDate, schedule, onSelect }) {
     currentDate = new Date(currentDate);
     const [data, setData] = useState([])
     useEffect(() => {
+        // console.log(schedule)
         setData(schedule)
         return () => {
         }
@@ -38,7 +39,7 @@ function Calendar({ currentDate, schedule, onSelect }) {
     }
 
     function onSelectData(date, color) {
-        var fightDetail = [...data].reverse().find(x => (new Date(x.eventDate).toLocaleDateString() == date.toLocaleDateString()))
+        var fightDetail = [...data].reverse().filter(x => (new Date(x.eventDate).toLocaleDateString() == date.toLocaleDateString()))
         if (fightDetail) {
             fightDetail.color = color;
         }

@@ -3,12 +3,13 @@ import MainLayout from "../layout/mainLayout";
 import BalanceHeader from '../components/balanceHeader'
 import bg from '../../public/images/game-bg.png'
 import MeronWala from "../components/meronWala";
+import EventsModal from "../components/modal/eventsModal";
 import BetModal from '../components/modal/betModal'
 
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import BetConfirmation from "../components/modal/betConfirmation";
 import Loading from "../components/loading";
-import { getEventTrend, getFightDetailsByEventId, getLatestFight, placeABet } from "../actions/fight";
+import { getEventDetailsDB, getEventTrend, getFightDetailsByEventId, getLatestFightV2, getOpenOrClosedEventsV2, placeABet } from "../actions/fight";
 import { isJsonEmpty } from "../lib/utils";
 import Alert from "../components/alert";
 import { getInitialBetDetails } from "../actions/wsApi";
@@ -16,7 +17,12 @@ import WinnerModal from "../components/modal/winnerModal";
 import { getToken } from "../helpers/StringGenerator";
 import { useWebSocketContext } from '../context/webSocketContext';
 import Trend from '../components/trend'
+import ThreeManScore from '../components/threeManScore'
 import SchedulePopUp from "../components/modal/schedulePopUp";
+import Tabs from '../components/tab'
+import Regla from '../components/regla'
+import axios from "axios";
+
 
 function Game() {
     const { socket, messages, closeBet } = useWebSocketContext();
@@ -31,9 +37,13 @@ function Game() {
         s1o: 0
     })
 
+
     // const [isShowPin, setIsShowPin] = useState(false)
     const [isSchedulePopUpOpen, setIsSchedulePopUpOpen] = useState(false)
     const [schedules, setSchedules] = useState([])
+    const [eventList, setEventList] = useState([])
+    const [selectedEvent, setSelectedEvent] = useState(null)
+    const [isEventListOpen, setIsEventListOpen] = useState(false)
     const [isLoaded, setIsLoaded] = useState(false)
     const [data, setData] = useState(null)
     const [amountToBet, setAmountToBet] = useState({ type: 1, amount: 0 })
@@ -41,6 +51,37 @@ function Game() {
         isOpen: false,
         type: 1
     })
+    const iframeRef = useRef(null);
+    const [feedConfig, setFeedConfig] = useState({
+        isShowFeed: false,
+        feedUrl: ""
+    })
+
+    const reloadIframe = () => {
+        // Get the iframe element and reload it by resetting its src
+        const iframe = iframeRef.current;
+        if (iframe) {
+            const src = iframe.src;
+            iframe.src = ''; // Temporarily set the src to empty
+            iframe.src = src; // Reset the src to the original URL
+        }
+    };
+
+    const getFeedConfig = async () => {
+        try {
+            const response = await axios.get('/api/feed_config',)
+            const { data } = response;
+            const { details } = data
+            setFeedConfig({
+                isShowFeed: details.isShowFeed,
+                feedUrl: details.feedUrl
+            })
+            console.log(details, 'feed')
+        } catch (error) {
+
+            console.log(error, 'feed')
+        }
+    }
 
     useEffect(() => {
         if (closeBet) {
@@ -67,17 +108,21 @@ function Game() {
             setSchedules(result)
         }
     }
-    const getData = async () => {
+    const getData = async (data = null) => {
         try {
-            const response = await getLatestFight();
+            if (!data)
+                data = selectedEvent;
+            const details = await getEventDetailsDB(data.eventId)
+            const response = await getLatestFightV2(data);
             if (response) {
-                setData(response);
+                setData({ ...response, ...details });
                 getFightSchedules(response)
             }
         } catch (error) {
             console.error("Error fetching data:", error);
         } finally {
             setIsLoaded(true);
+            reloadIframe()
         }
     }
 
@@ -151,6 +196,9 @@ function Game() {
 
                         }
                         break;
+                    case 200:
+                        getFeedConfig();
+                        break;
                     default:
                         getData();
                         break;
@@ -162,14 +210,36 @@ function Game() {
         }
     }, [messages])
 
+    const getEventLists = async () => {
+        const result = await getOpenOrClosedEventsV2();
+        setEventList(result);
+        if (result) {
+            if (result.length > 1) {
+                setIsEventListOpen(true);
+            } else if (result.length == 1) {
+                setSelectedEvent(result[0].event)
+                setIsEventListOpen(false);
+                getData(result[0].event);
+            }
+        }
 
+        setIsLoaded(true);
+    }
+
+    const onSelectFromEventList = (data) => {
+        setSelectedEvent(data.event)
+        setIsEventListOpen(false);
+        getData(data.event);
+    }
     useEffect(() => {
 
-        getData();
+        getEventLists();
+        getFeedConfig();
         return () => {
             setData(null)
             setIsLoaded(false);
         }
+
     }, [])
 
 
@@ -269,6 +339,9 @@ function Game() {
             {isLoaded && <BalanceHeader type={2} forceUpdate={randomText}></BalanceHeader>}
             {isLoaded && alert.isOpen && <Alert timeout={alert.timeout} hasTimer={alert.hasTimer} onClose={onCloseAlert} title="Lucky Taya" message={alert.message} type={alert.type}></Alert>}
             {renderModals()}
+            {isEventListOpen &&
+                <EventsModal onSelect={onSelectFromEventList} data={eventList}></EventsModal>
+            }
             {isLoaded && bettingEndedResult.isOpen &&
                 !isJsonEmpty(data) &&
                 <WinnerModal onClose={onWinnerModalClose} winnerSide={bettingEndedResult.winnerSide} data={data.fightDetails}></WinnerModal>
@@ -278,8 +351,9 @@ function Game() {
                 <SchedulePopUp data={schedules} onClose={() => setIsSchedulePopUpOpen(false)} />
             }
 
-            {isLoaded && !isJsonEmpty(data) &&
-                <div className="flex overflow-auto flex-col items-center gap-5 justify-center align-center  p-6">
+            {isLoaded && !isJsonEmpty(data) && !feedConfig.isShowFeed &&
+                <div className="flex overflow-auto flex-col items-center gap-3 justify-center align-center  p-6">
+
                     <div className="rounded-[20px] card max-w-md  bg-center  p-5 w-full"
                         style={
                             {
@@ -304,16 +378,22 @@ function Game() {
                             </div>
                         </div>
                     </div>
-
+                    {eventList && eventList.length > 1 &&
+                        <label onClick={() => setIsEventListOpen(true)}
+                            className="text-right underline text-blue-600 hover:text-blue-800 visited:text-purple-600 cursor-pointer">
+                            See Other Events
+                        </label>
+                    }
                     <div className="max-w-md w-full h-[30vh]">
 
                         <iframe className="relative h-full w-full z-0"
+                            ref={iframeRef}
                             // src="https://www.youtube.com/embed/4AbXp05VWoQ?si=zzaGMvrDOSoP9tBb?autoplay=1&cc_load_policy=1"
                             src={data.webRtc}
                             title="Lucky Taya" frameBorder="0"
                             allow="autoplay;encrypted-media;"
-                            referrerPolicy="strict-origin-when-cross-origin"
-                            allowFullScreen></iframe>
+                            allowFullScreen
+                        ></iframe>
                         <br />
                         <div className="grid grid-cols-5 grid-rows-1 gap-4">
                             <div className="col-span-2 card rounded-[10px] p-3  text-center">
@@ -327,8 +407,8 @@ function Game() {
                     </div>
                     <br />
                     <br />
-                    {showTrend && !isJsonEmpty(data) && <Trend data={data.fightDetails} items={trends} />}
-                    {!showTrend && <div className="max-w-md w-full">
+                    <br />
+                    <div className="max-w-md w-full">
                         <div className="grid grid-cols-2 grid-rows-1 gap-4">
                             <div onClick={() => openBetting(1)}>
                                 <MeronWala player={getPlayer(1)} type={1} data={betDetails} />
@@ -339,15 +419,38 @@ function Game() {
                                 </div>
                             </div>
                         </div>
-                    </div>}
+                    </div>
+                    {!isJsonEmpty(data) && data?.gameType == 4 && <ThreeManScore data={data}></ThreeManScore>}
+                    {!isJsonEmpty(data) && data?.gameType != 4 && <Tabs tabs={
+                        [
+                            { name: 'Trend', content: <Trend data={data.fightDetails} items={trends} /> },
+                            { name: 'Reglahan', content: <Regla data={data.fightDetails} items={trends} /> },
+                        ]
+                    }></Tabs>}
                 </div>
             }
-            {isLoaded && isJsonEmpty(data) && <React.Fragment>
+            {isLoaded && isJsonEmpty(data) && (!feedConfig.isShowFeed  || !feedConfig.feedUrl) && <React.Fragment>
                 <div className="w-full flex  justify-center">
 
                     <div className="flex flex-col justify-center card max-w-sm p-6 m-10 bg-white rounded-3xl shadow">
 
                         <h1 className="text-3xl text-center">No event scheduled today.</h1>
+                        <h1 className="text-l text-center">Please visit us again later or refresh the page to see if events are now available</h1>
+                    </div>
+                </div>
+            </React.Fragment>}
+
+            {feedConfig.feedUrl && feedConfig.isShowFeed && <React.Fragment>
+                <div className="flex overflow-auto flex-col items-center gap-3 justify-center align-center  p-6">
+
+                    <div className="max-w-md w-full h-[30vh]">
+                        <iframe className="relative h-full w-full z-0"
+                            src={feedConfig.feedUrl}
+                            title="YouTube video player"
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen>
+
+                        </iframe>
                     </div>
                 </div>
             </React.Fragment>}

@@ -33,9 +33,14 @@ export const WebSocketProvider = ({ children }) => {
   }, [profile]);
 
   const setupWebSocket = () => {
-    if (socketRef.current) {
-      socketRef.current.close();
-    }
+    // if (socketRef.current) {
+    //   socketRef.current.close();
+    // }
+      if (socketRef.current) {
+        if (socketRef.current.readyState == WebSocket.OPEN) { 
+          return
+        }
+      }
 
     const serverUrl = `${process.env.NEXT_PUBLIC_WEB_SOCKET_URL}${token}`;
     const socket = new WebSocket(serverUrl);
@@ -65,7 +70,7 @@ export const WebSocketProvider = ({ children }) => {
     // Ping every 30 seconds
     const pingInterval = setInterval(() => {
       if (socket.readyState === WebSocket.OPEN) {
-        socket.send("ping");
+        socket.send(JSON.stringify({ message: "ping" }));
       }
     }, 10000);
 
@@ -94,10 +99,9 @@ export const WebSocketProvider = ({ children }) => {
       } else {
         console.log('Tab Active')
         if (token) {
-          if (socket.readyState != WebSocket.OPEN) {
-            setupWebSocket();
-          }
+          setupWebSocket();
         }
+        setMessages(JSON.stringify({ "PacketType": 201, "SendDateTime": new Date(), "EventId": 0, "FightId": 0, "jsonPacket": "" }))
       }
     };
 

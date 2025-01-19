@@ -36,5 +36,16 @@ function formatAccountNumber(str) {
   return str.replace(/(.{4})(?=.)/g, '$1-');
 }
 
+const PHTimeOptions = {
+  timeZone: 'Asia/Manila',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: true, // Use 12-hour format
+};
 
-export { isJsonEmpty, getStartOfWeek, calculateAge, formatAccountNumber }
+
+export { PHTimeOptions,isJsonEmpty, getStartOfWeek, calculateAge, formatAccountNumber }

@@ -3,34 +3,34 @@ import calendar from '../../../public/images/calendar.png'
 import clock from '../../../public/images/clock.png'
 import Image from 'next/image'
 import Tables from '../tables'
-function SchedulePopUp({ data, onClose }) {
+function SchedulePopUpV2({ data, events, onSelect, onClose }) {
 
-    const getMeronWalaName = (fightDetails,side) =>{
-        if(fightDetails){
-            const item =fightDetails.find(x=>x.side == side);
-            if(item){
+    const getMeronWalaName = (fightDetails, side) => {
+        if (fightDetails) {
+            const item = fightDetails.find(x => x.side == side);
+            if (item) {
                 return `${item.owner} ${item.breed}`
             }
         }
         return ""
     }
-    const getWinnerDescription = (fightDetails, result)=>{
-        if(result){
-            return result.winSide == 1 ? getMeronWalaName(fightDetails,1) : result.winSide == 0 ? getMeronWalaName(fightDetails,0) : "Cancelled"
+    const getWinnerDescription = (fightDetails, result) => {
+        if (result) {
+            return result.winSide == 1 ? getMeronWalaName(fightDetails, 1) : result.winSide == 0 ? getMeronWalaName(fightDetails, 0) : "Cancelled"
         }
         return ""
     }
     const tableFight = data.fights.map((item) => {
-        
+
         return {
             fightNumber: item.fight.fightNum,
-            player1: getMeronWalaName(item.fightDetails,1),
-            player2: getMeronWalaName(item.fightDetails,0),
-            winner : getWinnerDescription(item.fightDetails,item.winnerResult)
+            player1: getMeronWalaName(item.fightDetails, 1),
+            player2: getMeronWalaName(item.fightDetails, 0),
+            winner: getWinnerDescription(item.fightDetails, item.winnerResult)
         }
 
     })
-    
+
     const formatDisplayDate = (date) => {
         var newDate = new Date(date);
         return newDate.toDateString();
@@ -40,18 +40,35 @@ function SchedulePopUp({ data, onClose }) {
 
         return newDate.substring(0, newDate.length - 6) + " " + newDate.slice(8);
     }
+
+    const handleEventChange = (e) => {
+        onSelect(events[e.target.value]);
+    };
     return (
         <div className='z-10 absolute flex justify-center items-center flex w-full overflow-hidden backdrop-blur'>
             <div className="flex overflow-auto flex-col items-center  w-full max-w-sm card gap-3 p-6 bg-white rounded-3xl shadow">
                 <div className="grid grid-cols-7 w-full grid-rows-1 gap-4  p-3  ">
                     <div className='flex justify-start font-black  cursor-pointer' onClick={onClose}>&lt;</div>
                     <div className="col-span-5">
-                        <div>
+                        <select
+                            onChange={handleEventChange}
+                            name="event"
+                            className="peer rounded-xlg p-2 text-[20px] bg-semiBlack shadow-sm font-sans font-light tacking-[5%] text-white invalid:border-red-500 invalid:[&.visited]:border invalid:[&.visited]:border-[#E74C3C]"
+                        >
+                            {events.map((item, index) => {
+                                return (
+                                    <option key={`option-${index}`} value={index}> {item.eventName}
+                                    </option>
+                                );
+                            })}
+                        </select>
+
+                        {/* <div>
                             <label className='label-header1'>{data.event.eventName}</label>
                         </div>
                         <div>
                             <label className='label-header1'>{data.venue.venueName}</label>
-                        </div>
+                        </div> */}
                     </div>
                     <div className='flex justify-end text-red text-[20px] font-black cursor-pointer label-header1' onClick={onClose}>X</div>
 
@@ -88,4 +105,4 @@ function SchedulePopUp({ data, onClose }) {
 }
 
 
-export default SchedulePopUp
+export default SchedulePopUpV2

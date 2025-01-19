@@ -4,10 +4,10 @@ import Legends from '../components/legends';
 import CenterLabel from '../components/centerLabel';
 import Calendar from '../components/calendar';
 import React, { useEffect, useState } from "react";
-import { getFightDetailsByEventId,  getVenueById } from "../actions/fight";
+import { getFightDetailsByEventId, getVenueById } from "../actions/fight";
 import { dataFilterByCurrentMonth } from "../lib/DataFilter";
 import { isJsonEmpty } from "../lib/utils";
-import SchedulePopUp from "../components/modal/schedulePopUp";
+import SchedulePopUpV2 from "../components/modal/schedulePopUpV2";
 import Loading from "../components/loading";
 import BalanceHeader from "../components/balanceHeader";
 export default function ScheduleComponent({ currDate, data }) {
@@ -17,24 +17,43 @@ export default function ScheduleComponent({ currDate, data }) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [currentDate, setCurrentDate] = useState(currDate)
+  const [events, setEvents] = useState([])
+  const onSelect = async (items) => {
+    setEvents(items);
+    if (items.length > 0) {
+      const details = await getDetails(items[0])
+      setSelectedEvent(details)
+    }
+  }
 
-  const onSelect = async (item) => {
-    if (item) {
-      setIsLoading(true)
-      const response = await getFightDetailsByEventId(item.eventId)
-      if (response) {
-        setIsSchedulePopUpOpen(true)
-        const venue = await getVenueById(item.venueId)
-        const result = {
-          event: item,
-          venue,
-          fights: response
-        }
-        setFightDetails(result)
+  const onEventSelect = async(item)=>{
+    const details = await getDetails(item)
+    setSelectedEvent(details)
+  }
+
+  const getDetails = async (item) => {
+    setIsLoading(true)
+    const response = await getFightDetailsByEventId(item.eventId)
+    if (response) {
+      setIsSchedulePopUpOpen(true)
+      const venue = await getVenueById(item.venueId)
+      const result = {
+        event: item,
+        venue,
+        fights: response
       }
+      setFightDetails(result)
     }
     setIsLoading(false)
   }
+
+  useEffect(() => {
+
+    console.log(filteredData, 'hell000')
+    return () => {
+
+    }
+  }, [filteredData])
 
   useEffect(() => {
     const result = dataFilterByCurrentMonth(currentDate, data, 'eventDate')
@@ -51,7 +70,7 @@ export default function ScheduleComponent({ currDate, data }) {
       <BalanceHeader type={1} ></BalanceHeader>
 
       {isSchedulePopUpOpen && !isJsonEmpty(fightDetails) &&
-        <SchedulePopUp data={fightDetails} onClose={() => setIsSchedulePopUpOpen(false)} />
+        <SchedulePopUpV2 onSelect={onEventSelect} events={events} data={fightDetails} onClose={() => setIsSchedulePopUpOpen(false)} />
       }
 
       <div className="w-full min-h-full p-8 pb-20 font-[family-name:var(--font-geist-sans)] flex flex-col items-center">
