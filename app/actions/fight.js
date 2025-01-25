@@ -546,7 +546,6 @@ export async function getLatestFightV2(event) {
                 for (let index = 0; index < data.length; index++) {
                     const element = data[index];
                     if (element.fightStatusCode == 11) {
-                        if(hasCancelled) break;
                         selectedIndex = index
                         break;
                     }else if (element.fightStatusCode == 21) {
@@ -554,6 +553,7 @@ export async function getLatestFightV2(event) {
                         hasCancelled = true
                         continue;
                     } else if (element.fightStatusCode == 10) {
+                        if(hasCancelled) break;
                         selectedIndex = index;
                         break;
                     }
