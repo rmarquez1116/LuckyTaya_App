@@ -537,21 +537,25 @@ export async function getLatestFightV2(event) {
         }
         if (response.status == 200) {
             var data;
+            
             if (response.data instanceof Array) {
                 // data = [...response.data].reverse();
                 data = response.data;
                 var selectedIndex = -1
+                var hasCancelled = false;
                 for (let index = 0; index < data.length; index++) {
                     const element = data[index];
                     if (element.fightStatusCode == 11) {
+                        if(hasCancelled) break;
                         selectedIndex = index
-                        break;
-                    } else if (element.fightStatusCode == 10) {
-                        selectedIndex = index;
                         break;
                     }else if (element.fightStatusCode == 21) {
                         selectedIndex = index;
+                        hasCancelled = true
                         continue;
+                    } else if (element.fightStatusCode == 10) {
+                        selectedIndex = index;
+                        break;
                     }
 
                 }
