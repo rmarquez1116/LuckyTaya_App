@@ -556,7 +556,13 @@ export async function getLatestFightV2(event) {
                         selectedIndex = index;
                         hasCancelled = true
                         continue;
-                    } else if (element.fightStatusCode == 10) {
+                    }
+                    else if (element.fightStatusCode == 22) {
+                        selectedIndex = index;
+                        
+                        break;
+                    }
+                     else if (element.fightStatusCode == 10) {
                         if(hasCancelled) break;
                         selectedIndex = index;
                         break;
