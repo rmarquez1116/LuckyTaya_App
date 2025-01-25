@@ -541,6 +541,7 @@ export async function getLatestFightV2(event) {
                 // data = [...response.data].reverse();
                 data = response.data;
                 var selectedIndex = -1
+                var hasCancelled = false;
                 for (let index = 0; index < data.length; index++) {
                     const element = data[index];
                     if (element.fightStatusCode == 11) {
