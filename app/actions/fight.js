@@ -551,7 +551,7 @@ export async function getLatestFightV2(event) {
                         break;
                     }else if (element.fightStatusCode == 21) {
                         selectedIndex = index;
-                        break;
+                        continue;
                     }
 
                 }
