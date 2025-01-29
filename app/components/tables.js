@@ -71,7 +71,13 @@ const Tables = ({ headers, items, primaryId, isCentered = false }) => {
 
         if (h.concatKey) {
             h.concatKey.forEach((concateKeyIndex) => {
-                value = `${value}${h.concatSeparator}${item[concateKeyIndex]}`
+                if (item[concateKeyIndex]) {
+                    if (concateKeyIndex == "reason") {
+                        value = `${value}\n${item[concateKeyIndex]}`
+                    } else {
+                        value = `${value}${h.concatSeparator}${item[concateKeyIndex]}`
+                    }
+                }
             })
         }
 
@@ -83,8 +89,8 @@ const Tables = ({ headers, items, primaryId, isCentered = false }) => {
             showFormatCustom = h.customValue(item)
         }
 
-        return <td key={`row-key-${h.key}-${i}`} className={className} style={{whiteSpace:'pre'}}>{showFormatCustom ?? value}</td>
- 
+        return <td key={`row-key-${h.key}-${i}`} className={className} style={{ whiteSpace: 'pre' }}>{showFormatCustom ?? value}</td>
+
     }
 
     return (
