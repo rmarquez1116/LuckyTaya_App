@@ -232,7 +232,7 @@ export async function getOpenOrClosedEventsV2() {
 
 
         let events = response.data.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
-        //events = events.filter(x => (new Date(x.eventDate)).toLocaleDateString() == (new Date()).toLocaleDateString(PHTimeOptions))
+        events = events.filter(x => (new Date(x.eventDate)).toLocaleDateString() == (new Date()).toLocaleDateString(PHTimeOptions))
 
         for (let index = 0; index < events.length; index++) {
             const element = events[index];
