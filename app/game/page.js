@@ -232,7 +232,7 @@ function Game() {
         getData(data.event);
     }
     useEffect(() => {
-
+        getData();
         getEventLists();
         getFeedConfig();
         return () => {
