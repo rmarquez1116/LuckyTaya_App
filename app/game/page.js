@@ -211,8 +211,10 @@ function Game() {
     }, [messages])
 
     const getEventLists = async () => {
+        console.log('here2')
         const result = await getOpenOrClosedEventsV2();
         setEventList(result);
+        console.log('here3', result)
         if (result) {
             if (result.length > 1) {
                 setIsEventListOpen(true);
@@ -233,8 +235,14 @@ function Game() {
     }
     useEffect(() => {
 
-        getEventLists();
-        getFeedConfig();
+        console.log('here')
+        try {
+
+            getEventLists();
+            getFeedConfig();
+        } catch (error) {
+            console.log('here5', error.message)
+        }
         return () => {
             setData(null)
             setIsLoaded(false);
