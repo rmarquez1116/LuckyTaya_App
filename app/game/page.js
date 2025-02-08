@@ -236,7 +236,7 @@ function Game() {
         getEventLists();
         getFeedConfig();
         return () => {
-            setData(null)
+            // setData(null)
             setIsLoaded(false);
         }
 
