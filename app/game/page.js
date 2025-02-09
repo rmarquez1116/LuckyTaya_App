@@ -231,7 +231,6 @@ function Game() {
     const getEventLists = async () => {
         const result = await getOpenOrClosedEventsV2();
         setEventList(result);
-        console.log('here3', result)
         if (result) {
             if (result.length > 1) {
                 setIsEventListOpen(true);

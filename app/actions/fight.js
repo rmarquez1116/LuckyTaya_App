@@ -507,6 +507,10 @@ export async function getLatestFightV2(event) {
     const cookieStore = await cookies()
     let webRtc = process.env.NEXT_PUBLIC_WEB_RTC_URL;
     var session = cookieStore.get('app_session');
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
+    currentDate.setDate(currentDate.getDate() + 1); // Add 1 day difference
+
     if (!session) {
         return redirect('/login')
     }
@@ -586,13 +590,8 @@ export async function getLatestFightV2(event) {
                 // if (fightStatusCode == 10 || fightStatusCode == 11) {
                 const fightDetails = await getFightDetailsByFightId(fightId)
                 if (!isJsonEmpty(fightDetails)) {
-                    const eventDate = new Date(fightDetails.event.eventDate);
-                    const currentDate = new Date();
-                    // Normalize the dates by setting their time to midnight
+                    const eventDate = new Date(fightDetails.event.eventDate); 
                     eventDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
-                    currentDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
-                    currentDate.setDate(currentDate.getDate() + 1); // Add 1 day difference
-
                     const config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
 
                     if (config.environment == 'develop' || eventDate.getTime() < currentDate.getTime()) {
