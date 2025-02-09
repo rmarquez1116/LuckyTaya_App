@@ -47,5 +47,10 @@ const PHTimeOptions = {
   hour12: true, // Use 12-hour format
 };
 
+const dateToLocalTime = (date)=>{
+  const newDate = new Date(date).toLocaleDateString(PHTimeOptions);
+  return new Date(newDate);
+}
 
-export { PHTimeOptions,isJsonEmpty, getStartOfWeek, calculateAge, formatAccountNumber }
+
+export {dateToLocalTime, PHTimeOptions,isJsonEmpty, getStartOfWeek, calculateAge, formatAccountNumber }

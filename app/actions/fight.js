@@ -2,7 +2,7 @@
 import axios from "axios";
 import { Agent } from "https";
 import { cookies } from "next/headers";
-import { isJsonEmpty, PHTimeOptions } from "../lib/utils";
+import { dateToLocalTime, isJsonEmpty, PHTimeOptions } from "../lib/utils";
 import { logout } from "./auth";
 import { map } from "zod";
 import { fetchData } from "@app/helpers/DB";
@@ -232,11 +232,11 @@ export async function getOpenOrClosedEventsV2() {
 
 
         let events = response.data.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
-         let currentDate = new Date();
+         let currentDate = dateToLocalTime(new Date().toDateString());
 
         // Add days (e.g., add 5 days)
         currentDate.setDate(currentDate.getDate() + 1);
-        events = events.filter(x => (new Date(x.eventDate)).getTime() < currentDate.getTime())
+        events = events.filter(x => (dateToLocalTime(x.eventDate)).getTime() < currentDate.getTime())
 
         for (let index = 0; index < events.length; index++) {
             const element = events[index];
@@ -507,7 +507,8 @@ export async function getLatestFightV2(event) {
     const cookieStore = await cookies()
     let webRtc = process.env.NEXT_PUBLIC_WEB_RTC_URL;
     var session = cookieStore.get('app_session');
-    const currentDate = new Date();
+    const currentDate = dateToLocalTime((new Date()).toDateString());
+
     currentDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
     currentDate.setDate(currentDate.getDate() + 1); // Add 1 day difference
 
@@ -590,7 +591,7 @@ export async function getLatestFightV2(event) {
                 // if (fightStatusCode == 10 || fightStatusCode == 11) {
                 const fightDetails = await getFightDetailsByFightId(fightId)
                 if (!isJsonEmpty(fightDetails)) {
-                    const eventDate = new Date(fightDetails.event.eventDate); 
+                    const eventDate = dateToLocalTime(fightDetails.event.eventDate); 
                     eventDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
                     const config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
 
