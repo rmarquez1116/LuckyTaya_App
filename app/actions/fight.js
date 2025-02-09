@@ -232,11 +232,11 @@ export async function getOpenOrClosedEventsV2() {
 
 
         let events = response.data.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
-         let currentDate = dateToLocalTime(new Date().toDateString());
-
-        // Add days (e.g., add 5 days)
-        currentDate.setDate(currentDate.getDate() + 1);
-        events = events.filter(x => (dateToLocalTime(x.eventDate)).getTime() < currentDate.getTime())
+         let currentDate = new Date();
+         // Add days (e.g., add 5 days)
+         currentDate.setDate(currentDate.getDate() + 1);
+         console.log(currentDate,'CURRENT DATE ------')
+        events = events.filter(x => (new Date(x.eventDate)).getTime() < currentDate.getTime())
 
         for (let index = 0; index < events.length; index++) {
             const element = events[index];
