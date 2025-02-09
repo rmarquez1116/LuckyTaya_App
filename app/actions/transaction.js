@@ -3,6 +3,7 @@ import axios from "axios";
 import { Agent } from "https";
 import { cookies } from "next/headers";
 import { fetchData } from "../helpers/DB";
+import { getFightDetailsByFightId } from "./fight";
 
 export async function getTransactionsByDate({ dateFrom, dateTo, isBettingHistory }) {
 
@@ -66,17 +67,12 @@ async function processTransaction(serverData, dateFrom, dateTo, accountNumber, i
 
     // const dbData = await fetchData('qr_transactions', query)
     const processedDataFromDB = []
-    // if (!isBettingHistory)
-    //     for (let index = 0; index < dbData.length; index++) {
-    //         const element = dbData[index];
-    //         if (element.masterToFee)
-    //             processedDataFromDB.push({ ...element.masterToFee, transactionType: "Fee", transCategoryDesc: "Out" })
-    //         if (element.masterToPlayer)
-    //             processedDataFromDB.push({ ...element.masterToPlayer, transactionType: "Transfer", transCategoryDesc: "In" })
-    //         if (element.agentToAgentPlayer)
-    //             processedDataFromDB.push({ ...element.agentToAgentPlayer, transactionType: "Transfer", transCategoryDesc: "In" })
-    //         if (element.agentToFee)
-    //             processedDataFromDB.push({ ...element.agentToFee, transactionType: "Fee", transCategoryDesc: "Out" })
+    // if (isBettingHistory)
+    //     for (let index = 0; index < serverData.length; index++) {
+    //         const element = serverData[index];
+    //         const eventFightDetails = await getFightDetailsByFightId(element.fightId)
+    //         serverData[index].fightNum = eventFightDetails.fight.fightNum;
+    //         serverData[index].eventName = eventFightDetails.event.eventName;
     //     }
 
     if (isBettingHistory)
@@ -100,16 +96,21 @@ async function processTransaction(serverData, dateFrom, dateTo, accountNumber, i
         }
     })
     // if (isBettingHistory)
-        for (const element of mergedArray) {
-            const details = await fetchData("taya_games", { fightId: { $eq: element.fightId } })
-            element.eventName = '';
-            element.reason = '';
-            if (details) {
-                const detail = details[0];
-                element.reason = detail?.reason;
-                element.eventName = detail?.event?.eventName
-            }
+    for (const element of mergedArray) {
+        const details = await fetchData("taya_games", { fightId: { $eq: element.fightId } })
+        element.eventName = '';
+        element.reason = '';
+        if (details) {
+            const detail = details[0];
+            element.reason = detail?.reason;
+            element.eventName = detail?.event?.eventName
         }
+        if (element.fightId) {
+            const eventFightDetails = await getFightDetailsByFightId(element.fightId)
+            element.fightNum = eventFightDetails.fight.fightNum;
+            element.eventName = eventFightDetails.event.eventName;
+        }
+    }
     return mergedArray
 }
 

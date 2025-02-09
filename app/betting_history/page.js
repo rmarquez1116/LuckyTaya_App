@@ -92,6 +92,15 @@ export default function BettingHistory() {
                 }, {
                   key: 'transactionNumber',
                   label: 'Transaction Id'
+                }, 
+                {
+                  key: '',
+                  label: 'Event',
+                  customValue: (val) =>
+                    <div>
+                      {val.eventName}<br />
+                      Fight No: {val.fightNum}
+                    </div>
                 },
                 {
                   key: '',
