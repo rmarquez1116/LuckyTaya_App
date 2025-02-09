@@ -587,11 +587,11 @@ export async function getLatestFightV2(event) {
                     // Normalize the dates by setting their time to midnight
                     eventDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
                     currentDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
-                    currentDate.setHours(currentDate.getHours() + 3); // Add 3 hours to the current date
+                    currentDate.setDate(currentDate.getDate() + 1); // Add 1 day difference
 
                     const config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
 
-                    if (config.environment == 'develop' || eventDate.getTime() <= currentDate.getTime()) {
+                    if (config.environment == 'develop' || eventDate.getTime() < currentDate.getTime()) {
                         return { ...fightDetails, fight: data, fightStatus: statusDesc, webRtc }
                     } else {
                         return null;
