@@ -535,8 +535,10 @@ export async function getLatestFightV2(event) {
                 })
             })
         }
+
         if (response.status == 200) {
             var data;
+            
             if (response.data instanceof Array) {
                 // data = [...response.data].reverse();
                 data = response.data;
@@ -585,9 +587,11 @@ export async function getLatestFightV2(event) {
                     // Normalize the dates by setting their time to midnight
                     eventDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
                     currentDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
+                    currentDate.setHours(currentDate.getHours() + 3); // Add 3 hours to the current date
+
                     const config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
 
-                    if (config.environment == 'develop' || eventDate.getTime() === currentDate.getTime()) {
+                    if (config.environment == 'develop' || eventDate.getTime() <= currentDate.getTime()) {
                         return { ...fightDetails, fight: data, fightStatus: statusDesc, webRtc }
                     } else {
                         return null;

@@ -99,7 +99,17 @@ async function processTransaction(serverData, dateFrom, dateTo, accountNumber, i
             toFullName: `${e.toFirstname} ${e.toLastname}`
         }
     })
-
+    // if (isBettingHistory)
+        for (const element of mergedArray) {
+            const details = await fetchData("taya_games", { fightId: { $eq: element.fightId } })
+            element.eventName = '';
+            element.reason = '';
+            if (details) {
+                const detail = details[0];
+                element.reason = detail?.reason;
+                element.eventName = detail?.event?.eventName
+            }
+        }
     return mergedArray
 }
 

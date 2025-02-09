@@ -121,10 +121,10 @@ export default function BettingHistory() {
                   }
                 }, {
                   key: 'transactionDesc',
-                  concatKey: ['transCategoryDesc'],
+                  concatKey: ['transCategoryDesc','reason'],
                   concatSeparator: ' ',
                   label: 'Type'
-                },
+                }, 
               ]}
               items={transactionList}
               isCentered={true}
