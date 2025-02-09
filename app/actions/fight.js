@@ -232,10 +232,9 @@ export async function getOpenOrClosedEventsV2() {
 
 
         let events = response.data.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
-         let currentDate = new Date();
-         // Add days (e.g., add 5 days)
-         currentDate.setDate(currentDate.getDate() + 1);
-         console.log(currentDate,'CURRENT DATE ------')
+        let currentDate = new Date();
+        // Add days (e.g., add 5 days)
+        currentDate.setDate(currentDate.getDate() + 1);
         events = events.filter(x => (new Date(x.eventDate)).getTime() < currentDate.getTime())
 
         for (let index = 0; index < events.length; index++) {
@@ -507,11 +506,12 @@ export async function getLatestFightV2(event) {
     const cookieStore = await cookies()
     let webRtc = process.env.NEXT_PUBLIC_WEB_RTC_URL;
     var session = cookieStore.get('app_session');
-    const currentDate = dateToLocalTime((new Date()).toDateString());
+    const currentDate = (new Date());
 
     currentDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
     currentDate.setDate(currentDate.getDate() + 1); // Add 1 day difference
 
+    console.log(currentDate, 'CURRENT DATE ------')
     if (!session) {
         return redirect('/login')
     }
@@ -591,8 +591,12 @@ export async function getLatestFightV2(event) {
                 // if (fightStatusCode == 10 || fightStatusCode == 11) {
                 const fightDetails = await getFightDetailsByFightId(fightId)
                 if (!isJsonEmpty(fightDetails)) {
-                    const eventDate = dateToLocalTime(fightDetails.event.eventDate); 
-                    eventDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
+                    const eventDate = dateToLocalTime(fightDetails.event.eventDate);
+
+
+                    // eventDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
+
+                    console.log(eventDate, '1CURRENT DATE ------')
                     const config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
 
                     if (config.environment == 'develop' || eventDate.getTime() < currentDate.getTime()) {
