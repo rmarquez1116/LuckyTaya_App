@@ -2,7 +2,7 @@
 import axios from "axios";
 import { Agent } from "https";
 import { cookies } from "next/headers";
-import { isJsonEmpty, PHTimeOptions } from "../lib/utils";
+import { dateToLocalTime, isJsonEmpty, PHTimeOptions } from "../lib/utils";
 import { logout } from "./auth";
 import { map } from "zod";
 import { fetchData } from "@app/helpers/DB";
@@ -232,7 +232,10 @@ export async function getOpenOrClosedEventsV2() {
 
 
         let events = response.data.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
-        events = events.filter(x => (new Date(x.eventDate)).toLocaleDateString() == (new Date()).toLocaleDateString(PHTimeOptions))
+        let currentDate = new Date();
+        // Add days (e.g., add 5 days)
+        currentDate.setDate(currentDate.getDate() + 1);
+        events = events.filter(x => (new Date(x.eventDate)).getTime() < currentDate.getTime())
 
         for (let index = 0; index < events.length; index++) {
             const element = events[index];
@@ -475,9 +478,8 @@ export async function getLatestFight() {
                 if (!isJsonEmpty(fightDetails)) {
                     const eventDate = new Date(fightDetails.event.eventDate);
                     const currentDate = new Date();
-                    // Normalize the dates by setting their time to midnight
-                    eventDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
-                    currentDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
+                    eventDate.setHours(0, 0, 0, 0);
+                    currentDate.setHours(0, 0, 0, 0); 
                     const config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
 
                     if (config.environment == 'develop' || eventDate.getTime() === currentDate.getTime()) {
@@ -503,6 +505,13 @@ export async function getLatestFightV2(event) {
     const cookieStore = await cookies()
     let webRtc = process.env.NEXT_PUBLIC_WEB_RTC_URL;
     var session = cookieStore.get('app_session');
+    const currentDate = (new Date());
+
+    currentDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
+    //add buffer
+    currentDate.setHours(currentDate.getHours() + 3); 
+    currentDate.setDate(currentDate.getDate() + 1);  
+                   
     if (!session) {
         return redirect('/login')
     }
@@ -576,21 +585,13 @@ export async function getLatestFightV2(event) {
             }
             else data = response.data
             if (data) {
-
                 const { fightId, eventId, fightStatusCode } = data
                 var statusDesc = await getFightStatus(fightStatusCode);
                 // if (fightStatusCode == 10 || fightStatusCode == 11) {
                 const fightDetails = await getFightDetailsByFightId(fightId)
                 if (!isJsonEmpty(fightDetails)) {
-                    const eventDate = new Date(fightDetails.event.eventDate);
-                    const currentDate = new Date();
-                    // Normalize the dates by setting their time to midnight
-                    eventDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
-                    currentDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
-                    currentDate.setDate(currentDate.getDate() + 1); // Add 1 day difference
-
+                    const eventDate = dateToLocalTime(fightDetails.event.eventDate);
                     const config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
-
                     if (config.environment == 'develop' || eventDate.getTime() < currentDate.getTime()) {
                         return { ...fightDetails, fight: data, fightStatus: statusDesc, webRtc }
                     } else {

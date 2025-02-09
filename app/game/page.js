@@ -251,8 +251,14 @@ function Game() {
     }
     useEffect(() => {
 
-        getEventLists();
-        getFeedConfig();
+        console.log('here')
+        try {
+
+            getEventLists();
+            getFeedConfig();
+        } catch (error) {
+            console.log('here5', error.message)
+        }
         return () => {
             setData(null)
             setIsLoaded(false);
