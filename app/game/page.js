@@ -76,7 +76,6 @@ function Game() {
                 isShowFeed: details.isShowFeed,
                 feedUrl: details.feedUrl
             })
-            console.log(details, 'feed')
         } catch (error) {
 
             console.log(error, 'feed')
