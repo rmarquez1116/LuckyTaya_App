@@ -509,9 +509,11 @@ export async function getLatestFightV2(event) {
     const currentDate = (new Date());
 
     currentDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
-    currentDate.setDate(currentDate.getDate() + 1); // Add 1 day difference
-
-    console.log(currentDate, 'CURRENT DATE ------')
+    //add buffer
+    currentDate.setHours(currentDate.getHours() + 3); 
+    currentDate.setDate(currentDate.getDate() + 1);  
+    console.log(currentDate, '1CURRENT DATE ------')
+                   
     if (!session) {
         return redirect('/login')
     }
