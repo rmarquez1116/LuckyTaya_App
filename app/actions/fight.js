@@ -236,7 +236,7 @@ export async function getOpenOrClosedEventsV2() {
 
         for (let index = 0; index < events.length; index++) {
             const element = events[index];
-      
+
             const venue = await getVenueById(element.venueId)
             const eventStatus = await getEventStatusById(element.eventStatusCode)
             data.push({
@@ -538,7 +538,7 @@ export async function getLatestFightV2(event) {
 
         if (response.status == 200) {
             var data;
-            
+
             if (response.data instanceof Array) {
                 // data = [...response.data].reverse();
                 data = response.data;
@@ -549,7 +549,7 @@ export async function getLatestFightV2(event) {
                     if (element.fightStatusCode == 11) {
                         selectedIndex = index
                         break;
-                    }else if (element.fightStatusCode == 12) {
+                    } else if (element.fightStatusCode == 12) {
                         selectedIndex = index
                         break;
                     }
@@ -560,11 +560,11 @@ export async function getLatestFightV2(event) {
                     }
                     else if (element.fightStatusCode == 22) {
                         selectedIndex = index;
-                        
+
                         continue;
                     }
-                     else if (element.fightStatusCode == 10) {
-                        if(hasCancelled) break;
+                    else if (element.fightStatusCode == 10) {
+                        if (hasCancelled) break;
                         selectedIndex = index;
                         break;
                     }
@@ -587,11 +587,11 @@ export async function getLatestFightV2(event) {
                     // Normalize the dates by setting their time to midnight
                     eventDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
                     currentDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
-                    currentDate.setHours(currentDate.getHours() + 3); // Add 3 hours to the current date
+                    currentDate.setDate(currentDate.getDate() + 1); // Add 1 day difference
 
                     const config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
 
-                    if (config.environment == 'develop' || eventDate.getTime() <= currentDate.getTime()) {
+                    if (config.environment == 'develop' || eventDate.getTime() < currentDate.getTime()) {
                         return { ...fightDetails, fight: data, fightStatus: statusDesc, webRtc }
                     } else {
                         return null;
@@ -797,5 +797,55 @@ export async function getEventStatusById(status) {
     } catch (error) {
         console.log(error, '---------------')
         return {}
+    }
+}
+
+
+export async function getBetDetailsByPlayer(fightId) {
+    const cookieStore = await cookies()
+    var session = cookieStore.get('app_session');
+    if (!session) {
+        return redirect('/login')
+    }
+    try {
+        session = JSON.parse(session.value);
+
+        var url = `${process.env.BASE_URL}/api/v1/SabongBet/GetByUserIdByFightId?fightId=${fightId}`
+
+        const response = await axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${session.token}`,
+                "Content-Type": "application/json",
+            },
+            httpsAgent: new Agent({
+                rejectUnauthorized: false
+            })
+        })
+        if (response.status == 200) {
+
+            const data = {
+                s1Total: 0,
+                s0Total: 0
+            }
+
+            data.s0Total = response.data
+                .filter(x => x.side == 0)
+                .reduce((acc, item) => acc + item.amount, 0);
+
+            data.s1Total = response.data
+                .filter(x => x.side == 1)
+                .reduce((acc, item) => acc + item.amount, 0);
+
+            return data
+        } else return {
+            s1Total: 0,
+            s0Total: 0
+        };
+    } catch (error) {
+        console.log(error, 'Error')
+        return {
+            s1Total: 0,
+            s0Total: 0
+        };
     }
 }
