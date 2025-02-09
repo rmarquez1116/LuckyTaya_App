@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-const TablesV2 = ({ headers,title, items, primaryId, isCentered = false }) => {
+const TablesV2 = ({ headers, title, items, primaryId, isCentered = false }) => {
     const [currentPage, setCurrentPage] = useState(1)
     const pageSize = 10
     const totalPages = Math.ceil(items.length / pageSize)
@@ -92,7 +92,7 @@ const TablesV2 = ({ headers,title, items, primaryId, isCentered = false }) => {
             return <td colSpan={headers.length} key={`row-key-${h.key}-${i}`} className={className} style={{ whiteSpace: 'pre' }}>{showFormatCustom ?? value}</td>
         }
 
-        return <td colSpan={h.isTitle?headers.length : 1} key={`row-key-${h.key}-${i}`} className={className} style={{ whiteSpace: 'pre' }}>{showFormatCustom ?? value}</td>
+        return <td colSpan={h.isTitle ? headers.length : 1} key={`row-key-${h.key}-${i}`} className={className} style={{ whiteSpace: 'pre' }}>{showFormatCustom ?? value}</td>
 
     }
 
@@ -115,12 +115,12 @@ const TablesV2 = ({ headers,title, items, primaryId, isCentered = false }) => {
                     </thead>
                     <tbody>
                         {paginatedItems.map((item, i) => (
-                            <React.Fragment>
+                            <React.Fragment key={`key-${item[primaryId]}-${i}`}>
                                 <tr
                                     key={`key-${item[primaryId]}-${i}`}
                                     className="even:bg-gray13 odd:bg-cursedBlack text-xs"
                                 >
-                                    {populateItem(i,title,item)}
+                                    {populateItem(i, title, item)}
                                 </tr>
                                 <tr
                                     key={`key-${item[primaryId]}-${i}`}
