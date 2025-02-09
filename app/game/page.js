@@ -229,7 +229,6 @@ function Game() {
     }, [messages])
 
     const getEventLists = async () => {
-        console.log('here2')
         const result = await getOpenOrClosedEventsV2();
         setEventList(result);
         console.log('here3', result)
