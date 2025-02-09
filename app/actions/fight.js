@@ -478,9 +478,8 @@ export async function getLatestFight() {
                 if (!isJsonEmpty(fightDetails)) {
                     const eventDate = new Date(fightDetails.event.eventDate);
                     const currentDate = new Date();
-                    // Normalize the dates by setting their time to midnight
-                    eventDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
-                    currentDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
+                    eventDate.setHours(0, 0, 0, 0);
+                    currentDate.setHours(0, 0, 0, 0); 
                     const config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
 
                     if (config.environment == 'develop' || eventDate.getTime() === currentDate.getTime()) {
@@ -512,7 +511,6 @@ export async function getLatestFightV2(event) {
     //add buffer
     currentDate.setHours(currentDate.getHours() + 3); 
     currentDate.setDate(currentDate.getDate() + 1);  
-    console.log(currentDate, '1CURRENT DATE ------')
                    
     if (!session) {
         return redirect('/login')
@@ -587,20 +585,13 @@ export async function getLatestFightV2(event) {
             }
             else data = response.data
             if (data) {
-
                 const { fightId, eventId, fightStatusCode } = data
                 var statusDesc = await getFightStatus(fightStatusCode);
                 // if (fightStatusCode == 10 || fightStatusCode == 11) {
                 const fightDetails = await getFightDetailsByFightId(fightId)
                 if (!isJsonEmpty(fightDetails)) {
                     const eventDate = dateToLocalTime(fightDetails.event.eventDate);
-
-
-                    // eventDate.setHours(0, 0, 0, 0); // Reset the time to 00:00:00
-
-                    console.log(eventDate, '1CURRENT DATE ------')
                     const config = (await fetchData('config', { "code": { $eq: "CFG0001" } }))[0]
-
                     if (config.environment == 'develop' || eventDate.getTime() < currentDate.getTime()) {
                         return { ...fightDetails, fight: data, fightStatus: statusDesc, webRtc }
                     } else {
