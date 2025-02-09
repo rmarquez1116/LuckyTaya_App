@@ -9,7 +9,7 @@ import BetModal from '../components/modal/betModal'
 import React, { memo, useEffect, useRef, useState } from "react";
 import BetConfirmation from "../components/modal/betConfirmation";
 import Loading from "../components/loading";
-import { getEventDetailsDB, getEventTrend, getFightDetailsByEventId, getLatestFightV2, getOpenOrClosedEventsV2, placeABet } from "../actions/fight";
+import { getBetDetailsByPlayer, getEventDetailsDB, getEventTrend, getFightDetailsByEventId, getLatestFightV2, getOpenOrClosedEventsV2, placeABet } from "../actions/fight";
 import { isJsonEmpty } from "../lib/utils";
 import Alert from "../components/alert";
 import { getInitialBetDetails } from "../actions/wsApi";
@@ -22,6 +22,7 @@ import SchedulePopUp from "../components/modal/schedulePopUp";
 import Tabs from '../components/tab'
 import Regla from '../components/regla'
 import axios from "axios";
+import { formatMoneyV2 } from "@app/helpers/Common";
 
 
 function Game() {
@@ -35,6 +36,11 @@ function Game() {
         s1c: 0,
         s1a: 0,
         s1o: 0
+    })
+
+    const [betDetailsByPlayer, setBetDetailsByPlayer] = useState({
+        s0Total: 0,
+        s1Total: 0
     })
 
 
@@ -87,6 +93,19 @@ function Game() {
             getData()
         }
     }, [closeBet])
+
+    const getBetDetailsPlayer = async () => {
+        if (!isJsonEmpty(data))
+            try {
+                const betDetPlayers = await getBetDetailsByPlayer(data.fight.fightId)
+                setBetDetailsByPlayer(betDetPlayers)
+            } catch (error) {
+
+            }
+    }
+    useEffect(() => {
+        getBetDetailsPlayer()
+    }, [betDetails])
 
 
     const [randomText, setRandomText] = useState("1234")
@@ -331,6 +350,17 @@ function Game() {
         return ""
     }
 
+    const getSafeData = (data, field) => {
+        try {
+            return data[field]
+        } catch (error) {
+            return 0;
+        }
+    }
+    const getTotalBet = () => {
+        return getSafeData(betDetails, 's0a') + getSafeData(betDetails, 's1a')
+    }
+
     return (
         <MainLayout>
             {/* {isShowPin && <PinV2 title="Enter Pin" isOpen={isShowPin} onClose={() => { setIsShowPin(false) }} onSubmit={(e) => onValidatePin(e)} />} */}
@@ -351,7 +381,7 @@ function Game() {
             }
 
             {isLoaded && !isJsonEmpty(data) && !feedConfig.isShowFeed &&
-                <div className="flex overflow-auto flex-col items-center gap-3 justify-center align-center  p-6">
+                <div className="flex overflow-auto flex-col items-center gap-3 justify-center align-center  p-2">
 
                     <div className="rounded-[20px] card max-w-md  bg-center  p-5 w-full"
                         style={
@@ -362,11 +392,9 @@ function Game() {
                         }>
                         <div className="grid grid-cols-4 grid-rows-1 gap-4">
                             <div className="col-span-4 uppercase label-header1">
-                                <div>
+                                <div className="flex justify-between font-bold">
                                     <label>{data.event.eventName}</label>
-                                </div>
-                                <div>
-                                    <label>{data.venue.venueName}</label>
+                                    <label className="bg-dark px-2">{data.venue.venueName}</label>
                                 </div>
                                 <div className="grid grid-cols-2 grid-rows-1 gap-4 justify-between">
                                     <label>{formatDisplayDate(data.event.eventDate)}</label>
@@ -393,27 +421,28 @@ function Game() {
                             allow="autoplay;encrypted-media;"
                             allowFullScreen
                         ></iframe>
-                        <br />
-                        <div className="grid grid-cols-5 grid-rows-1 gap-4">
-                            <div className="col-span-2 card rounded-[10px] p-3  text-center">
+                        <div className="grid grid-cols-4 grid-rows-1 gap-4 mt-2">
+                            <div className="col-span-2 card rounded-[10px] p-1  text-center">
                                 <label> Status : {data.fightStatus.name}</label>
                             </div>
-                            <div className="col"></div>
-                            <div className="col-span-2 card rounded-[10px] p-3 text-center">
+                            {/* <div className="col"></div> */}
+                            <div className="col-span-2 card rounded-[10px] p-1 text-center">
                                 <label> Game# {data.fight.fightNum}</label>
                             </div>
                         </div>
                     </div>
                     <br />
-                    <br />
-                    <br />
+                    <div className="bg-dark col-span-2 card rounded-[10px] w-full p-1 text-center">
+                        <label> Total Bet : {formatMoneyV2(getTotalBet())}</label>
+                    </div>
+                    {/* <br /> */}
                     <div className="max-w-md w-full">
                         <div className="grid grid-cols-2 grid-rows-1 gap-4">
                             <div onClick={() => openBetting(1)}>
-                                <MeronWala player={getPlayer(1)} type={1} data={betDetails} />
+                                <MeronWala dataByPlayer={betDetailsByPlayer} player={getPlayer(1)} type={1} data={betDetails} />
                             </div>
                             <div onClick={() => openBetting(0)}>
-                                <MeronWala player={getPlayer(0)} type={0} data={betDetails} />
+                                <MeronWala dataByPlayer={betDetailsByPlayer} player={getPlayer(0)} type={0} data={betDetails} />
                                 <div>
                                 </div>
                             </div>
@@ -428,7 +457,7 @@ function Game() {
                     }></Tabs>}
                 </div>
             }
-            {isLoaded && isJsonEmpty(data) && (!feedConfig.isShowFeed  || !feedConfig.feedUrl) && <React.Fragment>
+            {isLoaded && isJsonEmpty(data) && (!feedConfig.isShowFeed || !feedConfig.feedUrl) && <React.Fragment>
                 <div className="w-full flex  justify-center">
 
                     <div className="flex flex-col justify-center card max-w-sm p-6 m-10 bg-white rounded-3xl shadow">

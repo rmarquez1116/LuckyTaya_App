@@ -85,7 +85,7 @@ const Regla = React.memo(({ data, items }) => {
                                     {row.map((item, colIndex) => (
                                         <td
                                             key={`cell-${rowIndex}-${colIndex}`}
-                                            className="border border-gray-300 text-center p-2 h-[40px] w-[40px]" // Set fixed width for each cell
+                                            className="text-center p-2 h-[40px] w-[40px]" // Set fixed width for each cell
                                         >
                                             {item}
                                         </td>

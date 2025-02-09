@@ -1,3 +1,4 @@
+import { formatMoneyV2 } from '@app/helpers/Common';
 import Image from 'next/image';
 import React from 'react'
 
@@ -5,14 +6,14 @@ import React from 'react'
 // import wala from '../../public/images/wala.png'
 // import { isJsonEmpty } from '../lib/utils';
 
-function MeronWala({player, type, data }) {
+function MeronWala({dataByPlayer, player, type, data }) {
     const color = type == 1 ? "meronColor" : "walaColor";
     const title = type == 1 ? "Pula" : "Asul";
     const getSafeData = (data, field) => {
         try {
             return data[field]
         } catch (error) {
-            return "0"
+            return "0.00"
         }
     }
 
@@ -20,35 +21,38 @@ function MeronWala({player, type, data }) {
 
         const numerator = parseFloat(getSafeData(data, `s${type}a`))
         const denominator = parseFloat(getSafeData(data, 's1a')) + parseFloat(getSafeData(data, 's0a'))
-    
-        if(numerator === 0 || denominator === 0) {
-          return '0 %'
+
+        if (numerator === 0 || denominator === 0) {
+            return '0 %'
         }
-    
+
         return `${((numerator / denominator) * 100).toFixed(0)} %`
-      }
-    
+    }
 
 
 
-    return (<div className="col card rounded-[20] text-center  p-3 mt-10 cursor-pointer">
-        <div className={`${color} rounded-full h-20 w-20 mt-[-40px] items-center  flex justify-center justify-self-center`}>
-            {/* {title} */}
-            
-            {calculateOddPercentage(data)}
-        </div>
-        <br />
+
+    return (<React.Fragment>
+        <div className="col card rounded-[20] text-center  p-3 mt-8 cursor-pointer">
+            <div className={`${color} rounded-full h-20 w-20 mt-[-40px] items-center  flex justify-center justify-self-center`}>
+                {/* {title} */}
+
+                {calculateOddPercentage(data)}
+            </div>
+            {/* <br /> */}
             <h1 className='text-base'>{player}</h1>
-        <span className='label-header1'>
-            {getSafeData(data, `s${type}a`)} <br />
-        </span>
-        Bet<br />
 
-        <div className="bg-dark-no-border p-1 rounded-[20px] border-transparent">
-            Payout<br />
-            {parseFloat(getSafeData(data, `s${type}o`)).toFixed(2)}
+           Total Bet : {formatMoneyV2(getSafeData(data, `s${type}a`))} <br />
+            <span className='label-header1'>
+            </span>
+
+            <div className="bg-dark-no-border mt-2 p-1 rounded-[20px] border-transparent">
+                Payout<br />
+                {formatMoneyV2(getSafeData(data, `s${type}o`))}
+            </div>
         </div>
-    </div>
+        <div className='bg-dark text-center mt-2'>My Bet : {formatMoneyV2(getSafeData(dataByPlayer, `s${type}Total`))} </div>
+    </React.Fragment>
     )
 }
 
