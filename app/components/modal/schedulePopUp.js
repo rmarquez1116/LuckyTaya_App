@@ -42,7 +42,7 @@ function SchedulePopUp({ data, onClose }) {
     }
     return (
         <div className='z-10 absolute flex justify-center items-center flex w-full overflow-hidden backdrop-blur'>
-            <div className="flex overflow-auto flex-col items-center  w-full max-w-sm card gap-3 p-6 bg-white rounded-3xl shadow">
+            <div className="flex overflow-auto flex-col items-center  w-full max-w-sm card gap-3 p-2 bg-white rounded-3xl shadow">
                 <div className="grid grid-cols-7 w-full grid-rows-1 gap-4  p-3  ">
                     <div className='flex justify-start font-black  cursor-pointer' onClick={onClose}>&lt;</div>
                     <div className="col-span-5">
@@ -62,6 +62,7 @@ function SchedulePopUp({ data, onClose }) {
                     {/* <div className='inline-flex gap-2 items-center justify-end'><Image alt="time" className="w-[20px] h-[20px]" src={clock}></Image>  <label>{formatDisplayTime(data.event.eventDate)}</label></div> */}
 
                 </div>
+                <div className='w-full'>
                 <Tables
                     primaryId="id"
                     headers={[
@@ -82,6 +83,7 @@ function SchedulePopUp({ data, onClose }) {
                     items={tableFight}
                     isCentered={false}
                 />
+                </div>
             </div>
         </div>
     )

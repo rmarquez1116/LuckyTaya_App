@@ -20,7 +20,7 @@ function BalanceHeader({ type, forceUpdate }) {
     if (isLoaded)
         return (
             <div className='balance-header2'>
-                <div className='inline-flex gap-2 items-center'>
+                <div className='inline-flex gap-1 items-center'>
                     <label>Current Balance</label>
                     <Image alt='dollar' className="w-[20px] h-[20px]" src={dollar}></Image>
                     <label className=' font-bold label-header1'>
