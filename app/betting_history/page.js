@@ -4,7 +4,7 @@ import MainLayout from "../layout/mainLayout";
 import BalanceHeader from "../components/balanceHeader";
 import { getTransactionsByDate } from "../actions/transaction";
 import Loading from "../components/loading";
-import Tables from "../components/tables";
+import TablesV2 from "../components/tablesV2";
 import { format } from 'date-fns'
 import { formatAccountNumber, getStartOfWeek } from "../lib/utils";
 import { formatMoney, formatMoneyV2 } from "../helpers/Common";
@@ -79,8 +79,22 @@ export default function BettingHistory() {
             </div>
           </div>
           {isLoaded && <div className="overflow-x-auto max-w-full">
-            <Tables
+            <TablesV2
               primaryId="id"
+              title={
+                {
+                  isTitle: true,
+                  customValue: (val) =>
+                    <div className="inline-flex justify-between w-full">
+                      <label>
+                        Event: {val.eventName}
+                      </label>
+                      <label>
+                        Fight No: {val.fightNum}
+                      </label>
+                    </div>
+                }
+              }
               headers={[
                 {
                   key: 'transactionDateTime',
@@ -92,15 +106,6 @@ export default function BettingHistory() {
                 }, {
                   key: 'transactionNumber',
                   label: 'Transaction Id'
-                }, 
-                {
-                  key: '',
-                  label: 'Event',
-                  customValue: (val) =>
-                    <div>
-                      {val.eventName}<br />
-                      Fight No: {val.fightNum}
-                    </div>
                 },
                 {
                   key: '',
@@ -130,10 +135,10 @@ export default function BettingHistory() {
                   }
                 }, {
                   key: 'transactionDesc',
-                  concatKey: ['transCategoryDesc','reason'],
+                  concatKey: ['transCategoryDesc', 'reason'],
                   concatSeparator: ' ',
                   label: 'Type'
-                }, 
+                },
               ]}
               items={transactionList}
               isCentered={true}
